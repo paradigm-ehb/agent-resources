@@ -1,9 +1,11 @@
 name: main-build
 run-name: compile-build
+
 on: [push]
   
   jobs: 
     main-compile:
-      runs-on: ubuntue-latest
+      runs-on: ubuntu-latest
       steps:
-       -  run: echo "Workflow is running"
+        - name: Run Build step 
+        -  run: echo "Workflow is running"
