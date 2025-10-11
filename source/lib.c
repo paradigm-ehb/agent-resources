@@ -26,17 +26,19 @@ typedef struct {
 
 } ram_s;
 
+
+void *cpu_name();
+void *cpu_temperature(void);
+void *cpu_frequency(void);
+
 unsigned long get_total(void);
 unsigned long get_usage(void);
-long device_up_time(void);
+unsigned long device_up_time(void);
+
 void name();
 void temperature();
 void freq();
-void *cpu_i(void *a);
-void *ram_i(void *a);
-void cpu_name(void);
-void cpu_temperature(unsigned short delay);
-char* cpu_frequency(void);
+
 
 cpu_s _cpu;
 ram_s _ram;
@@ -48,7 +50,7 @@ void *cpu_name(){
   printf("Opening the CPU information files");
   FILE *fp = fopen("/proc/cpuinfo", "r");
   if (!fp)
-    printf("can't open /proc/cpuinfo");
+    perror("can't open /proc/cpuinfo");
 
   char line[buffer_size];
   while (fgets(line, sizeof(line), fp))
@@ -62,7 +64,7 @@ void *cpu_name(){
         cpu_name[strcspn(cpu_name, "\n")] = 0;
         int err = fclose(fp);
         if (err != 0)
-          printf("error closing /proc/cpuinfo");
+          perror("error closing /proc/cpuinfo");
       }
     }
   }
@@ -98,12 +100,6 @@ char* cpu_frequency() {
   return NULL;
 }
 
-void *cpu_i(void *a){
-  printf("thread is working");
-
-  return(NULL);
-}
-
 unsigned long get_total(void){
 
   struct sysinfo info;
@@ -133,42 +129,6 @@ unsigned long get_usage(void)
   return total_ram - free_ram;
 }
 
-void *ram_i(void *a){
-
-  printf("thread is working");
-  return NULL;
-}
-
-void cpu_name(void)
-{
-  int buffer_size = 256;
-  char cpu_name[buffer_size];
-
-  FILE *fp = fopen("/proc/cpuinfo", "r");
-  if (!fp)
-    printf("can't open /proc/cpuinfo");
-
-  char line[buffer_size];
-  while (fgets(line, sizeof(line), fp))
-  {
-    if (strncmp(line, "model name", 10) == 0)
-    {
-      char *colon = strchr(line, ':');
-      if (colon)
-      {
-        snprintf(cpu_name, buffer_size, "%s", colon + 2);
-        cpu_name[strcspn(cpu_name, "\n")] = 0;
-        int err = fclose(fp);
-        if (err != 0)
-          printf("error closing /proc/cpuinfo");
-
-      }
-    }
-  }
-
-  printf("%s", cpu_name);
-  snprintf(cpu_name, buffer_size, "%s", cpu_name);
-}
 
 void cpu_temperature(unsigned short delay)
 {
@@ -246,7 +206,7 @@ unsigned long get_usage(void)
   return total_ram - free_ram;
 }
 
-long device_up_time(void){
+unsigned long device_up_time(void){
   struct sysinfo info;
   if (sysinfo(&info) == -1)
     perror("sysinfo");
@@ -255,6 +215,7 @@ long device_up_time(void){
 }
 
 #endif
+
 #ifdef __APPLE__
 
 #include <sys/types.h>
@@ -273,6 +234,8 @@ long device_up_time(void){
 
 typedef struct{
     char* name;
+    char* hostname;
+    char* os_version;
 } device_s;
 
 typedef struct {
@@ -310,17 +273,18 @@ typedef struct {
 
 void* cpu_name();
 void* cpu_thread_count();
-unsigned long get_total(void);
-unsigned long get_usage(void);
-long device_up_time(void);
-float cpu_frequency(void);
+unsigned long get_total();
+unsigned long get_usage();
+unsigned long device_up_time();
+float cpu_frequency();
 void size();
 void av_size();
 void* ram_i();
 
-ram_s data;
-cpu_s cpu;
-device_s device_info;
+ram_s _ram;
+cpu_s _cpu;
+device_s _device;
+
 
 void *cpu_name() {
 
@@ -339,7 +303,7 @@ void *cpu_name() {
     return NULL;
   }
 
-  cpu.name = name;
+  _cpu.name = name;
   return NULL;
 }
 
@@ -359,7 +323,7 @@ void *cpu_info() {
   cpu_threads();
   cpu_name();
 
-  printf("cpu name: %s\ncpu threads: %d\n", cpu.name, cpu.threads);
+  printf("cpu name: %s\ncpu threads: %d\n", _cpu.name, _cpu.threads);
   return NULL;
 }
 
@@ -380,36 +344,47 @@ void *device_name(){
     return NULL;
   }
 
-  device_info.name = name;
+  _device.name = name;
   return NULL;
 }
 
+unsigned long device_up_time(void){
 
-void *device_model(){
+  struct timeval boottime;
+  size_t len = sizeof(boottime);
 
-  char *model_name;
+  if (sysctlbyname("kern.boottime", &boottime, len, NULL, 0) == -1){
+    perror("sysctl error");
+    return 1;
+  }
+}
+
+
+
+
+void *device_hostname(){
+
+  char *hostname;
   size_t size = 0;
 
   if (sysctlbyname("hw.model", NULL, &size, NULL, 0) < 0)
     perror("failed retrieving the hostname: \n"); 
 
-  model_name = malloc(size);
+  hostname = malloc(size);
 
-  if(sysctlbyname("hw.model", model_name, &size, NULL, 0) < 0){
+  if(sysctlbyname("hw.model", hostname, &size, NULL, 0) < 0){
     perror("failed retrieving the hostname: \n");
-    free(model_name);
+    free(hostname);
     return NULL;
   }
 
-  device_info.model = model_name;
+  _device.hostname = hostname;
   return NULL;
 
 }
 
-void *device_up_time()
-{
-  return NULL;
-}
+
+
 
 void *device_os_version() {
 
@@ -427,7 +402,7 @@ void *device_os_version() {
     return NULL;
   }
 
-  device_info.model = os_version;
+  device_info.os_version = os_version;
   return NULL;
 
 
@@ -435,12 +410,12 @@ void *device_os_version() {
 
 void *get_device_info() {
   device_name();
-  device_model();
+  device_hostname();
   printf("device name: %s\ndevice model: %s\n", device_info.name, device_info.model);
   return NULL;
 }
 
-void size() {
+void *mem_size() {
   int64_t size;
   size_t len = sizeof(size);
   if (sysctlbyname("hw.memsize", &size, &len, NULL, 0) < 0)
@@ -488,35 +463,7 @@ float cpu_frequency(void){
   return freq;
 }
 
-char* cpu_name(void){
 
-  size_t size = 0;
-
-  if (sysctlbyname("machdep.cpu.brand_string", NULL, &size, NULL, 0) < 0)
-    perror("sysctl"); 
-
-
-  char *name = malloc(size);
-
-  if(sysctlbyname("machdep.cpu.brand_string", &name, &size, NULL, 0) < 0){
-    perror("sysctl");
-    free(name);
-    return NULL;
-  }
-
-  return name;  
-}
-
-long device_up_time(void){
-
-  struct timeval boottime;
-  size_t len = sizeof(boottime);
-
-  if (sysctlbyname("kern.boottime", &boottime, len, NULL, 0) == -1){
-    perror("sysctl error");
-    return 1;
-  }
-}
 
 unsigned long get_usage(void) {
 
