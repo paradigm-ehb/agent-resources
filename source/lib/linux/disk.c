@@ -21,9 +21,17 @@
 #include <IOKit/IOKitLib.h>
 #include <CoreFoundation/CoreFoundation.h>
 
+<<<<<<< HEAD:source/lib/linux/disk.c
 
 typedef struct {
     long size; 
+=======
+void disk_size();
+
+
+typedef struct {
+    long total_disk_size; 
+>>>>>>> 1095ca1 (added the device file):source/disk.c
 } disk;
 
 

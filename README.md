@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Resources gathering tool
+=======
+# synf-sys
+>>>>>>> 1095ca1 (added the device file)
 
 System information retrieval software for synf.
 
@@ -8,3 +12,7 @@ helps users throuble shoot performance issues and do general checkups on devices
 The system code is written in C and will be imported in the backend through cgo.
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1095ca1 (added the device file)
