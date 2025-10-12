@@ -11,8 +11,6 @@ void ram_info();
 void cpu_frequency();
 void cpu_name();
 void cpu_threads();
-
-void cpu_name();
 void cpu_temperature();
 void cpu_frequency();
 void mem_size();
