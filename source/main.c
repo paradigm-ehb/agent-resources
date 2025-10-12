@@ -5,8 +5,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/* 
- cJSON convert_to_json() {
+void *gather_cpu_information();
+void *gather_ram_information();
+void *gather_disk_information();
+void *gather_device_information();
+
+/*
+cJSON convert_to_json() {
 
   cJSON *root = cJSON_CreateObject();
   cJSON_AddStringToObject(root, "cpu", info.cpu->name);
@@ -16,7 +21,6 @@
 
   return *root;
 }
- * */
 
 void handler(char *url) {
   CURL *curl;
@@ -28,7 +32,6 @@ void handler(char *url) {
   if (curl) {
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_easy_setopt(curl, CURLOPT_URL, url);
-
 
     // TO DO
     // parse the object to a json and pass that as an argument to post it
@@ -44,26 +47,22 @@ void handler(char *url) {
   curl_global_cleanup();
 }
 
-void setup_mt() {
-  pthread_t cpu_t,ram_t; // disk_t , device_t;
 
-  pthread_create(&cpu_t, NULL, cpu_i, NULL);
-  pthread_create(&ram_t, NULL, ram_i, NULL);
-  //    pthread_create(&disk_t, NULL, disk_i, NULL);
-  //    pthread_create(&device_t, NULL, device_i, NULL);
+*/
 
-  pthread_join(cpu_t, NULL);
-  pthread_join(ram_t, NULL);
-  //   pthread_join(disk_t, NULL);
-  //   pthread_join(device_t, NULL);
-}
+
 
 #ifdef __APPLE__
 
 int main(int argc, char** argv) {
 
-  setup_mt();
-  handler("api.nsrddyn.com");
+#if __STDC_VERSION__
+  printf("C standard version: %ld\n", __STDC_VERSION__);
+#else
+  printf("C standard not defined\n");
+#endif
+
+  // handler("api.nsrddyn.com");
 
   return 0;
 }
@@ -72,11 +71,8 @@ int main(int argc, char** argv) {
 
 #ifdef __gnu_linux
 
-
-
 int main(int argc, char** argv) {
 
-  setup_mt();
 
   return 0;
 }
