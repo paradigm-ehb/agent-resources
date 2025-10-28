@@ -188,14 +188,7 @@ void device_os_version() {
 
 }
 
-void device_model() {
-
-
-}
-
 #endif
-
-
 
 #ifdef __APPLE__
 
