@@ -245,16 +245,16 @@ memory_data(Ram *ram)
 			ram->free[length] = '\0';
 		}
 
-
 	}
 	fclose(file);
-
 }
 
 void
 disk_data(Disk *disk) 
 {
-	char disk_info[]	= "/proc/diskstats";
+	// TODO(nasr): get the partitions names, get the paritions sizes
+	// TODO(nasr): rewrite the disk struct
+	char disk_info[]	= "/proc/partitions";
 	FILE *file = fopen(disk_info, "r");
 	if (!file)
 	{
@@ -318,10 +318,12 @@ main()
 	cpu = (Cpu*)malloc(sizeof(Cpu));
 	ram = (Ram*)malloc(sizeof(Ram));
 	device = (Device*)malloc(sizeof(Device));
+	disk = (Disk*)malloc(sizeof(Disk));
 
 	cpu_data(cpu);
 	memory_data(ram);
 	device_data(device);
+	disk_data(disk);
 
 	printf("================================================================");
 	printf("\nmodel: %s\n", cpu->model);
