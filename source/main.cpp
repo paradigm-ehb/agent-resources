@@ -96,8 +96,8 @@ typedef struct
 	char hostname[MAXC_CHAR]; 
 	char os_version[MAXC_CHAR];
 	char uptime[MAXC_CHAR];
-	// TODO(nasr): handle the type later
-	uint16_t procs;
+	char **procs;
+	int	 procs_count;
 
 } Device;
 
@@ -105,7 +105,7 @@ typedef struct
 // math heper functions
 // @param takes a base and an exponent
 int
-pow(int base, int exp) 
+power(int base = 0, int exp = 0) 
 {
 
 	uint64_t result = 0;
@@ -120,7 +120,7 @@ pow(int base, int exp)
 }
 
 int
-pow(double base, double exp) 
+power(double base, double exp) 
 {
 
 	float result = 0;
@@ -221,7 +221,7 @@ memory_data(Ram *ram)
 		char *colon = strchr(buffer, ':');
 		if (!colon)
 			continue; 
-
+ 
 		char *start = colon + 1;
 		 
 		while (*start == ' ')
@@ -267,6 +267,78 @@ disk_data(Disk *disk)
 	fclose(file);
 }
 
+void
+get_processes(Device *device)
+{
+    const char *path = "/proc";
+    struct dirent *entry;
+
+    size_t pid_count = 0;
+    size_t pid_cap   = 8;
+
+    DIR *dP = opendir(path);
+    if (!dP) {
+        perror("failed to open /proc");
+        return;
+    }
+
+    char **pid_list = (char**)malloc(sizeof(char*) * pid_cap);
+    if (!pid_list) {
+        perror("malloc failed");
+        closedir(dP);
+        return;
+    }
+
+    while ((entry = readdir(dP)) != NULL) {
+        if (atoi(entry->d_name) == 0)
+            continue;
+
+        if (pid_count == pid_cap) {
+            pid_cap *= 2;
+            char **tmp = (char**)realloc(pid_list, sizeof(char*) * pid_cap);
+            if (!tmp) {
+				free(pid_list);
+                perror("realloc failed");
+                break;
+            }
+            pid_list = tmp;
+        }
+
+        size_t len = strlen(entry->d_name) + 1;
+        pid_list[pid_count] = (char*)malloc(len);
+        if (!pid_list[pid_count]) {
+            perror("malloc failed");
+            break;
+        }
+
+        memcpy(pid_list[pid_count], entry->d_name, len);
+        pid_count++;
+    }
+
+	device->procs_count = pid_count;
+    closedir(dP);
+
+    size_t valid_count = 0;
+    device->procs = (char**)malloc(sizeof(char*) * pid_count);
+    if (!device->procs) {
+        perror("malloc failed");
+    }
+
+    for (size_t i = 0; i < pid_count; i++) {
+        char sub_path[64];
+
+        snprintf(sub_path, sizeof(sub_path), "/proc/%s", pid_list[i]);
+
+        DIR *sdP = opendir(sub_path);
+        if (!sdP)
+            continue;
+
+        closedir(sdP);
+
+        device->procs[valid_count++] = pid_list[i];
+    }
+}
+
 
 void
 device_data(Device *device) 
@@ -298,33 +370,7 @@ device_data(Device *device)
 	fclose(os_version_file);
 
 
-}
-
-// TODO(nasr): finish this
-void
-get_processes()
-{
-	const char *path = "/proc";
-	struct dirent *entry;
-
-	DIR *dP = opendir(path);
-
-	char **pid_list = (char**)malloc(sizeof(char*) * 256);
-
-	if (!dP) return perror("failed to open /proc folder");
-
-	while ((entry = readdir(dP)) != NULL)
-	{
-		if (atoi(entry->d_name) != 0)
-		{
-			printf("%s\n", entry->d_name);
-			memcpy(pid_list, entry->d_name, entry->d_reclen);
-			++(*pid_list);
-		};
-	}
-
-	
-	return ;
+	get_processes(device);
 }
 
 int 
@@ -332,9 +378,6 @@ main()
 {
 	// Arena *arena; 
 	//
-	get_processes();
-
-
 	Cpu *cpu;
 	Ram *ram;
 	Device *device;
@@ -363,6 +406,7 @@ main()
 	printf("\nfrequency: %s\n", cpu->frequency);
 	printf("\ncores: %s\n", cpu->cores);
 
+
 	printf("================================================================");
 
 
@@ -373,12 +417,24 @@ main()
 	
 	printf("os_version: %s\n", device->os_version);
 	printf("uptime: %s\n", device->uptime);
+
+
+	printf("================================================================\n");
+
+	for (int i = 0; i < device->procs_count; i++)
+	{
+
+		printf("procs: %s\n", device->procs[i]);
+	}
+
+	free(device->procs);
 	// ArenaRelease(arena);
 	return 0;
 }
 
 // TODO(nasr): find a way to use libvirt to create and start a virtual machine
 // TODO(nasr): find a way to pass parameters to libvirt
+// TODO(nasr): cleanup
 
 void
 create_vm()
