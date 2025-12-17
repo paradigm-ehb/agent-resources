@@ -1,10 +1,10 @@
 CC=clang
 
-SOURCE = main.cpp
+SOURCE = main.c
 OUT = main
 
 run:
-	$(CC) --std=c++98 -g -o1 main.c -o main && ./$(OUT)
+	$(CC) --std=c99 -g $(SOURCE) -lprocps -o main
 
 clean:
 	rm -rf $(OUT)

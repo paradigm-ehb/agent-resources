@@ -10,6 +10,8 @@
 #include <string.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <proc/readproc.h>
+#include <signal.h>
 
 // TODO(nasr): create and start virtual machines using KVM - QEMU - LIBVIRT
 // #include <libvirt/libvirt.h>
@@ -30,7 +32,6 @@ Arena
 {
 
 	return NULL;
-
 }
 
 void
@@ -38,7 +39,6 @@ void
 {
 
 	return NULL;
-
 }
 
 Arena
@@ -105,7 +105,7 @@ typedef struct
 // math heper functions
 // @param takes a base and an exponent
 int
-power(int base = 0, int exp = 0) 
+ipow(int base , int exp ) 
 {
 
 	uint64_t result = 0;
@@ -120,7 +120,7 @@ power(int base = 0, int exp = 0)
 }
 
 int
-power(double base, double exp) 
+fpow(double base, double exp) 
 {
 
 	float result = 0;
@@ -267,6 +267,7 @@ disk_data(Disk *disk)
 	fclose(file);
 }
 
+// own impementation
 void
 get_processes(Device *device)
 {
@@ -315,7 +316,6 @@ get_processes(Device *device)
         pid_count++;
     }
 
-	device->procs_count = pid_count;
     closedir(dP);
 
     size_t valid_count = 0;
@@ -337,6 +337,7 @@ get_processes(Device *device)
 
         device->procs[valid_count++] = pid_list[i];
     }
+	device->procs_count = valid_count;
 }
 
 
@@ -373,9 +374,41 @@ device_data(Device *device)
 	get_processes(device);
 }
 
+// Library
+int
+list_processes()
+{
+    PROCTAB *proc = openproc(PROC_FILLSTAT | PROC_FILLSTATUS);
+    proc_t proc_info;
+
+    if (!proc) {
+        fprintf(stderr, "failed to open proc table\n");
+        return 1;
+    }
+	proc_t *p;
+	while ((p = readproc(proc, NULL)) != NULL) {
+		printf("PID: %d CMD: %s STATE: %c\n",
+				p->tid,
+				p->cmd,
+				p->state);
+	}
+	// iterate all processes
+    closeproc(proc);
+	return 0;
+}
+
+int
+kill_process(char *pid)
+{
+
+	return 0;
+
+}
+
 int 
 main() 
 {
+	ezway();
 	// Arena *arena; 
 	//
 	Cpu *cpu;
@@ -427,14 +460,22 @@ main()
 		printf("procs: %s\n", device->procs[i]);
 	}
 
+	for (int i = 0; i < device->procs_count; i++) {
+		free(device->procs[i]);
+	}
 	free(device->procs);
+
+	free(cpu);
+	free(ram);
+	free(device);
+	free(disk);
+
 	// ArenaRelease(arena);
 	return 0;
 }
 
 // TODO(nasr): find a way to use libvirt to create and start a virtual machine
 // TODO(nasr): find a way to pass parameters to libvirt
-// TODO(nasr): cleanup
 
 void
 create_vm()
