@@ -11,7 +11,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <proc/readproc.h>
+// #include <proc/readproc.h>
 
 // TODO(nasr): create and start virtual machines using KVM - QEMU - LIBVIRT
 // #include <libvirt/libvirt.h>
@@ -68,6 +68,16 @@ ArenaClear(Arena *arena)
 	free(arena);
 }
 
+
+typedef struct
+{
+	uint64_t major;
+	uint64_t minor;
+	uint64_t blocks;
+	char	 *name;
+
+} Partitions;
+
 typedef struct 
 {
 
@@ -88,6 +98,7 @@ typedef struct
 {
 	long size;
 	char *name;
+	Partitions *part;
 } Disk;
 
 typedef struct 
@@ -234,7 +245,6 @@ memory_data(Ram *ram)
 
 		size_t length = (size_t)(end - start);
 
-
 		if ((strncmp(buffer, total, sizeof(total) - 1)) == 0) 
 		{
 			memcpy(ram->total, start, length);
@@ -250,18 +260,86 @@ memory_data(Ram *ram)
 	}
 	fclose(file);
 }
-
-void
-disk_data(Disk *disk) 
+// return the int in the buffer
+// cool code but won't use it propably :(
+uint64_t
+*get_part_num(char *input)
 {
-	// TODO(nasr): get the partitions names, get the paritions sizes
-	// TODO(nasr): rewrite the disk struct
-	char disk_info[]	= "/proc/partitions";
+	uint64_t *major = malloc(sizeof(uint64_t));
+	while (*input && *input == ' ')
+	{
+		input++;
+	}
+
+	while (*input >= '0' && *input <= '9')
+	{
+		// add the current index ascii code - the ascii code of 0 to get the integer
+		// then multiply the major value by 10 to insert the next value
+		*major = (*major * 10) + (*input - '0');
+		input++;
+	}
+
+	return major;
+}
+
+
+void disk_data(Disk *disk) {
+
+	if (!disk->part)
+		perror("nothing allocated for part");
+
+	char disk_info[] = "/proc/partitions";
+
+	char buffer[MAXC_CHAR] = "";
 	FILE *file = fopen(disk_info, "r");
 	if (!file)
-	{
-		fclose(file);
 		return;
+
+	fgets(buffer, sizeof(buffer), file);
+
+	while (fgets(buffer, sizeof(buffer), file) != NULL)
+	{
+		char num_buf[MAXC_CHAR] = "";
+		char name_buf[MAXC_CHAR] = "";
+
+		size_t num_idx = 0;
+		size_t name_idx = 0;
+		int field = 0;
+
+		for (size_t i = 0; buffer[i] && buffer[i] != '\n'; i++)
+		{
+			if (buffer[i] >= '0' && buffer[i] <= '9')
+			{
+				num_buf[num_idx++] = buffer[i];
+			}
+			else if (buffer[i] == ' ')
+			{
+				if (num_idx > 0)
+				{
+					num_buf[num_idx] = '\0';
+
+					if (field == 0)
+						disk->part->major = atoi(num_buf);
+					else if (field == 1)
+						disk->part->minor = atoi(num_buf);
+					else if (field == 2)
+						disk->part->blocks = atoi(num_buf);
+
+					field++;
+					num_idx = 0;
+				}
+			}
+			else
+			{
+				name_buf[name_idx++] = buffer[i];
+			}
+		}
+
+		name_buf[name_idx] = '\0';
+
+		disk->part->name = malloc(sizeof(char) *name_idx);
+		strcpy(disk->part->name, name_buf);
+
 	}
 
 	fclose(file);
@@ -375,28 +453,28 @@ device_data(Device *device)
 }
 
 // Library
-int
-list_processes()
-{
-    PROCTAB *proc = openproc(PROC_FILLSTAT | PROC_FILLSTATUS);
-    proc_t proc_info;
-
-    if (!proc) {
-        fprintf(stderr, "failed to open proc table\n");
-        return 1;
-    }
-	proc_t *p;
-	while ((p = readproc(proc, NULL)) != NULL) {
-		printf("PID: %d CMD: %s STATE: %c\n",
-				p->tid,
-				p->cmd,
-				p->state);
-	}
-	// iterate all processes
-    closeproc(proc);
-	return 0;
-}
-
+// int
+// list_processes()
+// {
+//     PROCTAB *proc = openproc(PROC_FILLSTAT | PROC_FILLSTATUS);
+//     proc_t proc_info;
+//
+//     if (!proc) {
+//         fprintf(stderr, "failed to open proc table\n");
+//         return 1;
+//     }
+// 	proc_t *p;
+// 	while ((p = readproc(proc, NULL)) != NULL) {
+// 		printf("PID: %d CMD: %s STATE: %c\n",
+// 				p->tid,
+// 				p->cmd,
+// 				p->state);
+// 	}
+// 	// iterate all processes
+//     closeproc(proc);
+// 	return 0;
+// }
+//
 // int
 // terminate_process(char *pid)
 // {
@@ -415,23 +493,24 @@ int
 main() 
 {
 	// Arena *arena; 
-	//
-	Cpu *cpu;
-	Ram *ram;
-	Device *device;
-	Disk *disk;
+	 Cpu *cpu;
+	 Ram *ram;
+	 Device *device;
+	 Disk *disk;
+	 Partitions *part;
 
-	// ArenaPush(arena, sizeof(Cpu));
-	// ArenaPush(arena, sizeof(Ram));
-	// ArenaPush(arena, sizeof(Disk));
-	// ArenaPush(arena, sizeof(Device));
-	//
-	// ArenaAlloc();
-
-	cpu = (Cpu*)malloc(sizeof(Cpu));
-	ram = (Ram*)malloc(sizeof(Ram));
-	device = (Device*)malloc(sizeof(Device));
-	disk = (Disk*)malloc(sizeof(Disk));
+	 // ArenaPush(arena, sizeof(Cpu));
+	 // ArenaPush(arena, sizeof(Ram));
+	 // ArenaPush(arena, sizeof(Disk));
+	 // ArenaPush(arena, sizeof(Device));
+	 //
+	 // ArenaAlloc();
+	
+	 cpu = (Cpu*)malloc(sizeof(Cpu));
+	 ram = (Ram*)malloc(sizeof(Ram));
+	 device = (Device*)malloc(sizeof(Device));
+	 disk = (Disk*)malloc(sizeof(Disk));
+	 disk->part = (Partitions*)malloc(sizeof(Partitions));
 
 	cpu_data(cpu);
 	memory_data(ram);
@@ -452,10 +531,15 @@ main()
 	printf("\nfree: %s\n", ram->free);
 
 	printf("================================================================\n");
-	
+
 	printf("os_version: %s\n", device->os_version);
 	printf("uptime: %s\n", device->uptime);
 
+
+	printf("================================================================\n");
+
+	printf("disk name: %s\n", disk->part->name);
+	printf("blocks: %lu\n", disk->part->blocks);
 
 	printf("================================================================\n");
 
@@ -468,6 +552,7 @@ main()
 	for (int i = 0; i < device->procs_count; i++) {
 		free(device->procs[i]);
 	}
+
 	free(device->procs);
 
 	free(cpu);
