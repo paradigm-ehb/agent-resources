@@ -18,57 +18,6 @@
 
 #define MAXC_CHAR 256
 
-
-typedef struct {
-
-	uint8_t *base; 
-	size_t idx;
-	size_t cap;
-
-} Arena;
-
-Arena 
-*ArenaAlloc(void) 
-{
-
-	return NULL;
-}
-
-void
-*ArenaRelease(Arena *arena) 
-{
-
-	return NULL;
-}
-
-Arena
-*ArenaPush(Arena *arena, size_t bytes)
-{
-
-	return NULL;
-}
-
-void
-ArenaPop(Arena *arena)
-{
-
-}
-
-uint64_t
-ArenaGetPos(Arena *arena)
-{
-
-	return 0;
-}
-
-void
-ArenaClear(Arena *arena)
-{
-	// TODO(nasr): check if there is more needed to do here
-	free(arena);
-}
-
-
 typedef struct
 {
 	uint64_t major;
