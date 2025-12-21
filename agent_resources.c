@@ -409,4 +409,26 @@ int agent_process_kill(pid_t pid, int signal) {
   return AGENT_OK;
 }
 
+char *agent_cpu_get_vendor(AgentCpu *a) { return a->data.vendor; }
+char *agent_cpu_get_model(AgentCpu *a) { return a->data.model; }
+char *agent_cpu_get_frequency(AgentCpu *a) { return a->data.frequency; }
+char *agent_cpu_get_cores(AgentCpu *a) { return a->data.cores; }
+
 char *agent_ram_get_total(AgentRam *a) { return a->data.total; }
+char *agent_ram_get_free(AgentRam *a) { return a->data.free; }
+
+Partition *agent_disk_get_partitions(AgentDisk *a) { return a->data.parts; }
+size_t agent_disk_get_count(AgentDisk *a) { return a->data.count; }
+
+uint64_t agent_partition_get_major(Partition *p) { return p->major; }
+uint64_t agent_partition_get_minor(Partition *p) { return p->minor; }
+uint64_t agent_partition_get_blocks(Partition *p) { return p->blocks; }
+char *agent_partition_get_name(Partition *p) { return p->name; }
+
+char *agent_device_get_os_version(AgentDevice *d) { return d->data.os_version; }
+char *agent_device_get_uptime(AgentDevice *d) { return d->data.uptime; }
+char **agent_device_get_procs(AgentDevice *d) { return d->data.procs; }
+size_t agent_device_get_procs_count(AgentDevice *d) {
+
+  return d->data.procs_count;
+}

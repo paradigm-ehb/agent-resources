@@ -1,6 +1,9 @@
 #ifndef AGENT_RESOURCES_H
 #define AGENT_RESOURCES_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define AGENT_RESOURCES_API_VERSION 1
 
 #define AGENT_OK 0
@@ -37,6 +40,20 @@ int agent_device_read(struct AgentDevice *device);
 
 int agent_process_kill(int pid, int signal);
 
+char *agent_cpu_get_vendor(AgentCpu *a);
+char *agent_cpu_get_model(AgentCpu *a);
+char *agent_cpu_get_frequency(AgentCpu *a);
+char *agent_cpu_get_cores(AgentCpu *a);
+
 char *agent_ram_get_total(AgentRam *a);
+char *agent_ram_get_free(AgentRam *a);
+
+size_t agent_disk_get_count(AgentDisk *a);
+
+char *agent_device_get_os_version(AgentDevice *d);
+char *agent_device_get_uptime(AgentDevice *d);
+char **agent_device_get_procs(AgentDevice *d);
+
+size_t agent_device_get_procs_count(AgentDevice *d);
 
 #endif
