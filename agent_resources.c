@@ -68,6 +68,20 @@ typedef struct {
   size_t procs_count;
 } Device;
 
+struct Proces {
+
+  char *pid;
+  char *command;
+  char *state;
+  char *ppid; // parent process id
+  char *pgrp; // process group id
+  char *session;
+  char *tty_nr;
+  char *tpgid;
+  char *utime;       // user cpu time
+  char *num_threads; // thread count
+};
+
 struct AgentCpu {
   Cpu data;
 };
@@ -106,6 +120,8 @@ char *agent_partition_get_name(Partition *p) { return p->name; }
 
 char *agent_device_get_os_version(AgentDevice *d) { return d->data.os_version; }
 char *agent_device_get_uptime(AgentDevice *d) { return d->data.uptime; }
+// TODO(nasr): fix the return type
+// @return returns a list of processes
 char **agent_device_get_procs(AgentDevice *d) { return d->data.procs; }
 size_t agent_device_get_procs_count(AgentDevice *d) {
 
@@ -162,7 +178,7 @@ AgentCpu *agent_cpu_create(void) { return calloc(1, sizeof(AgentCpu)); }
  * Return: AGENT_OK on success, AGENT_ERR_INVALID if out is NULL,
  *         AGENT_ERR_IO if /proc/cpuinfo cannot be opened
  */
-int agent_cpu_read_arm64(AgentCpu *out) {
+int agent_cpu_read_amd64(AgentCpu *out) {
   if (!out)
     return AGENT_ERR_INVALID;
 
@@ -196,25 +212,71 @@ int agent_cpu_read_arm64(AgentCpu *out) {
   return AGENT_OK;
 }
 
-int agent_cpu_read_amd64(AgentCpu *out) {
+int agent_cpu_get_enabled_cores_arm64(void) {
 
-  if (!out)
-    return AGENT_ERR_INVALID;
+  FILE *fp = fopen("/sys/devices/system/cpu/enabled", "r");
+  if (!fp)
+    return -1;
 
-  // Check for all available cores on the CPU
-  FILE *dP = opendir("/sys/devices/system/cpu");
+  char buffer[MAXC_CHAR];
+  if (!fgets(buffer, sizeof(buffer), fp)) {
+    fclose(fp);
+    return -1;
+  }
+  fclose(fp);
 
-  return AGENT_OK;
+  int max_core = 0;
+  int dash = 0;
+
+  for (size_t i = 0; buffer[i] != '\0'; ++i) {
+    char c = buffer[i];
+
+    if (c == '-') {
+      dash = 1;
+      continue;
+    }
+
+    if (!dash)
+      continue;
+
+    if (c < '0' || c > '9')
+      break;
+
+    max_core = max_core * 10 + (c - '0');
+  }
+
+  return max_core + 1;
 }
 
 /**
  * get a read of the enabled cpu cores to get a view of the folder structure
  * before starting to read every single of of them
  *
+ * call
+ *
  * */
-int agent_cpu_read_enabled_cores(AgentCpu *out) {
+int agent_cpu_read_enabled_cores(AgentCpu *out, int enabled_cpu_count) {
 
-  // TODO(nasr): read all enabled processes on linux
+  struct dirent *e;
+  if (!out)
+    return AGENT_ERR_INVALID;
+
+  FILE *fP = fopen("/sys/devices/system/cpu/enabled", "r");
+  while ((e = readdir(fP))) {
+    printf("%s", e->d_name);
+  }
+
+  return AGENT_OK;
+}
+
+int agent_cpu_read_arm64(AgentCpu *out) {
+
+  if (!out)
+    return AGENT_ERR_INVALID;
+
+  // Check for all available cores on the CPU
+  DIR *dP = opendir("/sys/devices/system/cpu");
+
   return AGENT_OK;
 }
 
@@ -383,9 +445,20 @@ void collect_processes(Device *dev) {
   closedir(d);
 }
 
-void collect_processes_stats(char *pid) {
+int collect_processes_stats(char *pid, Proces *a) {
 
-  // TODO(nasr): get the stats on an individual process
+  FILE *fp = fopen("pid", "r");
+
+  char buf[MAXC_CHAR];
+  fgets(buf, sizeof(buf), fp);
+
+  while (fgets(buf, sizeof(buf), fp)) {
+    printf("buf %s", buf);
+  }
+
+  fclose(fp);
+
+  return AGENT_OK;
 }
 
 /*

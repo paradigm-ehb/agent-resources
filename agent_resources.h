@@ -23,6 +23,8 @@ typedef struct AgentRam AgentRam;
 typedef struct AgentDisk AgentDisk;
 typedef struct AgentDevice AgentDevice;
 
+typedef struct Proces Proces;
+
 AgentCpu *agent_cpu_create(void);
 AgentRam *agent_ram_create(void);
 AgentDisk *agent_disk_create(void);
