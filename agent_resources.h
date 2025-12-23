@@ -1,16 +1,16 @@
-#ifndef AGENT_RESOURCES_H
-#define AGENT_RESOURCES_H
+#ifndef RESOURCES_H
+#define RESOURCES_H
 
 #include <stddef.h>
 #include <stdint.h>
 
-#define AGENT_RESOURCES_API_VERSION 1
+#define RESOURCES_API_VERSION 1
 
-#define AGENT_OK 0
-#define AGENT_ERR_IO 1
-#define AGENT_ERR_PARSE 2
-#define AGENT_ERR_PERM 3
-#define AGENT_ERR_INVALID 4
+#define OK 0
+#define ERR_IO 1
+#define ERR_PARSE 2
+#define ERR_PERM 3
+#define ERR_INVALID 4
 
 /**
  * These structs are intentionally incomplete here.
@@ -18,45 +18,45 @@
  *
  */
 
-typedef struct AgentCpu AgentCpu;
-typedef struct AgentRam AgentRam;
-typedef struct AgentDisk AgentDisk;
-typedef struct AgentDevice AgentDevice;
+typedef struct Cpu Cpu;
+typedef struct Ram Ram;
+typedef struct Disk Disk;
+typedef struct Device Device;
 
 typedef struct Proces Proces;
 
-AgentCpu *agent_cpu_create(void);
-AgentRam *agent_ram_create(void);
-AgentDisk *agent_disk_create(void);
-AgentDevice *agent_device_create(void);
+Cpu *cpu_create(void);
+Ram *ram_create(void);
+Disk *disk_create(void);
+Device *device_create(void);
 
-void agent_cpu_destroy(struct AgentCpu *cpu);
-void agent_ram_destroy(struct AgentRam *ram);
-void agent_disk_destroy(struct AgentDisk *disk);
-void agent_device_destroy(struct AgentDevice *device);
+void cpu_destroy(struct Cpu *cpu);
+void ram_destroy(struct Ram *ram);
+void disk_destroy(struct Disk *disk);
+void device_destroy(struct Device *device);
 
-int agent_cpu_read(struct AgentCpu *cpu);
-int agent_ram_read(struct AgentRam *ram);
-int agent_disk_read(struct AgentDisk *disk);
-int agent_device_read(struct AgentDevice *device);
+int cpu_read(struct Cpu *cpu);
+int ram_read(struct Ram *ram);
+int disk_read(struct Disk *disk);
+int device_read(struct Device *device);
 
-int agent_process_kill(int pid, int signal);
+int process_kill(int pid, int signal);
 
-char *agent_cpu_get_vendor(AgentCpu *a);
-char *agent_cpu_get_model(AgentCpu *a);
-char *agent_cpu_get_frequency(AgentCpu *a);
-char *agent_cpu_get_cores(AgentCpu *a);
+char *cpu_get_vendor(Cpu *a);
+char *cpu_get_model(Cpu *a);
+char *cpu_get_frequency(Cpu *a);
+char *cpu_get_cores(Cpu *a);
 
-char *agent_ram_get_total(AgentRam *a);
-char *agent_ram_get_free(AgentRam *a);
+char *ram_get_total(Ram *a);
+char *ram_get_free(Ram *a);
 
-size_t agent_disk_get_count(AgentDisk *a);
-char *agent_disk_get_partitions(AgentDisk *a);
+size_t disk_get_count(Disk *a);
+char *disk_get_partitions(Disk *a);
 
-char *agent_device_get_os_version(AgentDevice *d);
-char *agent_device_get_uptime(AgentDevice *d);
-char **agent_device_get_procs(AgentDevice *d);
+char *device_get_os_version(Device *d);
+char *device_get_uptime(Device *d);
+char **device_get_procs(Device *d);
 
-size_t agent_device_get_procs_count(AgentDevice *d);
+size_t device_get_procs_count(Device *d);
 
 #endif

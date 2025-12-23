@@ -19,14 +19,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXC_CHAR 256
+typedef uint64_t u64;
+typedef uint32_t u32;
+typedef uint16_t u16;
+
+#define OK 0
+#define ERR_IO 1
+#define ERR_PARSE 2
+#define ERR_PERM 3
+#define ERR_INVALID 4
 
 enum {
   BUFFER_SIZE_SMALL = 128,
   BUFFER_SIZE_DEFAULT = 256,
   BUFFER_SIZE_LARGE = 512,
-  PATH_MAX_LEN = 4096 // Standard for Linux paths
+  PATH_MAX_LEN = 4096
 };
+
 /*
  * Represents a disk partition with major/minor device numbers and block count.
  */
@@ -41,39 +50,39 @@ typedef struct {
  * CPU information structure containing vendor, model, frequency, and core
  * count.
  */
-typedef struct {
-  char vendor[MAXC_CHAR];
-  char model[MAXC_CHAR];
-  char frequency[MAXC_CHAR];
-  char cores[MAXC_CHAR];
-} Cpu;
+struct Cpu {
+  char vendor[BUFFER_SIZE_DEFAULT];
+  char model[BUFFER_SIZE_DEFAULT];
+  char frequency[BUFFER_SIZE_SMALL];
+  char cores[BUFFER_SIZE_SMALL];
+};
 
 /*
  * RAM information structure containing total and free memory.
  */
-typedef struct {
-  char total[MAXC_CHAR];
-  char free[MAXC_CHAR];
-} Ram;
+struct Ram {
+  char total[BUFFER_SIZE_DEFAULT];
+  char free[BUFFER_SIZE_DEFAULT];
+};
 
 /*
  * Dynamic array of disk partitions with capacity tracking.
  */
-typedef struct {
+struct Disk {
   Partition *parts;
   size_t count;
   size_t cap;
-} Disk;
+};
 
 /*
  * Device information including OS version, uptime, and running processes.
  */
-typedef struct {
-  char os_version[MAXC_CHAR];
-  char uptime[MAXC_CHAR];
+struct Device {
+  char os_version[BUFFER_SIZE_DEFAULT];
+  char uptime[BUFFER_SIZE_DEFAULT];
   char **procs;
   size_t procs_count;
-} Device;
+};
 
 struct Proces {
 
@@ -89,51 +98,32 @@ struct Proces {
   char *num_threads; // thread count
 };
 
-struct AgentCpu {
-  Cpu data;
-};
-
-struct AgentRam {
-  Ram data;
-};
-
-struct AgentDisk {
-  Disk data;
-};
-
-struct AgentDevice {
-  Device data;
-};
-
 /**
  * Getters for data models to retreive in CGO
  *
  * */
-char *agent_cpu_get_vendor(AgentCpu *a) { return a->data.vendor; }
-char *agent_cpu_get_model(AgentCpu *a) { return a->data.model; }
-char *agent_cpu_get_frequency(AgentCpu *a) { return a->data.frequency; }
-char *agent_cpu_get_cores(AgentCpu *a) { return a->data.cores; }
+char *cpu_get_vendor(Cpu *a) { return a->vendor; }
+char *cpu_get_model(Cpu *a) { return a->model; }
+char *cpu_get_frequency(Cpu *a) { return a->frequency; }
+char *cpu_get_cores(Cpu *a) { return a->cores; }
 
-char *agent_ram_get_total(AgentRam *a) { return a->data.total; }
-char *agent_ram_get_free(AgentRam *a) { return a->data.free; }
+char *ram_get_total(Ram *a) { return a->total; }
+char *ram_get_free(Ram *a) { return a->free; }
 
-char *agent_disk_get_partitions(AgentDisk *a) { return a->data.parts->name; }
-size_t agent_disk_get_count(AgentDisk *a) { return a->data.count; }
+char *disk_get_partitions(Disk *a) { return a->parts->name; }
+size_t disk_get_count(Disk *a) { return a->count; }
 
-uint64_t agent_partition_get_major(Partition *p) { return p->major; }
-uint64_t agent_partition_get_minor(Partition *p) { return p->minor; }
-uint64_t agent_partition_get_blocks(Partition *p) { return p->blocks; }
-char *agent_partition_get_name(Partition *p) { return p->name; }
+uint64_t partition_get_major(Partition *p) { return p->major; }
+uint64_t partition_get_minor(Partition *p) { return p->minor; }
+uint64_t partition_get_blocks(Partition *p) { return p->blocks; }
+char *partition_get_name(Partition *p) { return p->name; }
 
-char *agent_device_get_os_version(AgentDevice *d) { return d->data.os_version; }
-char *agent_device_get_uptime(AgentDevice *d) { return d->data.uptime; }
+char *device_get_os_version(Device *d) { return d->os_version; }
+char *device_get_uptime(Device *d) { return d->uptime; }
 // TODO(nasr): fix the return type
 // @return returns a list of processes
-char **agent_device_get_procs(AgentDevice *d) { return d->data.procs; }
-size_t agent_device_get_procs_count(AgentDevice *d) {
-
-  return d->data.procs_count;
-}
+char **device_get_procs(Device *d) { return d->procs; }
+size_t device_get_procs_count(Device *d) { return d->procs_count; }
 
 /*
  * disk_push_partition - Add a partition to the disk structure
@@ -169,63 +159,72 @@ int is_numeric(const char *s) {
 }
 
 /*
- * agent_cpu_create - Allocate and initialize a new AgentCpu structure
+ * cpu_create - Allocate and initialize a new Cpu structure
  *
- * Return: Pointer to newly allocated AgentCpu, or NULL on allocation failure
+ * Return: Pointer to newly allocated Cpu, or NULL on allocation failure
  */
-AgentCpu *agent_cpu_create(void) { return calloc(1, sizeof(AgentCpu)); }
+Cpu *cpu_create(void) { return calloc(1, sizeof(Cpu)); }
 
 /*
- * agent_cpu_read - Read CPU information from /proc/cpuinfo
- * @out: Pointer to AgentCpu structure to populate
+ * cpu_read - Read CPU information from /proc/cpuinfo
+ * @out: Pointer to Cpu structure to populate
  *
  * Reads vendor_id, model name, cpu MHz, and cpu cores from /proc/cpuinfo.
  * The function reads the first occurrence of each field.
  *
- * Return: AGENT_OK on success, AGENT_ERR_INVALID if out is NULL,
- *         AGENT_ERR_IO if /proc/cpuinfo cannot be opened
+ * Return: OK on success, AGENT_ERR_INVALID if out is NULL,
+ *         ERR_IO if /proc/cpuinfo cannot be opened
  */
-int agent_cpu_read_amd64(AgentCpu *out) {
+
+/**
+ * get a read of the enabled cpu cores to get a view of the folder structure
+ * before starting to read every single of of them
+ *
+ * call
+ *
+ * */
+int cpu_read_enabled_core_cpu_frequency(Cpu *out, int enabled_cpu_count) {
   if (!out)
-    return AGENT_ERR_INVALID;
+    return ERR_INVALID;
 
-  FILE *f = fopen("/proc/cpuinfo", "r");
-  if (!f)
-    return AGENT_ERR_IO;
+  char curr_freq[BUFFER_SIZE_SMALL];
+  char path[128];
 
-  char buf[MAXC_CHAR];
-  while (fgets(buf, sizeof(buf), f)) {
-    char *colon = strchr(buf, ':');
-    if (!colon)
-      continue;
+  snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/cpuinfo_cur_freq",
+           enabled_cpu_count);
 
-    char *val = colon + 1;
-    while (*val == ' ')
-      val++;
-
-    size_t len = strcspn(val, "\n");
-
-    if (!strncmp(buf, "vendor_id", 9))
-      memcpy(out->data.vendor, val, len);
-    else if (!strncmp(buf, "model name", 10))
-      memcpy(out->data.model, val, len);
-    else if (!strncmp(buf, "cpu MHz", 7))
-      memcpy(out->data.frequency, val, len);
-    else if (!strncmp(buf, "cpu cores", 9))
-      memcpy(out->data.cores, val, len);
+  FILE *fp = fopen(path, "r");
+  if (!fgets(curr_freq, sizeof(curr_freq), fp)) {
+    return ERR_PARSE;
   }
 
-  fclose(f);
-  return AGENT_OK;
+  size_t len = sizeof(curr_freq) / sizeof(char);
+  memcpy(out->frequency, curr_freq, len);
+  out->frequency[len] = '\0';
+  // AGAIN!!! DONT FORGET TO NULL TERMINATE STRINGS
+
+  fclose(fp);
+
+  return OK;
+}
+// TODO(nasr): i was doing something with directories i forgot what
+
+// TODO(nasr): read the binary /proc/device-tree/model
+// it contains the device model + cpu model
+int cpu_read_cpu_model_name_arm64(Cpu *out) {
+
+  printf("%s", out->frequency);
+
+  return OK;
 }
 
-int agent_cpu_get_enabled_cores_arm64(void) {
+int cpu_get_enabled_cores_arm64(void) {
 
   FILE *fp = fopen("/sys/devices/system/cpu/enabled", "r");
   if (!fp)
     return -1;
 
-  char buffer[MAXC_CHAR];
+  char buffer[BUFFER_SIZE_DEFAULT];
   if (!fgets(buffer, sizeof(buffer), fp)) {
     fclose(fp);
     return -1;
@@ -255,89 +254,88 @@ int agent_cpu_get_enabled_cores_arm64(void) {
   return max_core + 1;
 }
 
-/**
- * get a read of the enabled cpu cores to get a view of the folder structure
- * before starting to read every single of of them
- *
- * call
- *
- * */
-int agent_cpu_read_enabled_core_cpu_frequency(AgentCpu *out,
-                                              int enabled_cpu_count) {
-  if (!out)
-    return AGENT_ERR_INVALID;
-
-  char curr_freq[MAXC_CHAR];
-  char path[128];
-
-  snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/cpuinfo_cur_freq",
-           enabled_cpu_count);
-
-  FILE *fp = fopen(path, "r");
-  if (!fgets(curr_freq, sizeof(curr_freq), fp)) {
-    return AGENT_ERR_PARSE;
-  }
-
-  size_t len = sizeof(curr_freq) / sizeof(char);
-  memcpy(out->data.frequency, curr_freq, len);
-  out->data.frequency[len] = '\0';
-  // AGAIN!!! DONT FORGET TO NULL TERMINATE STRINGS
-
-  fclose(fp);
-
-  return AGENT_OK;
-}
-// TODO(nasr): i was doing something with directories i forgot what
-
-// TODO(nasr): read the binary /proc/device-tree/model
-// it contains the device model + cpu model
-int agent_cpu_read_cpu_model_name_arm64(AgentCpu *out) {
-
-  printf("%s", out->data.frequency);
-
-  return AGENT_OK;
-}
-
-int agent_cpu_read_arm64(AgentCpu *out) {
+int cpu_read_arm64(Cpu *out) {
 
   if (!out)
-    return AGENT_ERR_INVALID;
+    return ERR_INVALID;
 
   // TODO(nasr): gather all information arm
-  return AGENT_OK;
+  return OK;
+}
+
+int cpu_read_amd64(Cpu *out) {
+  if (!out)
+    return ERR_INVALID;
+
+  FILE *f = fopen("/proc/cpuinfo", "r");
+  if (!f)
+    return ERR_IO;
+
+  char buf[BUFFER_SIZE_LARGE];
+  while (fgets(buf, sizeof(buf), f)) {
+    char *colon = strchr(buf, ':');
+    if (!colon)
+      continue;
+
+    char *val = colon + 1;
+    while (*val == ' ')
+      val++;
+
+    size_t len = strcspn(val, "\n");
+
+    if (!strncmp(buf, "vendor_id", 9))
+      memcpy(out->vendor, val, len);
+    else if (!strncmp(buf, "model name", 10))
+      memcpy(out->model, val, len);
+    else if (!strncmp(buf, "cpu MHz", 7))
+      memcpy(out->frequency, val, len);
+    else if (!strncmp(buf, "cpu cores", 9))
+      memcpy(out->cores, val, len);
+  }
+
+  fclose(f);
+  return OK;
+}
+
+int cpu_read(Cpu *out) {
+
+  // TODO(nasr): C macro check for architecture and call appropriate function
+  printf("%s", out->model);
+
+  return OK;
 }
 
 /*
- * agent_cpu_destroy - Free an AgentCpu structure
- * @c: Pointer to AgentCpu to free
+ * cpu_destroy - Free an Cpu structure
+ * @c: Pointer to Cpu to free
  */
-void agent_cpu_destroy(AgentCpu *c) { free(c); }
+void cpu_destroy(Cpu *c) { free(c); }
 
 /*
- * agent_ram_create - Allocate and initialize a new AgentRam structure
+ * ram_create - Allocate and initialize a new Ram structure
  *
- * Return: Pointer to newly allocated AgentRam, or NULL on allocation failure
+ * Return: Pointer to newly allocated Ram, or NULL on allocation failure
  */
-AgentRam *agent_ram_create(void) { return calloc(1, sizeof(AgentRam)); }
+Ram *ram_create(void) { return calloc(1, sizeof(Ram)); }
 
 /*
- * agent_ram_read - Read RAM information from /proc/meminfo
- * @out: Pointer to AgentRam structure to populate
+ * ram_read - Read RAM information from /proc/meminfo
+ * @out: Pointer to Ram structure to populate
  *
  * Reads MemTotal and MemFree from /proc/meminfo in kilobytes.
  *
- * Return: AGENT_OK on success, AGENT_ERR_INVALID if out is NULL,
- *         AGENT_ERR_IO if /proc/meminfo cannot be opened
+ * Return: OK on success, AGENT_ERR_INVALID if out is NULL,
+ *         ERR_IO if /proc/meminfo cannot be opened
  */
-int agent_ram_read(AgentRam *out) {
+int ram_read(Ram *out) {
   if (!out)
-    return AGENT_ERR_INVALID;
+    return ERR_INVALID;
 
   FILE *f = fopen("/proc/meminfo", "r");
   if (!f)
-    return AGENT_ERR_IO;
+    return ERR_IO;
 
-  char buf[MAXC_CHAR];
+  char buf[BUFFER_SIZE_LARGE];
   while (fgets(buf, sizeof(buf), f)) {
     char *colon = strchr(buf, ':');
     if (!colon)
@@ -350,53 +348,53 @@ int agent_ram_read(AgentRam *out) {
     size_t len = strcspn(val, " k\n");
 
     if (!strncmp(buf, "MemTotal", 8))
-      memcpy(out->data.total, val, len);
+      memcpy(out->total, val, len);
     else if (!strncmp(buf, "MemFree", 7))
-      memcpy(out->data.free, val, len);
+      memcpy(out->free, val, len);
   }
 
   fclose(f);
-  return AGENT_OK;
+  return OK;
 }
 
 /*
- * agent_ram_destroy - Free an AgentRam structure
- * @r: Pointer to AgentRam to free
+ * ram_destroy - Free an Ram structure
+ * @r: Pointer to Ram to free
  */
-void agent_ram_destroy(AgentRam *r) { free(r); }
+void ram_destroy(Ram *r) { free(r); }
 
 /*
- * agent_disk_create - Allocate and initialize a new AgentDisk structure
+ * disk_create - Allocate and initialize a new Disk structure
  *
- * Return: Pointer to newly allocated AgentDisk, or NULL on allocation failure
+ * Return: Pointer to newly allocated Disk, or NULL on allocation failure
  */
-AgentDisk *agent_disk_create(void) { return calloc(1, sizeof(AgentDisk)); }
+Disk *disk_create(void) { return calloc(1, sizeof(Disk)); }
 
 /*
- * agent_disk_read - Read disk partition information from /proc/partitions
- * @out: Pointer to AgentDisk structure to populate
+ * disk_read - Read disk partition information from /proc/partitions
+ * @out: Pointer to Disk structure to populate
  *
  * Reads all partitions from /proc/partitions, storing major/minor device
  * numbers, block count, and device name for each partition. Skips the header
  * line and any malformed entries.
  *
- * Return: AGENT_OK on success, AGENT_ERR_INVALID if out is NULL,
- *         AGENT_ERR_IO if /proc/partitions cannot be opened
+ * Return: OK on success, AGENT_ERR_INVALID if out is NULL,
+ *         ERR_IO if /proc/partitions cannot be opened
  */
-int agent_disk_read(AgentDisk *out) {
+int disk_read(Disk *out) {
   if (!out)
-    return AGENT_ERR_INVALID;
+    return ERR_INVALID;
 
   FILE *f = fopen("/proc/partitions", "r");
   if (!f)
-    return AGENT_ERR_IO;
+    return ERR_IO;
 
-  char buf[MAXC_CHAR];
+  char buf[BUFFER_SIZE_DEFAULT];
   fgets(buf, sizeof(buf), f);
 
   while (fgets(buf, sizeof(buf), f)) {
     Partition p = {0};
-    char name[MAXC_CHAR];
+    char name[BUFFER_SIZE_DEFAULT];
 
     if (sscanf(buf, "%lu %lu %lu %255s", &p.major, &p.minor, &p.blocks, name) !=
         4)
@@ -406,36 +404,34 @@ int agent_disk_read(AgentDisk *out) {
     if (!p.name)
       continue;
 
-    disk_push_partition(&out->data, p);
+    disk_push_partition(out, p);
   }
 
   fclose(f);
-  return AGENT_OK;
+  return OK;
 }
 
 /*
- * agent_disk_destroy - Free an AgentDisk structure and all partition data
- * @d: Pointer to AgentDisk to free
+ * disk_destroy - Free an Disk structure and all partition data
+ * @d: Pointer to Disk to free
  *
  * Frees all dynamically allocated partition names and the partition array.
  */
-void agent_disk_destroy(AgentDisk *d) {
+void disk_destroy(Disk *d) {
   if (!d)
     return;
-  for (size_t i = 0; i < d->data.count; ++i)
-    free(d->data.parts[i].name);
-  free(d->data.parts);
+  for (size_t i = 0; i < d->count; ++i)
+    free(d->parts[i].name);
+  free(d->parts);
   free(d);
 }
 
 /*
- * agent_device_create - Allocate and initialize a new AgentDevice structure
+ * device_create - Allocate and initialize a new Device structure
  *
- * Return: Pointer to newly allocated AgentDevice, or NULL on allocation failure
+ * Return: Pointer to newly allocated Device, or NULL on allocation failure
  */
-AgentDevice *agent_device_create(void) {
-  return calloc(1, sizeof(AgentDevice));
-}
+Device *device_create(void) { return calloc(1, sizeof(Device)); }
 
 /*
  * collect_processes - Collect all running process IDs from /proc
@@ -476,35 +472,35 @@ int collect_processes_stats(char *pid, Proces *out) {
 
   FILE *fp = fopen(pid, "r");
 
-  char buf[MAXC_CHAR];
+  char buf[BUFFER_SIZE_SMALL];
   fgets(buf, sizeof(buf), fp);
 
   if (!fgets(buf, sizeof(buf), fp))
-    return AGENT_ERR_PARSE;
+    return ERR_PARSE;
 
   // TODO(nasr): parse buffer to correct stuff
   // TODO(nasr): fix the length
-  memcpy(out->pid, buf, 256);
+  memcpy(out->pid, buf, BUFFER_SIZE_SMALL);
 
   fclose(fp);
 
-  return AGENT_OK;
+  return OK;
 }
 
 /*
- * agent_device_read - Read device information including OS version, uptime, and
+ * device_read - Read device information including OS version, uptime, and
  * processes
- * @out: Pointer to AgentDevice structure to populate
+ * @out: Pointer to Device structure to populate
  *
  * Reads OS version from /proc/version, uptime from /proc/uptime, and collects
  * all running process IDs from /proc directory.
  *
- * Return: AGENT_OK on success, AGENT_ERR_INVALID if out is NULL,
- *         AGENT_ERR_IO if required files cannot be opened
+ * Return: OK on success, AGENT_ERR_INVALID if out is NULL,
+ *         ERR_IO if required files cannot be opened
  */
-int agent_device_read(AgentDevice *out) {
+int device_read(Device *out) {
   if (!out)
-    return AGENT_ERR_INVALID;
+    return ERR_INVALID;
 
   FILE *u = fopen("/proc/uptime", "r");
   FILE *v = fopen("/proc/version", "r");
@@ -513,56 +509,56 @@ int agent_device_read(AgentDevice *out) {
       fclose(u);
     if (v)
       fclose(v);
-    return AGENT_ERR_IO;
+    return ERR_IO;
   }
 
-  fgets(out->data.uptime, sizeof(out->data.uptime), u);
-  fgets(out->data.os_version, sizeof(out->data.os_version), v);
+  fgets(out->uptime, sizeof(out->uptime), u);
+  fgets(out->os_version, sizeof(out->os_version), v);
 
   fclose(u);
   fclose(v);
 
-  collect_processes(&out->data);
-  return AGENT_OK;
+  collect_processes(out);
+  return OK;
 }
 
 /*
- * agent_device_destroy - Free an AgentDevice structure and all process data
- * @d: Pointer to AgentDevice to free
+ * device_destroy - Free an Device structure and all process data
+ * @d: Pointer to Device to free
  *
  * Frees all dynamically allocated process ID strings and the process array.
  */
-void agent_device_destroy(AgentDevice *d) {
+void device_destroy(Device *d) {
   if (!d)
     return;
-  for (size_t i = 0; i < d->data.procs_count; ++i)
-    free(d->data.procs[i]);
-  free(d->data.procs);
+  for (size_t i = 0; i < d->procs_count; ++i)
+    free(d->procs[i]);
+  free(d->procs);
   free(d);
 }
 
 /*
- * agent_process_kill - Send a signal to a process
+ * process_kill - Send a signal to a process
  * @pid: Process ID to signal
  * @signal: Signal number to send (e.g., SIGTERM, SIGKILL)
  *
  * Wrapper around kill(2) system call with error handling.
  *
- * Return: AGENT_OK on success,
- *         AGENT_ERR_INVALID if pid is invalid or process not found,
- *         AGENT_ERR_PERM if permission denied,
- *         AGENT_ERR_IO for other errors
+ * Return: OK on success,
+ *         ERR_INVALID if pid is invalid or process not found,
+ *         ERR_PERM if permission denied,
+ *         ERR_IO for other errors
  */
-int agent_process_kill(pid_t pid, int signal) {
+int process_kill(pid_t pid, int signal) {
   if (pid <= 0)
-    return AGENT_ERR_INVALID;
+    return ERR_INVALID;
 
   if (kill(pid, signal) == -1) {
     if (errno == EPERM)
-      return AGENT_ERR_PERM;
+      return ERR_PERM;
     if (errno == ESRCH)
-      return AGENT_ERR_INVALID;
-    return AGENT_ERR_IO;
+      return ERR_INVALID;
+    return ERR_IO;
   }
-  return AGENT_OK;
+  return OK;
 }
