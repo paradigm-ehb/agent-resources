@@ -9,3 +9,4 @@ https://www.gingerbill.org/series/memory-allocation-strategies/
 https://www.youtube.com/watch?v=jgiMagdjA1s
 https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator
 https://github.com/EpicGamesExt/raddebugger/blob/master/src/base/base_arena.c
+https://www.geeksforgeeks.org/c/inline-function-in-c/

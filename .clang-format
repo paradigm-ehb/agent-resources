@@ -4,10 +4,10 @@ Language: C
 # -------------------------------------------------------------------
 # Indentation & layout
 # -------------------------------------------------------------------
-IndentWidth: 4
-TabWidth: 4
+IndentWidth: 2
+TabWidth: 2
 UseTab: Never
-ContinuationIndentWidth: 4
+ContinuationIndentWidth: 2
 
 IndentCaseLabels: false
 IndentGotoLabels: false
@@ -62,7 +62,7 @@ SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
 
 # Pointer style: type* name
-PointerAlignment: Left
+PointerAlignment: Right 
 DerivePointerAlignment: false
 
 # -------------------------------------------------------------------
