@@ -225,40 +225,44 @@ cpu_read_enabled_core_cpu_frequency(Cpu *out, int enabled_cpu_count)
 {
   if (!out)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
-  char curr_freq[BUFFER_SIZE_SMALL];
   char path[PATH_MAX_LEN];
-
-  snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/cpuinfo_cur_freq",
-    enabled_cpu_count);
-
-  FILE *fp = fopen(path, "r");
-  if (!fgets(curr_freq, sizeof(curr_freq), fp))
+  for (i8 i = 0; i <= enabled_cpu_count; i++)
   {
+    snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq", i);
+  }
+  FILE *fp = fopen(path, "r");
+  // TODO(nasr): do a **cores  see each frequency individually together with the utilization
+  if (!fp)
+  {
+    assert(fp);
+    return ERR_IO;
+  }
+
+  u64 freq = 0;
+  if (fscanf(fp, "%lu", &freq) != 1)
+  {
+    fclose(fp);
+    assert(0);
     return ERR_PARSE;
   }
 
-  size_t len = sizeof(curr_freq) / sizeof(char);
-  memcpy(out->frequency, curr_freq, len);
-  out->frequency[len] = '\0';
-  // AGAIN!!! DONT FORGET TO NULL TERMINATE STRINGS
-
   fclose(fp);
 
+  snprintf(out->frequency, sizeof(out->frequency), "%lu", freq);
   return OK;
 }
-// TODO(nasr): i was doing something with directories i forgot what
 
-// TODO(nasr): read the binary /proc/device-tree/model
-// it contains the device model + cpu model
 int
 cpu_read_cpu_model_name_arm64(Cpu *out)
 {
   FILE *of = fopen("/proc/device-tree/model", "rb");
   if (!of)
   {
+    assert(0);
     return ERR_IO;
   }
 
@@ -275,6 +279,7 @@ cpu_read_cpu_model_name_arm64(Cpu *out)
   size_t n = fread(buffer, 1, sizeof(buffer), of);
   if (n == 0)
   {
+    assert(0);
     return ERR_IO;
   }
 
@@ -293,49 +298,43 @@ cpu_read_cpu_model_name_arm64(Cpu *out)
 }
 
 int
-cpu_get_enabled_cores_arm64(void)
+cpu_get_cores_enabled_arm(Cpu *out)
 {
-  FILE *fp = fopen("/sys/devices/system/cpu/enabled", "r");
-  if (!fp)
-  {
-    return -1;
-  }
+  assert(out);
 
-  char buffer[BUFFER_SIZE_DEFAULT];
-  if (!fgets(buffer, sizeof(buffer), fp))
-  {
-    fclose(fp);
-    return -1;
-  }
+  FILE *fp = fopen("/sys/devices/system/cpu/enabled", "r");
+  assert(fp);
+
+  char buf[BUFFER_SIZE_DEFAULT];
+  assert(fgets(buf, sizeof(buf), fp));
   fclose(fp);
 
-  int max_core = 0;
-  int dash = 0;
+  int max_cpu = 0;
+  char *p = buf;
 
-  for (size_t i = 0; buffer[i] != '\0'; ++i)
+  while (*p)
   {
-    char c = buffer[i];
-
-    if (c == '-')
+    if (*p >= '0' && *p <= '9')
     {
-      dash = 1;
-      continue;
-    }
+      int v = 0;
+      while (*p >= '0' && *p <= '9')
+      {
+        v = v * 10 + (*p++ - '0');
+      }
 
-    if (!dash)
+      if (v > max_cpu)
+      {
+        max_cpu = v;
+      }
+    }
+    else
     {
-      continue;
+      ++p;
     }
-
-    if (c < '0' || c > '9')
-    {
-      break;
-    }
-
-    max_core = max_core * 10 + (c - '0');
   }
 
-  return max_core + 1;
+  out->cores = (u32)max_cpu;
+  return OK;
 }
 
 int
@@ -343,10 +342,13 @@ cpu_read_arm64(Cpu *out)
 {
   if (!out)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
+  cpu_get_cores_enabled_arm(out);
   cpu_read_cpu_model_name_arm64(out);
+  cpu_read_enabled_core_cpu_frequency(out, (int)out->cores);
 
   return OK;
 }
@@ -356,12 +358,16 @@ cpu_read_amd64(Cpu *out)
 {
   if (!out)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
   FILE *f = fopen("/proc/cpuinfo", "r");
   if (!f)
+  {
+    assert(0);
     return ERR_IO;
+  }
 
   char buf[BUFFER_SIZE_LARGE];
   while (fgets(buf, sizeof(buf), f))
@@ -390,7 +396,7 @@ cpu_read_amd64(Cpu *out)
     }
     if (!strncmp(buf, "cpu cores", 9))
     {
-      memcpy(out->cores, val, len);
+      out->cores = (u32)atoi(buf);
     }
   }
 
@@ -401,10 +407,9 @@ cpu_read_amd64(Cpu *out)
 int
 cpu_read(Cpu *out)
 {
-  return OK;
-
   if (!out)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
@@ -431,6 +436,7 @@ cpu_read(Cpu *out)
 #else
 #error "Unsupported architecture"
 #endif
+  return OK;
 }
 
 /*
@@ -457,11 +463,17 @@ int
 ram_read(Ram *out)
 {
   if (!out)
+  {
+    assert(0);
     return ERR_INVALID;
+  }
 
   FILE *f = fopen("/proc/meminfo", "r");
   if (!f)
+  {
+    assert(0);
     return ERR_IO;
+  }
 
   char buf[BUFFER_SIZE_LARGE];
   while (fgets(buf, sizeof(buf), f))
@@ -521,11 +533,17 @@ int
 disk_read(Disk *out, mem_arena *arena)
 {
   if (!out)
+  {
+    assert(0);
     return ERR_INVALID;
+  }
 
   FILE *f = fopen("/proc/partitions", "r");
   if (!f)
+  {
+    assert(0);
     return ERR_IO;
+  }
 
   char buf[BUFFER_SIZE_DEFAULT];
 
@@ -580,7 +598,10 @@ process_list_collect(Process_List *list, mem_arena *arena)
 {
   DIR *d = opendir("/proc");
   if (!d)
+  {
+    assert(0);
     return ERR_IO;
+  }
 
   struct dirent *e = 0;
 
@@ -592,6 +613,7 @@ process_list_collect(Process_List *list, mem_arena *arena)
     if (!list->items)
     {
       closedir(d);
+      assert(0);
       return ERR_IO;
     }
   }
@@ -647,7 +669,10 @@ process_read(i32 pid, Process *out)
 
   FILE *fp = fopen(path, "r");
   if (!fp)
+  {
+    assert(0);
     return ERR_IO;
+  }
 
   char buf[BUFFER_SIZE_LARGE];
 
@@ -739,28 +764,31 @@ device_up_time(Device *out)
 {
   if (!out)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
   FILE *f = fopen("/proc/uptime", "r");
   if (!f)
   {
+    assert(0);
     return ERR_IO;
   }
 
   i64 s;
-  int result = fscanf(f, "%lld", &s);
+  int result = fscanf(f, "%ld", &s);
   fclose(f);
 
   if (result != 1)
   {
+    assert(0);
     return ERR_IO;
   }
 
   i64 day = s / 86400;
   i64 hour = s % 86400 / 3600;
   i64 min = s % 3600 / 60;
-  sprintf(out->uptime, "%lldd %lldh %lldm", day, hour, min);
+  sprintf(out->uptime, "%ldd %ldh %ldm", day, hour, min);
   return OK;
 }
 
@@ -780,6 +808,7 @@ device_read(Device *out)
 {
   if (!out)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
@@ -839,6 +868,7 @@ process_kill(pid_t pid, int signal)
 {
   if (pid <= 0)
   {
+    assert(0);
     return ERR_INVALID;
   }
 
@@ -846,13 +876,16 @@ process_kill(pid_t pid, int signal)
   {
     if (errno == EPERM)
     {
+      assert(0);
       return ERR_PERM;
     }
     if (errno == ESRCH)
     {
+      assert(0);
       return ERR_INVALID;
     }
 
+    assert(0);
     return ERR_IO;
   }
   return OK;

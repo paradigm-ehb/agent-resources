@@ -87,7 +87,7 @@ struct Cpu {
   char vendor[BUFFER_SIZE_DEFAULT];
   char model[BUFFER_SIZE_DEFAULT];
   char frequency[BUFFER_SIZE_SMALL];
-  char cores[BUFFER_SIZE_SMALL];
+  u32 cores;
 };
 
 struct Ram {
