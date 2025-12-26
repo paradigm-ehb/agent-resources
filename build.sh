@@ -21,7 +21,7 @@ CFLAGS="
 -Wcast-align
 -Wcast-qual
 -Wwrite-strings
--Wformat=0
+-Wformat=2
 -Wformat-security 
 -Wnull-dereference
 -Wmisleading-indentation
