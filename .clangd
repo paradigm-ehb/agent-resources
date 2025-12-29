@@ -16,7 +16,7 @@ CompileFlags:
     - -Wcast-qual
     - -Wwrite-strings
     - -Wswitch-enum
-    - -Wformat=0
+    - -Wformat=2
     - -Wstrict-aliasing=2
     - -Werror=implicit-function-declaration
     - -Werror=implicit-int
