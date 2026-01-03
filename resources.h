@@ -3,40 +3,10 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "base.h"
+#include "arena.c"
 
 #define RESOURCES_API_VERSION 1
-
-#define OK 0
-#define ERR_IO 1
-#define ERR_PARSE 2
-#define ERR_PERM 3
-#define ERR_INVALID 4
-
-enum {
-  BUFFER_SIZE_SMALL = 128,
-  BUFFER_SIZE_DEFAULT = 256,
-  BUFFER_SIZE_LARGE = 512,
-  PATH_MAX_LEN = 4096
-};
-
-typedef uint64_t u64;
-typedef uint32_t u32;
-typedef uint16_t u16;
-typedef uint8_t u8;
-
-typedef int8_t i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-
-typedef i16 b16;
-typedef i32 b32;
-
-static inline u64 KiB(u64 n) { return n << 10; }
-static inline u64 MiB(u64 n) { return n << 20; }
-static inline u64 GiB(u64 n) { return n << 30; }
-
-typedef struct mem_arena mem_arena;
 
 typedef struct Cpu Cpu;
 typedef struct Ram Ram;

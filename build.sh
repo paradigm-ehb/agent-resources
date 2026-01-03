@@ -4,9 +4,9 @@ set -eu
 CC=cc
 AR=ar
 
-SRC=agent_resources.c
+SRC=resources.c
 OUT_DIR=build
-OUT_OBJ=$OUT_DIR/agent_resources.o
+OUT_OBJ=$OUT_DIR/resources.o
 OUT_LIB=$OUT_DIR/libagent_resources.a
 
 CFLAGS="
