@@ -12,3 +12,4 @@ https://github.com/EpicGamesExt/raddebugger/blob/master/src/base/base_arena.c
 https://www.geeksforgeeks.org/c/inline-function-in-c/
 
 https://libdnf.readthedocs.io/en/dnf-5-devel/tutorial/install-build-deps.html
+https://man.archlinux.org/man/libalpm.3#Topics
