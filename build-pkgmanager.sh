@@ -2,7 +2,7 @@
 set -eu
 
 CXX=c++
-SRC=dnf_handler.cpp
+SRC=libdnf_handler.cpp
 OUT=build/pkgmanager
 
 CXXFLAGS="

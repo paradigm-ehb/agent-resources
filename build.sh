@@ -33,6 +33,7 @@ CFLAGS="
 -D_POSIX_C_SOURCE=200809L
 "
 
+# TODO(nasr): compile the package manager libs, static bin
 mkdir -p "$OUT_DIR"
 
 echo "Compiling object..."

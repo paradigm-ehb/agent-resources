@@ -27,7 +27,16 @@ typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
 
-typedef i16 b16;
+typedef float  f32;
+typedef double f64;
+
 typedef i32 b32;
+typedef i16 b16;
+typedef u8 b8;
+
+#define TRUE  1
+#define FALSE 0
+
+
 
 #endif 

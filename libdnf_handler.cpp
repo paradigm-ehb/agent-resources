@@ -50,11 +50,10 @@ run_transaction(libdnf5::Base *base, std::string package_name)
 
   libdnf5::repo::PackageDownloader downloader(*base);
 
-  for (auto & tspkg : transaction.get_transaction_packages())
+  for (auto &tspkg : transaction.get_transaction_packages())
   {
     if (libdnf5::transaction::transaction_item_action_is_inbound(tspkg.get_action()))
     {
-
       downloader.add(tspkg.get_package());
       downloader.download();
     }
@@ -62,7 +61,8 @@ run_transaction(libdnf5::Base *base, std::string package_name)
 
   downloader.download();
 
-  std::cout << std::endl << "Running the transaction" << std::endl;
+  std::cout << std::endl
+            << "Running the transaction" << std::endl;
   transaction.set_callbacks(std::unique_ptr<libdnf5::rpm::TransactionCallbacks>());
   transaction.set_description("installing a package for the first time");
 
@@ -71,6 +71,7 @@ run_transaction(libdnf5::Base *base, std::string package_name)
   return;
 }
 
+// TODO(nasr): fix call backs 
 
 int
 main()
@@ -79,7 +80,7 @@ main()
 
   libdnf5::Base *base = setup();
   packages = query(base, "helix");
-  for (const std::string & package : packages)
+  for (const std::string &package : packages)
   {
     run_transaction(base, package);
   }
