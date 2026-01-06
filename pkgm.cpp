@@ -1,3 +1,9 @@
+#if defined(DISTRO_ARCH)
+
+#include <libalpm.h>
+
+#elif defined(DISTRO_FEDORAH)
+
 #include <libdnf5/base/base.hpp>
 #include <libdnf5/rpm/package_query.hpp>
 #include <libdnf5/rpm/transaction_callbacks.hpp>
@@ -87,3 +93,5 @@ main()
 
   return 0;
 }
+
+#endif
