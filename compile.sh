@@ -2,7 +2,7 @@
 set -eu
 
 CC=cc
-SRC=agent_resources.c
+SRC=resources.c
 OUT_DIR=build
 OUT_BIN=$OUT_DIR/agent_resources
 

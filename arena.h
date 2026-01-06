@@ -11,6 +11,13 @@
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define ALIGN_UP_POW2(n, p) (((u64)(n) + ((u64)(p) - 1)) & (~((u64)(p) - 1)))
 
+
+#define PUSH_STRUCT(arena, T) (T *)arena_push((arena), sizeof(T), 0)
+#define PUSH_STRUCT_NZ(arena, T) (T *)arena_push((arena), sizeof(T), 1)
+#define PUSH_ARRAY(arena, T, n) (T *)arena_push((arena), sizeof(T) * (n), 0)
+#define PUSH_ARRAY_NZ(arena, T, n) (T *)arena_push((arena), sizeof(T) * (n), 1)
+
+
 /*
  * Represents a disk partition with major/minor device numbers and block count.
  */

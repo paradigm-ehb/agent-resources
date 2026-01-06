@@ -9,6 +9,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "resources.h"
+#include "arena.h"
 
 #include <assert.h>
 #include <dirent.h>

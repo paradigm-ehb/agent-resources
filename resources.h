@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "base.h"
-#include "arena.c"
+#include "arena.h"
 
 #define RESOURCES_API_VERSION 1
 
@@ -81,8 +81,8 @@ mem_arena *arena_create(u64 capacity);
 /**
  * TODO(nasr): add error handling for both the destroy and the clear
  * */
-// void arena_destroy(mem_arena *arena);
-// void arena_clear(mem_arena *arena);
+void arena_destroy(mem_arena *arena);
+void arena_clear(mem_arena *arena);
 
 Cpu *cpu_create(mem_arena *arena);
 Ram *ram_create(mem_arena *arena);
