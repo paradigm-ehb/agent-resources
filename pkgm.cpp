@@ -2,6 +2,11 @@
 
 #include <libalpm.h>
 
+
+/**
+ * TODO(nasr): pacman impelmentation of package manager
+ * */
+
 #elif defined(DISTRO_FEDORAH)
 
 #include <libdnf5/base/base.hpp>
@@ -94,4 +99,13 @@ main()
   return 0;
 }
 
+#elif defined (DISTRO_DEBIAN)
+
+/**
+ * TODO(nasr): apt impelmentation of package manager
+ * */
+
+
+
 #endif
+
