@@ -2,12 +2,12 @@
 set -eu
 
 CC=cc
-SRC=resources.c
+SRC=resources_main.c
 OUT_DIR=build
 OUT_BIN=$OUT_DIR/agent_resources
 
 CFLAGS="
--std=c11
+-std=c99
 -Wall
 -Wextra
 -Wpedantic
@@ -29,3 +29,5 @@ $CC $CFLAGS "$SRC" -o "$OUT_BIN"
 
 echo "Done:"
 echo "  $OUT_BIN"
+
+./$OUT_BIN

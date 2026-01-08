@@ -6,6 +6,7 @@
  *
  */
 
+#include "base.h"
 #define _POSIX_C_SOURCE 200809L
 
 #include "resources.h"
@@ -23,7 +24,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
+#include <stdio.h>
 
 /*
  * disk_push_partition - Add a partition to the disk structure
@@ -556,42 +557,56 @@ process_read(i32 pid, Process *out)
   FILE *fp = fopen(path, "r");
   if (!fp)
   {
-    assert(0);
     return ERR_IO;
   }
 
   char buf[BUFFER_SIZE_LARGE];
 
+  /* initialize */
   out->pid = pid;
-  out->state = PROCESS_UNDEFINED;
-  out->utime = 0;
-  out->stime = 0;
-  out->num_threads = 0;
-  out->name[0] = 0;
 
-  while (fgets(buf, sizeof(buf), fp))
+  while (fgets(
+    buf,
+    sizeof(buf),
+    fp))
   {
     char *colon = strchr(buf, ':');
     if (!colon)
+    {
       continue;
+    }
 
     char *val = colon + 1;
     while (*val == ' ' || *val == '\t')
+    {
       ++val;
+    }
 
     size_t len = strcspn(val, "\n");
 
-    if (!strncmp(buf, "Name", 4))
+    if (!strncmp(buf, "Name:", 5))
     {
       if (len >= sizeof(out->name))
+      {
         len = sizeof(out->name) - 1;
+      }
 
       memcpy(out->name, val, len);
       out->name[len] = 0;
     }
-    else if (!strncmp(buf, "State", 5))
+    if (!strncmp(buf, "State:", 6))
     {
-      switch (val[0])
+      char state_char = 0;
+      for (char *p = val; *p; ++p)
+      {
+        if (*p >= 'A' && *p <= 'Z')
+        {
+          state_char = *p;
+          break;
+        }
+      }
+
+      switch (state_char)
       {
         case 'R':
         {
@@ -628,6 +643,11 @@ process_read(i32 pid, Process *out)
           out->state = PROCESS_DEAD;
           break;
         }
+        case 'I':
+        {
+          out->state = PROCESS_IDLE;
+          break;
+        }
         default:
         {
           out->state = PROCESS_UNDEFINED;
@@ -635,13 +655,21 @@ process_read(i32 pid, Process *out)
         }
       }
     }
-    else if (!strncmp(buf, "Threads", 7))
+
+    if (!strncmp(buf, "Threads:", 8))
     {
       out->num_threads = (u32)strtoul(val, 0, 10);
     }
   }
 
-  fclose(fp);
+  printf("sizeof(Process) = %zu\n", sizeof(Process));
+
+  int error = fclose(fp);
+  if (error != 0)
+  {
+    return ERR_IO;
+  }
+
   return OK;
 }
 
