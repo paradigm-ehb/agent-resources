@@ -63,3 +63,6 @@ build/
 .cache
 source/main
 tmp
+/.vs
+*.json
+*.c
