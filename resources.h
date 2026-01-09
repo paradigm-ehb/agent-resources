@@ -63,6 +63,8 @@ struct Cpu
   char vendor[BUFFER_SIZE_DEFAULT];
   char model[BUFFER_SIZE_DEFAULT];
   char frequency[BUFFER_SIZE_SMALL];
+  u64 total_time;
+  u64 idle_time;
   u32 cores;
 };
 
@@ -107,6 +109,8 @@ device_create(mem_arena *arena);
 
 int
 cpu_read(Cpu *cpu);
+int
+cpu_read_usage(Cpu *cpu);
 int
 ram_read(Ram *ram);
 int

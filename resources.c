@@ -326,6 +326,53 @@ cpu_read(Cpu *out)
   return OK;
 }
 
+int
+cpu_read_usage(Cpu *out)
+{
+  if (!out)
+  {
+    assert(0);
+    return ERR_INVALID;
+  }
+
+  FILE *f = fopen("/proc/stat", "r");
+  if (!f)
+  {
+    assert(0);
+    return ERR_IO;
+  }
+
+  char buf[BUFFER_SIZE_LARGE];
+  while (fgets(buf, sizeof(buf), f))
+  {
+    if (strncmp(buf, "cpu ", 4) == 0)
+    {
+      unsigned long user, nice, system, idle, iowait, irq, softirq, steal;
+      if (sscanf(
+            buf + 4,
+            "%lu %lu %lu %lu %lu %lu %lu %lu",
+            &user,
+            &nice,
+            &system,
+            &idle,
+            &iowait,
+            &irq,
+            &softirq,
+            &steal) == 8)
+      {
+        u64 idleAll = idle + iowait;
+        u64 total = user + nice + system + idle + iowait + irq + softirq + steal;
+        out->idle_time = idleAll;
+        out->total_time = total;
+        break;
+      }
+    }
+  }
+
+  fclose(f);
+  return OK;
+}
+
 /*
  * ram_create - Allocate and initialize a new Ram structure
  *
