@@ -1,14 +1,16 @@
+
 #include "arena.h"
 #include "base.h"
 #include "resources.h"
+#include "pkgm.hpp"
 #include <string.h>
-#include <stdio.h>
 
-char *
-check_distro_version(mem_arena *arena)
+internal enum LinuxDistro
+find_lxd_pkgm(mem_arena *arena)
 {
   Device *device = device_create((arena));
   device_read(device);
+  enum LinuxDistro lxd;
 
   i32 len = sizeof(device->os_version);
   char distro_unparsed[len];
@@ -34,14 +36,5 @@ check_distro_version(mem_arena *arena)
 
   arena_destroy(arena);
 
-  return buffer;
-}
-
-i32
-main()
-{
-  mem_arena *arena = arena_create(KiB(4));
-  printf("%s", check_distro_version(arena));
-
-  return 0;
+  return lxd;
 }

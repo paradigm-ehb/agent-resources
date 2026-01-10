@@ -17,6 +17,15 @@ typedef struct Partition Partition;
 typedef struct Process Process;
 typedef struct Process_List Process_List;
 
+/**
+ * TODO(nasr):
+ *
+ * Heh? what are you doing with the types here,
+ * you mismatched the namings
+ * check for what you are doing in the cgo wrapper
+ * this could be a big issue
+ *
+ * */
 typedef int32_t ProcessState;
 
 typedef enum Process_State

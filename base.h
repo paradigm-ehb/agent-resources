@@ -10,6 +10,10 @@
 #define ERR_PERM 3
 #define ERR_INVALID 4
 
+#define internal static 
+#define local_persist static 
+#define global_variable static
+
 enum {
   BUFFER_SIZE_SMALL = 128,
   BUFFER_SIZE_DEFAULT = 256,

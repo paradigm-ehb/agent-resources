@@ -1,3 +1,4 @@
+#define DISTRO_FEDORAH
 #if defined(DISTRO_ARCH)
 
 #include <libalpm.h>
@@ -17,9 +18,7 @@
 #include <libdnf5/base/goal.hpp>
 #include <libdnf5/repo/package_downloader.hpp>
 #include <memory>
-#include <ostream>
 #include <vector>
-#include <iostream>
 
 libdnf5::Base *
 setup()
@@ -72,31 +71,12 @@ run_transaction(libdnf5::Base *base, std::string package_name)
 
   downloader.download();
 
-  std::cout << std::endl
-            << "Running the transaction" << std::endl;
   transaction.set_callbacks(std::unique_ptr<libdnf5::rpm::TransactionCallbacks>());
   transaction.set_description("installing a package for the first time");
 
   transaction.run();
 
   return;
-}
-
-// TODO(nasr): fix call backs 
-
-int
-main()
-{
-  std::vector<std::string> packages;
-
-  libdnf5::Base *base = setup();
-  packages = query(base, "helix");
-  for (const std::string &package : packages)
-  {
-    run_transaction(base, package);
-  }
-
-  return 0;
 }
 
 #elif defined (DISTRO_DEBIAN)
