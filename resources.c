@@ -424,15 +424,18 @@ ram_read(Ram *out)
       val++;
     }
 
-    size_t len = strcspn(val, " k\n");
-
-    if (!strncmp(buf, "MemTotal", len))
+    if (!strncmp(buf, "MemTotal", 8))
     {
+      size_t len = strcspn(val, "k\n");
       memcpy(out->total, val, len);
+      out->total[len] = '\0';
     }
-    else if (!strncmp(buf, "MemFree", len))
+
+    if (!strncmp(buf, "MemFree", 7))
     {
+      size_t len = strcspn(val, "k\n");
       memcpy(out->free, val, len);
+      out->total[len] = '\0';
     }
   }
 
@@ -631,10 +634,8 @@ process_read(i32 pid, Process *out)
 
     size_t len = strcspn(val, "\n");
 
-
     if (!strncmp(buf, "Name:", 5))
     {
-
       memcpy(out->name, val, len);
       out->name[len] = 0;
     }
@@ -649,8 +650,6 @@ process_read(i32 pid, Process *out)
           break;
         }
       }
-
-      printf("\nstate before reading %c\n\n", state_char);
 
       switch (state_char)
       {
@@ -707,7 +706,6 @@ process_read(i32 pid, Process *out)
       out->num_threads = (u32)strtoul(val, 0, 10);
     }
   }
-
 
   int error = fclose(fp);
   if (error != 0)

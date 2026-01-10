@@ -11,7 +11,10 @@ main(void)
 {
   mem_arena *arena = arena_create(MiB(1));
 
+  Ram *ram = ram_create(arena);
   Device *device = device_create(arena);
+
+  ram_read(ram);
   process_list_collect(&device->processes, arena);
 
   for (size_t proc_idx = 0;
@@ -22,17 +25,17 @@ main(void)
       sizeof(Process),
       1);
 
-    i32 error = process_read(device->processes
-
-                               .items[proc_idx]
-                               .pid,
+    i32 error = process_read(
+      device->processes
+        .items[proc_idx]
+        .pid,
       proc);
 
     printf(
-      "[process] pid=%6d  state=%3d [name] = %6s\n",
-      proc->pid,
-      proc->state,
-      proc->name);
+      "[total] total=%6s  free=%3s\n",
+      ram->total,
+      ram->free
+      );
 
     if (error != OK)
     {
