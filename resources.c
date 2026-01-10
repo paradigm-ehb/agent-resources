@@ -631,16 +631,13 @@ process_read(i32 pid, Process *out)
 
     size_t len = strcspn(val, "\n");
 
-    printf("lenght: %lu", len);
 
     if (!strncmp(buf, "Name:", 5))
     {
 
       memcpy(out->name, val, len);
-      printf("\nout name %s\n", out->name);
-      // out->name[len] = 0;
+      out->name[len] = 0;
     }
-    printf("name: %s", out->name);
     if (!strncmp(buf, "State:", 6))
     {
       char state_char = 0;
@@ -652,6 +649,8 @@ process_read(i32 pid, Process *out)
           break;
         }
       }
+
+      printf("\nstate before reading %c\n\n", state_char);
 
       switch (state_char)
       {
@@ -709,7 +708,6 @@ process_read(i32 pid, Process *out)
     }
   }
 
-  printf("sizeof(Process) = %zu\n", sizeof(Process));
 
   int error = fclose(fp);
   if (error != 0)

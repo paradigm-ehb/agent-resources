@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-CC=cc
+CC=clang
 SRC=resources_main.c
 OUT_DIR=build
 OUT_BIN=$OUT_DIR/agent_resources
@@ -22,12 +22,40 @@ CFLAGS="
 -D_POSIX_C_SOURCE=200809L
 "
 
+sep() {
+  printf '%s\n' "============================================================"
+}
+
+header() {
+  sep
+  printf '  %s\n' "$1"
+  sep
+}
+
+info() {
+  printf '  • %s\n' "$1"
+}
+
+ok() {
+  printf '  ✓ %s\n' "$1"
+}
+
 mkdir -p "$OUT_DIR"
 
-echo "Compiling binary..."
+header "BUILD"
+info "Compiler : $CC"
+info "Source   : $SRC"
+info "Output   : $OUT_BIN"
+
+printf '\n'
+info "Compiling…"
 $CC $CFLAGS "$SRC" -o "$OUT_BIN"
+ok "Compilation finished"
 
-echo "Done:"
-echo "  $OUT_BIN"
-
-./$OUT_BIN
+printf '\n'
+header "RUN"
+info "Executing binary"
+sep
+"$OUT_BIN"
+sep
+ok "Execution finished"

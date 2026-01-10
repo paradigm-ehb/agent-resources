@@ -6,43 +6,39 @@
 #include "resources.c"
 #include <assert.h>
 
-
-int main()
+int
+main(void)
 {
-
   mem_arena *arena = arena_create(MiB(1));
 
-  Device *device =  device_create(arena);
+  Device *device = device_create(arena);
   process_list_collect(&device->processes, arena);
 
-  for (size_t proc_idx;
+  for (size_t proc_idx = 0;
     proc_idx < device->processes.count;
     ++proc_idx)
-    {
+  {
+    Process *proc = (Process *)arena_push(arena,
+      sizeof(Process),
+      1);
 
-      Process *proc = (Process*)arena_push(arena,
-        sizeof(Process),
-        1);
+    i32 error = process_read(device->processes
 
-      printf("\nstate: %d\n", proc->state);
-
-      i32 error = process_read(device->processes
-      
-      .items[proc_idx]
-      .pid,
+                               .items[proc_idx]
+                               .pid,
       proc);
 
-      printf("\nstate: %d\n", proc->state);
+    printf(
+      "[process] pid=%6d  state=%3d [name] = %6s\n",
+      proc->pid,
+      proc->state,
+      proc->name);
 
-      if (error != OK)
-      {
-
-        assert(0);
-      }
-
-    printf("after %d\n", proc->state);
+    if (error != OK)
+    {
+      assert(0);
     }
-
+  }
 
   return 0;
 }
