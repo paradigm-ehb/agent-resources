@@ -138,6 +138,9 @@ disk_read(Disk *disk, mem_arena *arena);
 int
 device_read(Device *device);
 
+int
+fs_usage(char *path, Disk *disk);
+
 // TODO(nasr): add a function that updates certain values incrementally
 // instead of neading to update the entire cpu struct
 
