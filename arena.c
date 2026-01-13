@@ -7,7 +7,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include "base.h"
-
 #include "arena.h"
 
 mem_arena *
@@ -27,13 +26,13 @@ arena_create(u64 capacity)
 }
 
 // make it a void pointer to allow implicit conversion
-internal void
+void
 arena_destroy(mem_arena *arena)
 {
   munmap(arena, arena->capacity);
 }
 
-internal void *
+void *
 arena_push(mem_arena *arena, u64 size, b32 non_zero)
 {
   u64 pos_aligned = ALIGN_UP_POW2(arena->pos, ARENA_ALIGN);
@@ -56,21 +55,21 @@ arena_push(mem_arena *arena, u64 size, b32 non_zero)
   return out;
 }
 
-internal void
+void
 arena_pop(mem_arena *arena, u64 size)
 {
   size = MIN(size, arena->pos - ARENA_BASE_POS);
   arena->pos -= size;
 }
 
-internal void
+void
 arena_pop_to(mem_arena *arena, u64 pos)
 {
   u64 size = pos < arena->pos ? arena->pos - pos : 0;
   arena_pop(arena, size);
 }
 
-internal void
+void
 arena_clear(mem_arena *arena)
 {
   arena_pop_to(arena, ARENA_BASE_POS);

@@ -7,14 +7,21 @@ OUT=build/pkgmanager
 
 CXXFLAGS="
 -std=c++20
--Wall -Wextra -Wpedantic
--Wshadow -Wconversion
+-Wall 
+-Wextra 
+-Wpedantic
+-Wshadow 
+-Wconversion
 -Wundef
--Wpointer-arith -Wcast-align -Wcast-qual
--Wformat=2 -Wformat-security
+-Wpointer-arith 
+-Wcast-align 
+-Wcast-qual
+-Wformat=2 
+-Wformat-security
 -Wnull-dereference
 -Wmisleading-indentation
--Wunused -Wuninitialized
+-Wunused 
+-Wuninitialized
 -fexceptions
 -fno-rtti
 -ldnf5

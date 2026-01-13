@@ -44,6 +44,7 @@ Then:
       - -Wstrict-overflow=2
       - -D_POSIX_C_SOURCE=200809L
       - -ldnf5
+      - I..
 
 # C++ configuration
 If:

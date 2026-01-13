@@ -55,22 +55,22 @@ struct mem_arena
 };
 
 // arena prototypes
-internal mem_arena *
+mem_arena *
 arena_create(u64 capacity);
 // make it a void pointer to allow implicit conversion
-internal void
+void
 arena_destroy(mem_arena *arena);
 
-internal void *
+void *
 arena_push(mem_arena *arena, u64 size, b32 non_zero);
 
-internal void
+void
 arena_pop(mem_arena *arena, u64 size);
 
-internal void
+void
 arena_pop_to(mem_arena *arena, u64 pos);
 
-internal void
+void
 arena_clear(mem_arena *arena);
 
 #define PUSH_STRUCT(arena, T) (T *)arena_push((arena), sizeof(T), 0)

@@ -1,8 +1,8 @@
 #ifndef PKGMANAGER_H
 #define PKGMANAGER_H
 
-#include "arena.h"
-#include "base.h"
+#include "../arena.h"
+#include "../base.h"
 
 enum LinuxDistro
 {
@@ -62,7 +62,7 @@ internal const struct DistroStack distro_map[] = {
   { "opensuse", DISTRO_OPENSUSE },
 };
 
-internal enum LinuxDistro
+internal char *
 find_lxd_pkgm(mem_arena *arena);
 
 #endif

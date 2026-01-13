@@ -1,10 +1,10 @@
-#include "arena.h"
-#include "resources.h"
+#include "../arena.h"
+#include "../resources.h"
 #include "pkgm.hpp"
 #include <string.h>
 #include "stdio.h"
 
-internal enum LinuxDistro
+internal char *
 find_lxd_pkgm(mem_arena *arena)
 {
   Device *device = device_create(arena);
