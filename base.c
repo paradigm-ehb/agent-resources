@@ -31,7 +31,7 @@ parse_u64(char *buf, size_t len)
  * Return: 1 if string contains only numeric characters, 0 otherwise
  */
 b8
-is_numeric(const char *s)
+is_numeric(char *s)
 {
   for (; *s; ++s)
   {
@@ -41,4 +41,28 @@ is_numeric(const char *s)
     }
   }
   return 1;
+}
+
+b8
+compare_string(char *c1, char *c2)
+{
+  if (sizeof(c1) != sizeof(c2))
+  {
+    return -1;
+  }
+
+  for (
+    i32 word_idx = 0;
+    word_idx <= sizeof(*c1);
+    ++word_idx)
+  {
+    if (*c1 != *c2)
+    {
+      return -1;
+    }
+    ++c1;
+    ++c2;
+  }
+
+  return 0;
 }

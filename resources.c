@@ -12,18 +12,18 @@
 #include "resources.h"
 #include "arena.h"
 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <sys/statfs.h>
 
 /*
@@ -876,6 +876,9 @@ process_kill(pid_t pid, int signal)
 }
 
 /**
+ * main entry point for testing 
+ * */
+/*
 int
 main(void)
 {
@@ -904,8 +907,7 @@ main(void)
     printf(
       "[total] total=%6s  free=%3s\n",
       ram->total,
-      ram->free
-      );
+      ram->free);
 
     if (error != OK)
     {
@@ -913,6 +915,6 @@ main(void)
     }
   }
 
- return 0;
+  return 0;
 }
 */
