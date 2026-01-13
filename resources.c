@@ -433,6 +433,7 @@ ram_read(Ram *out)
   out->total = parse_u64(total_buffer, total_len);
   out->free = parse_u64(free_buffer, free_len);
 
+  arena_destroy(temp_arena);
   fclose(f);
   return OK;
 }
@@ -874,47 +875,3 @@ process_kill(pid_t pid, int signal)
   }
   return OK;
 }
-
-/**
- * main entry point for testing 
- * */
-/*
-int
-main(void)
-{
-  mem_arena *arena = arena_create(MiB(1));
-
-  Ram *ram = ram_create(arena);
-  Device *device = device_create(arena);
-
-  ram_read(ram);
-  process_list_collect(&device->processes, arena);
-
-  for (size_t proc_idx = 0;
-    proc_idx < device->processes.count;
-    ++proc_idx)
-  {
-    Process *proc = (Process *)arena_push(arena,
-      sizeof(Process),
-      1);
-
-    i32 error = process_read(
-      device->processes
-        .items[proc_idx]
-        .pid,
-      proc);
-
-    printf(
-      "[total] total=%6s  free=%3s\n",
-      ram->total,
-      ram->free);
-
-    if (error != OK)
-    {
-      assert(0);
-    }
-  }
-
-  return 0;
-}
-*/

@@ -100,11 +100,36 @@ struct Disk
   size_t part_capacity;
 };
 
+enum TransportLayerType
+{
+  TRANSPORT_TCP,
+  TRANSPORT_UDP,
+};
+
+struct Port
+{
+  /**
+   * Get the name by calling 
+   * what service is listening to port xx
+   *
+   * */
+  char name[BUFFER_SIZE_SMALL];
+
+  int port;
+  enum TransportLayerType type;
+  char alias[BUFFER_SIZE_DEFAULT];
+  char comment[BUFFER_SIZE_DEFAULT];
+};
+
 struct Device
 {
   char os_version[BUFFER_SIZE_DEFAULT];
   char uptime[BUFFER_SIZE_DEFAULT];
   Process_List processes;
+  /**
+   *
+   * */
+  struct Port *port;
 };
 
 mem_arena *

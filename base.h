@@ -19,6 +19,8 @@
 #define local_persist static
 #define global_variable static
 
+#define DEPRECATED __attribute__((__deprecated__))
+
 typedef uint64_t u64;
 typedef uint32_t u32;
 typedef uint16_t u16;
@@ -43,6 +45,9 @@ u64
 parse_u64(char *buf, size_t len);
 
 b8
-is_numeric(const char *s);
+is_numeric(char *s);
+
+b8
+compare_string(char *c1, char *c2);
 
 #endif

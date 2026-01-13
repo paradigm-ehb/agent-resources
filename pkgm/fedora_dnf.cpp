@@ -25,6 +25,12 @@ setup()
   libdnf5::Base *base = new libdnf5::Base;
   base->setup();
 
+  /*
+   * TODO(nasr): think about freeing this?
+   * should it be freed?
+   * can we allocate it on the arena?
+   * */
+
   auto repo_sack = base->get_repo_sack();
 
   repo_sack->create_repos_from_system_configuration();
