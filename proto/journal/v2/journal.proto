@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package paradigm.journal.v2;
+
+option cpp_namespace = "paradigm::journal::v1";
+
+service JournalService {
+  rpc Stream (JournalRequest) returns (stream JournalEntry);
+  rpc Metadata (JournalMetadataRequest) returns (JournalMetadata);
+}
+
+/**
+ * TODO(nasr): refactor
+ * */
+
+message JournalRequest {
+
+  oneof position {
+    SeekHead head = 1;
+    SeekTail tail = 2;
+    SeekCursor cursor = 3;
+    SeekRealtime realtime = 4;
+    SeekMonotonic monotonic = 5;
+  }
+
+  uint64 limit = 10;
+  bool follow = 11;
+  bool reverse = 12;
+
+  repeated JournalMatch matches = 20;
+
+  JournalOutputMode output = 30;
+  bool include_cursor = 31;
+}
+
+
+message SeekHead {}
+message SeekTail {}
+
+message SeekCursor {
+  string cursor = 1;
+}
+
+message SeekRealtime {
+  uint64 usec = 1;
+}
+
+message SeekMonotonic {
+  uint64 usec = 1;
+  string boot_id = 2;
+}
+
+message JournalMatch {
+  string field = 1;
+  string value = 2;
+}
+
+
+enum JournalOutputMode {
+  OUTPUT_UNSPECIFIED = 0;
+  OUTPUT_FIELDS     = 1;
+  OUTPUT_JSON       = 2;
+  OUTPUT_BINARY     = 3;
+}
+
+
+message JournalEntry {
+  string cursor = 1;
+
+  uint64 realtime_usec = 2;
+  uint64 monotonic_usec = 3;
+  string boot_id = 4;
+
+  map<string, bytes> fields = 10;
+  bytes payload = 20;
+}
+
+
+message JournalMetadataRequest {}
+
+message JournalMetadata {
+  uint64 entries = 1;
+  repeated string boots = 2;
+  repeated string fields = 3;
+}

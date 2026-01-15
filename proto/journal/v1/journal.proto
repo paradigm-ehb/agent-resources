@@ -22,12 +22,18 @@ message JournalRequest  {
   string time = 1;
   // The amount of stuff you want to pull from the journal
   uint64 numFromTail = 2;
-  // dont know what this does yet
+  /**
+   * A cursor is a serialization of the current position in the journal stream
+   * */
   string cursor = 3;
   // matches
   Field field = 4;
   string value = 5;
 
+  /**
+   * unit name without service
+   * example: mariadb.service
+   * */
   string path = 6;
 
 }
