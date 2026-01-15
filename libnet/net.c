@@ -2,8 +2,8 @@
 #include <netdb.h>
 #include <unistd.h>
 
-#include "base/base.h"
 #include "libres/resources.h"
+#include "base/.c"
 
 /**
  * Retrieve listening service to port x
@@ -15,7 +15,7 @@
 i8
 port_read_tcp4(Device *device)
 {
-  const char *endofline = "\n";
+  char endofline[] = "\n";
   if (!device)
   {
     return ERR_INVALID;
@@ -71,6 +71,6 @@ port_read_tcp6(Device *device)
 
 /**
  * Think of a way to merge these 2 functions
- * both read tcp 
+ * both read tcp
  * one v4 and one v6
  * */
