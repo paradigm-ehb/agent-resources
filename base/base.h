@@ -1,8 +1,8 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define OK 0
 #define ERR_IO 1
@@ -41,13 +41,13 @@ typedef u8 b8;
 #define TRUE 1
 #define FALSE 0
 
-u64
+internal u64
 parse_u64(char *buf, size_t len);
 
-b8
+internal b8
 is_numeric(char *s);
 
-b8
+internal b8
 compare_string(char *c1, char *c2);
 
 #endif

@@ -3,7 +3,7 @@
 /**
  * Helper function to parse strings to int using ascii codes
  * */
-u64
+internal u64
 parse_u64(char *buf, size_t len)
 {
   u64 value = 0;
@@ -30,7 +30,7 @@ parse_u64(char *buf, size_t len)
  *
  * Return: 1 if string contains only numeric characters, 0 otherwise
  */
-b8
+internal b8
 is_numeric(char *s)
 {
   for (; *s; ++s)
@@ -43,7 +43,7 @@ is_numeric(char *s)
   return 1;
 }
 
-b8
+internal b8
 compare_string(char *c1, char *c2)
 {
   if (sizeof(c1) != sizeof(c2))

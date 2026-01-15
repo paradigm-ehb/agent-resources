@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include "../base/base.h"
+#include "libgrpc/grpc.h"
 
 int
 main(int argc, char **argv)
 {
-  printf("Hello World");
+  run_server();
   return 0;
 }
