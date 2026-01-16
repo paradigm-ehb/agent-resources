@@ -1,21 +1,29 @@
 syntax = "proto3";
 
-option go_package = "paradigm-ehb/agent/proto/greet";
+option cpp_namespace = "paradigm::greet";
 
 package greet;
 
-// The greeting service definition.
+/*
+ * Greeting service definition
+ * */
 service Greeter {
-  // Sends a greeting
+  /**
+   * Sends a greeting
+   * */
   rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 
-// The request message containing the user's name.
+/**
+ * The Hello request containing the users name
+ * */
 message HelloRequest {
   string name = 1;
 }
 
-// The response message containing the greetings
+/**
+ * The Response containing the message response
+ * */
 message HelloReply {
   string message = 1;
 }

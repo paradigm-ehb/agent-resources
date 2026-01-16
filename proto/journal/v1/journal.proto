@@ -2,44 +2,151 @@ syntax = "proto3";
 
 package journal.v1;
 
-option go_package = "paradigm-ehb/agent/proto/journal";
+option cpp_namespace = "paradigm::journal::v1";
 
+/**
+ * JournalService
+ *
+ * Streaming interface for querying entries from the system journal
+ * (e.g. systemd-journald). The service emits a stream of journal
+ * records matching the supplied query parameters.
+ *
+ * Deprecation notice:
+ * This service is considered deprecated due to incomplete field
+ * coverage and limited expressiveness. Prefer a newer API if
+ * available.
+ */
 service JournalService {
 
+  /**
+   * Action
+   *
+   * Executes a journal query and streams back matching entries.
+   *
+   * The server responds with zero or more JournalChunk messages.
+   * Each chunk represents raw or serialized journal data, depending
+   * on the server implementation.
+   *
+   * Typical use cases:
+   * - Tail recent log entries
+   * - Resume reading from a cursor
+   * - Filter by a specific journal field/value pair
+   */
   rpc Action (JournalRequest) returns (stream JournalChunk) {}
-
 }
 
+/**
+ * JournalRequest
+ *
+ * Describes a query against the system journal.
+ * Fields may be combined, but the exact semantics
+ * (AND/OR behavior, precedence) are implementation-defined.
+ */
 message JournalRequest  {
 
+  /**
+   * Field
+   *
+   * Enumerates supported journal fields that can be matched
+   * against a provided value.
+   *
+   * These map conceptually to common journald fields:
+   * - SYSTEMD_UNIT
+   * - _PID
+   * - _UID
+   * - _GID
+   */
   enum Field {
-      Systemd  = 0;
-      PID      = 1;
-      UID      = 2;
-      GID      = 3;
+      Systemd  = 0;  // systemd unit name (e.g. sshd.service)
+      PID      = 1;  // process ID
+      UID      = 2;  // user ID
+      GID      = 3;  // group ID
   }
 
-  string time = 1;
-  // The amount of stuff you want to pull from the journal
-  uint64 numFromTail = 2;
   /**
-   * A cursor is a serialization of the current position in the journal stream
-   * */
+   * time
+   *
+   * Optional timestamp constraint.
+   * Interpretation is implementation-specific
+   * (e.g. ISO-8601 string, relative time, or journald cursor time).
+   *
+   * Example:
+   *   "2026-01-15T10:30:00Z"
+   */
+  string time = 1;
+
+  /**
+   * numFromTail
+   *
+   * Number of entries to read starting from the end of the journal.
+   * Commonly used to implement `journalctl -n <N>`-like behavior.
+   *
+   * If set to 0, the server may choose a default.
+   */
+  uint64 numFromTail = 2;
+
+  /**
+   * cursor
+   *
+   * Serialized journal cursor indicating a precise position
+   * in the journal stream.
+   *
+   * When provided, the server should resume reading from
+   * this position instead of starting from the head or tail.
+   */
   string cursor = 3;
-  // matches
+
+  /**
+   * field
+   *
+   * Journal field to match against `value`.
+   * Must be set if `value` is provided.
+   */
   Field field = 4;
+
+  /**
+   * value
+   *
+   * Value associated with the selected `field`.
+   * Example:
+   *   field = PID
+   *   value = "1234"
+   */
   string value = 5;
 
   /**
-   * unit name without service
-   * example: mariadb.service
-   * */
+   * path
+   *
+   * Systemd unit name used as a filter.
+   *
+   * Note:
+   * Despite the name, this refers to a unit identifier,
+   * not a filesystem path.
+   *
+   * Example:
+   *   "mariadb.service"
+   */
   string path = 6;
-
 }
 
+/**
+ * JournalChunk
+ *
+ * Represents a single chunk of streamed journal data.
+ *
+ * The `reply` payload is opaque to the protocol and may contain:
+ * - Raw journald export format
+ * - JSON-encoded entries
+ * - Custom binary serialization
+ *
+ * Consumers must interpret this according to the server contract.
+ */
 message JournalChunk {
 
+  /**
+   * reply
+   *
+   * Opaque payload containing journal entry data.
+   */
   bytes reply = 1;
 }
-

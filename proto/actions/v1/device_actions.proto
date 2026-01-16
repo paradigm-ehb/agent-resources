@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package actions.v1;
 
-option go_package = "paradigm-ehb/agent/gen/device_actions/v1";
+option cpp_namespace = "paradigm::device_actions::v1;
 
 // TODO(nasr): reboot poweroff etc
 

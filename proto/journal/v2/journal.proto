@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package paradigm.journal.v2;
+package journal.v2;
 
-option cpp_namespace = "paradigm::journal::v1";
+option cpp_namespace = "paradigm::journal::v2";
 
 service JournalService {
   rpc Stream (JournalRequest) returns (stream JournalEntry);
@@ -15,6 +15,14 @@ service JournalService {
 
 message JournalRequest {
 
+  /**
+   * Conceptually ```oneof``` is like a C-style union
+   * The fields share the same memory
+   * and when one is set, the others are cleared
+   * doing this complies with how the fields work internally within sd-journal
+   * You can only pass one filter match
+   * This approach saves memory and avoides mistakes.
+   * */
   oneof position {
     SeekHead head = 1;
     SeekTail tail = 2;
@@ -76,6 +84,10 @@ message JournalEntry {
 }
 
 
+
+/**
+ * TODO(nasr): meta data retrieval
+ * */
 message JournalMetadataRequest {}
 
 message JournalMetadata {
