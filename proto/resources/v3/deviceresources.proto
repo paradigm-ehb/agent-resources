@@ -2,31 +2,56 @@ syntax = "proto3";
 
 package resources.v3;
 
-option go_package = "paradigm-ehb/agent/gen/resources/v3;resourcespb";
+option cpp_namespace = "paradigm::resources::v3";
 
+/**
+ * ResourcesService exposes read-only system inspection endpoints
+ * and limited process control facilities.
+ *
+ * All getters return a snapshot of the system state at call time.
+ */
 service ResourcesService {
 
+  /**
+   * Retrieve a full system snapshot in a single call.
+   *
+   * Includes CPU, memory, device metadata, disks, and processes.
+   */
   rpc GetSystemResources(GetSystemResourcesRequest)
       returns (GetSystemResourcesResponse);
 
+  /** Retrieve CPU information and aggregated CPU time counters. */
   rpc GetCpu(GetCpuRequest)
       returns (GetCpuReply);
 
+  /** Retrieve system memory statistics. */
   rpc GetMemory(GetMemoryRequest)
       returns (GetMemoryReply);
 
+  /** Retrieve basic device and OS metadata. */
   rpc GetDevice(GetDeviceRequest)
       returns (GetDeviceReply);
 
+  /** Retrieve disk devices and their partitions. */
   rpc GetDisks(GetDisksRequest)
       returns (GetDisksReply);
 
+  /**
+   * Retrieve filesystem statistics for the filesystem
+   * backing the provided path.
+   */
   rpc GetFileSystems(GetFileSystemsRequest)
       returns (GetFileSystemsReply);
 
+  /** Retrieve the list of processes visible to the agent. */
   rpc GetProcesses(GetProcessesRequest)
       returns (GetProcessesReply);
 
+  /**
+   * Send a Unix signal to a process.
+   *
+   * Semantics are equivalent to kill(2).
+   */
   rpc ProcessAction(ProcessActionRequest)
       returns (ProcessActionReply);
 }
@@ -38,11 +63,10 @@ message GetSystemResourcesResponse {
 }
 
 /**
+ * Aggregated system snapshot.
  *
- * Get a complete system snapshots
- * @return Cpu, Memory, Device, Disk ( partitions ) and processes
- *
- * */
+ * All fields represent a point-in-time view.
+ */
 message SystemResources {
   Cpu cpu = 1;
   Memory memory = 2;
@@ -51,20 +75,24 @@ message SystemResources {
   repeated Process processes = 5;
 }
 
-
 message GetCpuRequest {}
 
 message GetCpuReply {
   Cpu cpu = 1;
 }
 
+/**
+ * CPU metadata and usage counters.
+ *
+ * Time units depend on the underlying platform.
+ */
 message Cpu {
-  string vendor = 1;        
-  string model = 2;         
-  string frequency = 3;     
-  uint32 cores = 4;         
-  uint64 total_time = 5;    
-  uint64 idle_time = 6;     
+  string vendor = 1;     // CPU vendor identifier
+  string model = 2;      // CPU model string
+  string frequency = 3;  // Nominal or current frequency
+  uint32 cores = 4;      // Logical core count
+  uint64 total_time = 5; // Total CPU time since boot
+  uint64 idle_time = 6;  // Idle CPU time since boot
 }
 
 message GetMemoryRequest {}
@@ -73,11 +101,15 @@ message GetMemoryReply {
   Memory memory = 1;
 }
 
+/**
+ * System memory statistics.
+ *
+ * Values are expressed in bytes.
+ */
 message Memory {
-  uint64 total = 1;       
-  uint64 free = 2;  
+  uint64 total = 1; // Total physical memory
+  uint64 free = 2;  // Free memory
 }
-
 
 message GetDeviceRequest {}
 
@@ -85,11 +117,13 @@ message GetDeviceReply {
   Device device = 1;
 }
 
+/**
+ * Device and operating system metadata.
+ */
 message Device {
-  string os_version = 1;
-  string uptime = 2;   
+  string os_version = 1; // OS version string
+  string uptime = 2;    // System uptime
 }
-
 
 message GetDisksRequest {}
 
@@ -97,34 +131,40 @@ message GetDisksReply {
   repeated Disk disks = 1;
 }
 
+/**
+ * Block device representation.
+ */
 message Disk {
-  string device = 1;
-  repeated DiskPartition partitions = 2;
+  string device = 1;                     // Device path (e.g. /dev/sda)
+  repeated DiskPartition partitions = 2; // Associated partitions
 }
 
 message DiskPartition {
-  string name = 1;          
-  uint32 major = 2;
-  uint32 minor = 3;
-  uint64 blocks = 4;
+  string name = 1;   // Partition name
+  uint32 major = 2;  // Major device number
+  uint32 minor = 3;  // Minor device number
+  uint64 blocks = 4; // Block count
 }
 
-
 message GetFileSystemsRequest {
-  string path = 1;
+  string path = 1; // Path used to resolve filesystem
 }
 
 message GetFileSystemsReply {
   repeated FileSystem filesystems = 1;
 }
 
+/**
+ * Filesystem capacity statistics.
+ *
+ * Values are expressed in bytes.
+ */
 message FileSystem {
-  uint64 total = 1;         
-  uint64 used = 2;          
-  uint64 free = 3;          
-  uint64 available = 4;     
+  uint64 total = 1;
+  uint64 used = 2;
+  uint64 free = 3;
+  uint64 available = 4; // Available to unprivileged users
 }
-
 
 message GetProcessesRequest {}
 
@@ -132,6 +172,11 @@ message GetProcessesReply {
   repeated Process processes = 1;
 }
 
+/**
+ * Process execution state.
+ *
+ * Closely maps to Linux task states.
+ */
 enum ProcessState {
   PROCESS_STATE_UNSPECIFIED = 0;
   PROCESS_STATE_RUNNING = 1;
@@ -145,18 +190,28 @@ enum ProcessState {
   PROCESS_STATE_UNDEFINED = 9;
 }
 
+/**
+ * Process metadata and execution statistics.
+ */
 message Process {
-  int32 pid = 1;
-  string name = 2;
-  ProcessState state = 3;
-  uint64 utime = 4;         
-  uint32 num_threads = 5;
+  int32 pid = 1;          // Process ID
+  string name = 2;        // Process name
+  ProcessState state = 3; // Execution state
+  uint64 utime = 4;       // User-mode CPU time
+  uint32 num_threads = 5; // Thread count
 }
 
-
+/**
+ * Send a Unix signal to a process.
+ *
+ * The signal field must contain a valid signal number.
+ *
+ * Reference:
+ * https://man7.org/linux/man-pages/man7/signal.7.html
+ */
 message ProcessActionRequest {
   int32 pid = 1;
-  int32 signal = 2;         
+  int32 signal = 2;
 }
 
 message ProcessActionReply {

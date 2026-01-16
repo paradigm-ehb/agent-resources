@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package resources.v2;
 
-option go_package = "paradigm-ehb/agent/gen/resources/v2;resourcespb";
+option cpp_namespace = "paradigm::resources::v2";
 
 service ResourcesService {
   rpc GetSystemResources(GetSystemResourcesRequest)
@@ -48,7 +48,7 @@ message Cpu {
 
 /**
  * Memory
- * @return total memory on system, available memory on system 
+ * @return total memory on system, available memory on system
  * */
 message Memory {
   uint64 total = 1;
