@@ -3,7 +3,7 @@
 #include <grpcpp/server_builder.h>
 #include <memory>
 
-#include "agent_grpc/agent_grpc.h"
+#include "grpc_service/grpc_service.h"
 #include "base/base.h"
 
 #include <grpcpp/grpcpp.h>
@@ -17,7 +17,7 @@ local_internal void
 grpc_server_setup()
 {
 
-  char *server_address = "0.0.0.0:5000";
+  const char *server_address = "0.0.0.0:5000";
 
   grpc::ServerBuilder sb;
 

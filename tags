@@ -60,9 +60,9 @@
 !_TAG_ROLE_DESCRIPTION!C++!header	local	/local header/
 !_TAG_ROLE_DESCRIPTION!C++!header	system	/system header/
 !_TAG_ROLE_DESCRIPTION!C++!macro	undef	/undefined/
-ALIGN_UP_POW2	base/base_arena.h	/^#define ALIGN_UP_POW2(/;"	d	line:13	language:C++	signature:(n,p)
-ARENA_ALIGN	base/base_arena.h	/^#define ARENA_ALIGN /;"	d	line:21	language:C++
-ARENA_BASE_POS	base/base_arena.h	/^#define ARENA_BASE_POS /;"	d	line:20	language:C++
+ALIGN_UP_POW2	base/base_arena.h	/^#define ALIGN_UP_POW2(/;"	d	line:12	language:C++	signature:(n,p)
+ARENA_ALIGN	base/base_arena.h	/^#define ARENA_ALIGN /;"	d	line:20	language:C++
+ARENA_BASE_POS	base/base_arena.h	/^#define ARENA_BASE_POS /;"	d	line:19	language:C++
 ARENA_H	base/base_arena.h	/^#define ARENA_H$/;"	d	line:2	language:C++
 BASE_H	base/base.h	/^#define BASE_H$/;"	d	line:2	language:C++
 BUFFER_SIZE_DEFAULT	base/base.h	/^#define BUFFER_SIZE_DEFAULT /;"	d	line:22	language:C++
@@ -120,8 +120,8 @@ ERR_OK	base/base.h	/^#define ERR_OK /;"	d	line:11	language:C++
 ERR_PARSE	base/base.h	/^#define ERR_PARSE /;"	d	line:13	language:C++
 ERR_PERM	base/base.h	/^#define ERR_PERM /;"	d	line:14	language:C++
 FALSE	base/base.h	/^#define FALSE /;"	d	line:47	language:C++
-FLAGS	forge/forge.c	/^#define FLAGS$/;"	d	line:10	language:C	file:
-FLAGS	forge/forge.c	/^#define FLAGS$/;"	d	line:8	language:C	file:
+FLAGS	forge/forge.c	/^#define FLAGS$/;"	d	line:11	language:C	file:
+FLAGS	forge/forge.c	/^#define FLAGS$/;"	d	line:9	language:C	file:
 FileSystem	libres/resources.h	/^struct FileSystem$/;"	s	line:89	language:C++
 FileSystem	libres/resources.h	/^typedef struct FileSystem FileSystem;$/;"	t	line:17	language:C++	typeref:struct:FileSystem
 FileSystem::available	libres/resources.h	/^  u64 available;$/;"	m	line:93	language:C++	struct:FileSystem	typeref:typename:u64	access:public
@@ -162,8 +162,8 @@ LoadedUnit::name	dbus/dbushandler.h	/^  char *name;$/;"	m	line:58	language:C++	s
 LoadedUnit::object_path	dbus/dbushandler.h	/^  char *object_path;$/;"	m	line:64	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
 LoadedUnit::queued_job	dbus/dbushandler.h	/^  uint32_t queued_job;$/;"	m	line:65	language:C++	struct:LoadedUnit	typeref:typename:uint32_t	access:public
 LoadedUnit::sub_state	dbus/dbushandler.h	/^  char *sub_state;$/;"	m	line:61	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
-MAX	base/base_arena.h	/^#define MAX(/;"	d	line:12	language:C++	signature:(a,b)
-MIN	base/base_arena.h	/^#define MIN(/;"	d	line:11	language:C++	signature:(a,b)
+MAX	base/base_arena.h	/^#define MAX(/;"	d	line:11	language:C++	signature:(a,b)
+MIN	base/base_arena.h	/^#define MIN(/;"	d	line:10	language:C++	signature:(a,b)
 MiB	base/base.h	/^#define MiB(/;"	d	line:18	language:C++	signature:(n)
 PATH_MAX_LEN	base/base.h	/^#define PATH_MAX_LEN /;"	d	line:24	language:C++
 PKGMANAGER_H	libpkg/pkg.h	/^#define PKGMANAGER_H$/;"	d	line:2	language:C++
@@ -176,10 +176,10 @@ PROCESS_STOPPED	libres/resources.h	/^  PROCESS_STOPPED = 4,$/;"	e	line:40	langua
 PROCESS_TRACING_STOPPED	libres/resources.h	/^  PROCESS_TRACING_STOPPED = 5,$/;"	e	line:41	language:C++	enum:Process_State	access:public
 PROCESS_UNDEFINED	libres/resources.h	/^  PROCESS_UNDEFINED = 0,$/;"	e	line:36	language:C++	enum:Process_State	access:public
 PROCESS_ZOMBIE	libres/resources.h	/^  PROCESS_ZOMBIE = 6,$/;"	e	line:42	language:C++	enum:Process_State	access:public
-PUSH_ARRAY	base/base_arena.h	/^#define PUSH_ARRAY(/;"	d	line:17	language:C++	signature:(arena,T,n)
-PUSH_ARRAY_NZ	base/base_arena.h	/^#define PUSH_ARRAY_NZ(/;"	d	line:18	language:C++	signature:(arena,T,n)
-PUSH_STRUCT	base/base_arena.h	/^#define PUSH_STRUCT(/;"	d	line:15	language:C++	signature:(arena,T)
-PUSH_STRUCT_NZ	base/base_arena.h	/^#define PUSH_STRUCT_NZ(/;"	d	line:16	language:C++	signature:(arena,T)
+PUSH_ARRAY	base/base_arena.h	/^#define PUSH_ARRAY(/;"	d	line:16	language:C++	signature:(arena,T,n)
+PUSH_ARRAY_NZ	base/base_arena.h	/^#define PUSH_ARRAY_NZ(/;"	d	line:17	language:C++	signature:(arena,T,n)
+PUSH_STRUCT	base/base_arena.h	/^#define PUSH_STRUCT(/;"	d	line:14	language:C++	signature:(arena,T)
+PUSH_STRUCT_NZ	base/base_arena.h	/^#define PUSH_STRUCT_NZ(/;"	d	line:15	language:C++	signature:(arena,T)
 Partition	libres/resources.h	/^struct Partition$/;"	s	line:65	language:C++
 Partition	libres/resources.h	/^typedef struct Partition Partition;$/;"	t	line:19	language:C++	typeref:struct:Partition
 Partition::blocks	libres/resources.h	/^  u64 blocks;$/;"	m	line:69	language:C++	struct:Partition	typeref:typename:u64	access:public
@@ -258,17 +258,17 @@ b16	base/base.h	/^typedef i16 b16;$/;"	t	line:43	language:C++	typeref:typename:i
 b32	base/base.h	/^typedef i32 b32;$/;"	t	line:42	language:C++	typeref:typename:i32
 b8	base/base.h	/^typedef u8 b8;$/;"	t	line:44	language:C++	typeref:typename:u8
 blocks	libres/resources.h	/^  u64 blocks;$/;"	m	line:69	language:C++	struct:Partition	typeref:typename:u64	access:public
-build	forge/forge.c	/^build(int argc, char **argv)$/;"	f	line:22	language:C	typeref:typename:internal int	signature:(int argc,char ** argv)
+build	forge/forge.c	/^build(int argc, char **argv)$/;"	f	line:24	language:C	typeref:typename:local_internal int	signature:(int argc,char ** argv)
 build	forge/forge.h	/^build(char *path)$/;"	f	line:4	language:C++	typeref:typename:internal void	signature:(char * path)
-capacity	base/base_arena.h	/^  u64 capacity;$/;"	m	line:27	language:C++	struct:mem_arena	typeref:typename:u64	access:public
+capacity	base/base_arena.h	/^  u64 capacity;$/;"	m	line:26	language:C++	struct:mem_arena	typeref:typename:u64	access:public
 capacity	libres/resources.h	/^  size_t capacity;$/;"	m	line:62	language:C++	struct:Process_List	typeref:typename:size_t	access:public
 comment	libres/resources.h	/^  char comment[BUFFER_SIZE_DEFAULT];$/;"	m	line:127	language:C++	struct:Port	typeref:typename:char[]	access:public
 compare_string	base/base.c	/^compare_string(const char *c1, const char *c2)$/;"	f	line:48	language:C	typeref:typename:local_internal b8	signature:(const char * c1,const char * c2)
-compile	forge/forge.c	/^compile(char *path)$/;"	f	line:14	language:C	typeref:typename:internal void	signature:(char * path)
+compile	forge/forge.c	/^compile(char *path)$/;"	f	line:15	language:C	typeref:typename:local_internal void	signature:(char * path)
 conn	dbus/dbushandler.h	/^  BusConnection *conn;$/;"	m	line:20	language:C++	struct:BusConnection	typeref:typename:BusConnection *	access:public
 cores	libres/resources.h	/^  u32 cores;$/;"	m	line:80	language:C++	struct:Cpu	typeref:typename:u32	access:public
 count	libres/resources.h	/^  size_t count;$/;"	m	line:61	language:C++	struct:Process_List	typeref:typename:size_t	access:public
-cpu_create	libres/resources.cc	/^cpu_create(mem_arena *m)$/;"	f	line:60	language:C++	typeref:typename:Cpu *	signature:(mem_arena * m)
+cpu_create	libres/resources.cc	/^cpu_create(mem_arena *m)$/;"	f	line:60	language:C++	typeref:typename:local_internal Cpu *	signature:(mem_arena * m)
 cpu_get_cores_enabled_arm	libres/resources.cc	/^cpu_get_cores_enabled_arm(Cpu *out)$/;"	f	line:161	language:C++	typeref:typename:int	signature:(Cpu * out)
 cpu_read	libres/resources.cc	/^cpu_read(Cpu *out)$/;"	f	line:268	language:C++	typeref:typename:int	signature:(Cpu * out)
 cpu_read_amd64	libres/resources.cc	/^cpu_read_amd64(Cpu *out)$/;"	f	line:217	language:C++	typeref:typename:int	signature:(Cpu * out)
@@ -276,32 +276,32 @@ cpu_read_arm64	libres/resources.cc	/^cpu_read_arm64(Cpu *out)$/;"	f	line:201	lan
 cpu_read_cpu_model_name_arm64	libres/resources.cc	/^cpu_read_cpu_model_name_arm64(Cpu *out)$/;"	f	line:120	language:C++	typeref:typename:int	signature:(Cpu * out)
 cpu_read_enabled_core_cpu_frequency	libres/resources.cc	/^cpu_read_enabled_core_cpu_frequency(Cpu *out, int enabled_cpu_count)$/;"	f	line:84	language:C++	typeref:typename:int	signature:(Cpu * out,int enabled_cpu_count)
 cpu_read_usage	libres/resources.cc	/^cpu_read_usage(Cpu *out)$/;"	f	line:303	language:C++	typeref:typename:int	signature:(Cpu * out)
-create_logind_object	dbus/dbushandler.cc	/^create_logind_object(sd_bus *bus, const sd_bus_vtable *vtable)$/;"	f	line:40	language:C++	typeref:typename:local_internal sd_bus_slot *	signature:(sd_bus * bus,const sd_bus_vtable * vtable)
-create_session_bus_connection	dbus/dbushandler.cc	/^create_session_bus_connection()$/;"	f	line:10	language:C++	typeref:typename:local_internal sd_bus *	signature:()
-create_system_bus_connection	dbus/dbushandler.cc	/^create_system_bus_connection()$/;"	f	line:18	language:C++	typeref:typename:local_internal sd_bus *	signature:()
-create_systemd_object	dbus/dbushandler.cc	/^create_systemd_object(sd_bus *bus, const sd_bus_vtable *vtable)$/;"	f	line:26	language:C++	typeref:typename:local_internal sd_bus_slot *	signature:(sd_bus * bus,const sd_bus_vtable * vtable)
+create_logind_object	dbus/dbushandler.cc	/^create_logind_object(sd_bus *bus, const sd_bus_vtable *vtable)$/;"	f	line:37	language:C++	typeref:typename:local_internal sd_bus_slot *	signature:(sd_bus * bus,const sd_bus_vtable * vtable)
+create_session_bus_connection	dbus/dbushandler.cc	/^create_session_bus_connection()$/;"	f	line:7	language:C++	typeref:typename:local_internal sd_bus *	signature:()
+create_system_bus_connection	dbus/dbushandler.cc	/^create_system_bus_connection()$/;"	f	line:15	language:C++	typeref:typename:local_internal sd_bus *	signature:()
+create_systemd_object	dbus/dbushandler.cc	/^create_systemd_object(sd_bus *bus, const sd_bus_vtable *vtable)$/;"	f	line:23	language:C++	typeref:typename:local_internal sd_bus_slot *	signature:(sd_bus * bus,const sd_bus_vtable * vtable)
 dep_unit	dbus/dbushandler.h	/^  char *dep_unit;$/;"	m	line:63	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
 deps	forge/dep.h	/^internal struct package_set deps = {$/;"	v	line:9	language:C++	typeref:struct:package_set
 description	dbus/dbushandler.h	/^  char *description;$/;"	m	line:59	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
 destination_symlink	dbus/dbushandler.h	/^  char *destination_symlink;$/;"	m	line:75	language:C++	struct:UnitFileChange	typeref:typename:char *	access:public
-device_create	libres/resources.cc	/^device_create(mem_arena *m)$/;"	f	line:539	language:C++	typeref:typename:Device *	signature:(mem_arena * m)
-device_read	libres/resources.cc	/^device_read(Device *out)$/;"	f	line:784	language:C++	typeref:typename:int	signature:(Device * out)
-device_up_time	libres/resources.cc	/^device_up_time(Device *out)$/;"	f	line:740	language:C++	typeref:typename:int	signature:(Device * out)
+device_create	libres/resources.cc	/^device_create(mem_arena *m)$/;"	f	line:544	language:C++	typeref:typename:local_internal Device *	signature:(mem_arena * m)
+device_read	libres/resources.cc	/^device_read(Device *out)$/;"	f	line:789	language:C++	typeref:typename:int	signature:(Device * out)
+device_up_time	libres/resources.cc	/^device_up_time(Device *out)$/;"	f	line:745	language:C++	typeref:typename:local_internal int	signature:(Device * out)
 disk_create	libres/resources.cc	/^disk_create(mem_arena *m)$/;"	f	line:439	language:C++	typeref:typename:Disk *	signature:(mem_arena * m)
 disk_push_partition	libres/resources.cc	/^disk_push_partition(Disk *d, Partition p, mem_arena *arena)$/;"	f	line:32	language:C++	typeref:typename:local_internal void	signature:(Disk * d,Partition p,mem_arena * arena)
-disk_read	libres/resources.cc	/^disk_read(Disk *out, mem_arena *arena)$/;"	f	line:457	language:C++	typeref:typename:int	signature:(Disk * out,mem_arena * arena)
-distro_map	libpkg/pkg.h	/^internal const struct DistroStack distro_map[] = {$/;"	v	line:42	language:C++	typeref:typename:const struct DistroStack[]
+disk_read	libres/resources.cc	/^disk_read(Disk *out, mem_arena *arena)$/;"	f	line:457	language:C++	typeref:typename:local_internal int	signature:(Disk * out,mem_arena * arena)
+distro_map	libpkg/pkg.h	/^local_internal const struct DistroStack distro_map[] = {$/;"	v	line:42	language:C++	typeref:typename:const struct DistroStack[]
 f32	base/base.h	/^typedef float f32;$/;"	t	line:39	language:C++	typeref:typename:float
 f64	base/base.h	/^typedef double f64;$/;"	t	line:40	language:C++	typeref:typename:double
 file_name_symlink	dbus/dbushandler.h	/^  char *file_name_symlink;$/;"	m	line:74	language:C++	struct:UnitFileChange	typeref:typename:char *	access:public
-find_lxd_pkgm	libpkg/pkg.c	/^find_lxd_pkgm(mem_arena *arena)$/;"	f	line:12	language:C	typeref:typename:internal char *	signature:(mem_arena * arena)
+find_lxd_pkgm	libpkg/pkg.c	/^find_lxd_pkgm(mem_arena *arena)$/;"	f	line:12	language:C	typeref:typename:local_internal char *	signature:(mem_arena * arena)
 free	libres/resources.h	/^  u64 free;$/;"	m	line:86	language:C++	struct:Ram	typeref:typename:u64	access:public
 free	libres/resources.h	/^  u64 free;$/;"	m	line:92	language:C++	struct:FileSystem	typeref:typename:u64	access:public
 frequency	libres/resources.h	/^  char frequency[BUFFER_SIZE_SMALL];$/;"	m	line:77	language:C++	struct:Cpu	typeref:typename:char[]	access:public
-fs_create	libres/resources.cc	/^fs_create(mem_arena *arena)$/;"	f	line:504	language:C++	typeref:typename:FileSystem *	signature:(mem_arena * arena)
-fs_read	libres/resources.cc	/^fs_read(char *path, FileSystem *fs)$/;"	f	line:510	language:C++	typeref:typename:int	signature:(char * path,FileSystem * fs)
+fs_create	libres/resources.cc	/^fs_create(mem_arena *arena)$/;"	f	line:509	language:C++	typeref:typename:local_internal FileSystem *	signature:(mem_arena * arena)
+fs_read	libres/resources.cc	/^fs_read(char *path, FileSystem *fs)$/;"	f	line:515	language:C++	typeref:typename:local_internal int	signature:(char * path,FileSystem * fs)
 global_variable	base/base.h	/^#define global_variable /;"	d	line:7	language:C++
-grpc_server_setup	agent_grpc/agent_grpc.cc	/^grpc_server_setup(ServerBuilder *sb)$/;"	f	line:12	language:C++	typeref:typename:local_internal std::unique_ptr<Server>	signature:(ServerBuilder * sb)
+grpc_server_setup	agent_grpc/agent_grpc.cc	/^grpc_server_setup()$/;"	f	line:17	language:C++	typeref:typename:local_internal void	signature:()
 i16	base/base.h	/^typedef int16_t i16;$/;"	t	line:35	language:C++	typeref:typename:int16_t
 i32	base/base.h	/^typedef int32_t i32;$/;"	t	line:36	language:C++	typeref:typename:int32_t
 i64	base/base.h	/^typedef int64_t i64;$/;"	t	line:37	language:C++	typeref:typename:int64_t
@@ -314,20 +314,19 @@ is_numeric	base/base.c	/^is_numeric(char *s)$/;"	f	line:35	language:C	typeref:ty
 items	libres/resources.h	/^  Process *items;$/;"	m	line:60	language:C++	struct:Process_List	typeref:typename:Process *	access:public
 job_path	dbus/dbushandler.h	/^  char *job_path;$/;"	m	line:67	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
 job_type	dbus/dbushandler.h	/^  char *job_type;$/;"	m	line:66	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
-journal_field_names	journal/journald.c	/^global_variable const char *journal_field_names[JOURNAL_FIELD_COUNT] = {$/;"	v	line:6	language:C	typeref:typename:global_variable const char * []
 linux_distro	libpkg/pkg.h	/^  enum LinuxDistro linux_distro;$/;"	m	line:39	language:C++	struct:DistroStack	typeref:enum:LinuxDistro	access:public
 load_state	dbus/dbushandler.h	/^  char *load_state;$/;"	m	line:60	language:C++	struct:LoadedUnit	typeref:typename:char *	access:public
 local_internal	base/base.h	/^#define local_internal /;"	d	line:9	language:C++
 local_persist	base/base.h	/^#define local_persist /;"	d	line:8	language:C++
-logs	journal/journald.c	/^logs(char *unit, char *time, JournalField jf)$/;"	f	line:30	language:C	typeref:typename:local_internal const char *	signature:(char * unit,char * time,JournalField jf)
+logs	journal/journald.c	/^logs(char *unit, char *time, JournalField jf)$/;"	f	line:49	language:C	typeref:typename:local_internal const char *	signature:(char * unit,char * time,JournalField jf)
 main	agent/core.cc	/^main(void)$/;"	f	line:7	language:C++	typeref:typename:int	signature:(void)
 main	forge/forge.h	/^main()$/;"	f	line:9	language:C++	typeref:typename:int	signature:()
 major	libres/resources.h	/^  u64 major;$/;"	m	line:67	language:C++	struct:Partition	typeref:typename:u64	access:public
 manager	forge/dep.h	/^  const char *manager;$/;"	m	line:5	language:C++	struct:package_set	typeref:typename:const char *	access:public
-mem_arena	base/base_arena.h	/^struct mem_arena$/;"	s	line:25	language:C++
-mem_arena	base/base_arena.h	/^typedef struct mem_arena mem_arena;$/;"	t	line:23	language:C++	typeref:struct:mem_arena
-mem_arena::capacity	base/base_arena.h	/^  u64 capacity;$/;"	m	line:27	language:C++	struct:mem_arena	typeref:typename:u64	access:public
-mem_arena::pos	base/base_arena.h	/^  u64 pos;$/;"	m	line:28	language:C++	struct:mem_arena	typeref:typename:u64	access:public
+mem_arena	base/base_arena.h	/^struct mem_arena$/;"	s	line:24	language:C++
+mem_arena	base/base_arena.h	/^typedef struct mem_arena mem_arena;$/;"	t	line:22	language:C++	typeref:struct:mem_arena
+mem_arena::capacity	base/base_arena.h	/^  u64 capacity;$/;"	m	line:26	language:C++	struct:mem_arena	typeref:typename:u64	access:public
+mem_arena::pos	base/base_arena.h	/^  u64 pos;$/;"	m	line:27	language:C++	struct:mem_arena	typeref:typename:u64	access:public
 minor	libres/resources.h	/^  u64 minor;$/;"	m	line:68	language:C++	struct:Partition	typeref:typename:u64	access:public
 model	libres/resources.h	/^  char model[BUFFER_SIZE_DEFAULT];$/;"	m	line:76	language:C++	struct:Cpu	typeref:typename:char[]	access:public
 name	dbus/dbushandler.h	/^  char *name;$/;"	m	line:26	language:C++	struct:Process	typeref:typename:char *	access:public
@@ -348,7 +347,7 @@ package_set::manager	forge/dep.h	/^  const char *manager;$/;"	m	line:5	language:
 package_set::packages	forge/dep.h	/^  const char *packages[16];$/;"	m	line:6	language:C++	struct:package_set	typeref:typename:const char * [16]	access:public
 packages	forge/dep.h	/^  const char *packages[16];$/;"	m	line:6	language:C++	struct:package_set	typeref:typename:const char * [16]	access:public
 parse_u64	base/base.c	/^parse_u64(char *buf, size_t len)$/;"	f	line:8	language:C	typeref:typename:local_internal u64	signature:(char * buf,size_t len)
-parse_unit_name	journal/journald.c	/^parse_unit_name(char *unit)$/;"	f	line:24	language:C	typeref:typename:local_internal JournalField	signature:(char * unit)
+parse_unit_name	journal/journald.c	/^parse_unit_name(char *unit)$/;"	f	line:36	language:C	typeref:typename:local_internal JournalField	signature:(char * unit)
 part_capacity	libres/resources.h	/^  size_t part_capacity;$/;"	m	line:102	language:C++	struct:Disk	typeref:typename:size_t	access:public
 part_count	libres/resources.h	/^  size_t part_count;$/;"	m	line:101	language:C++	struct:Disk	typeref:typename:size_t	access:public
 partitions	libres/resources.h	/^  Partition *partitions;$/;"	m	line:99	language:C++	struct:Disk	typeref:typename:Partition *	access:public
@@ -357,22 +356,21 @@ port	libres/resources.h	/^  int port;$/;"	m	line:124	language:C++	struct:Port	ty
 port	libres/resources.h	/^  struct Port *port;$/;"	m	line:138	language:C++	struct:Device	typeref:struct:Port *	access:public
 port_read_tcp4	libnet/net.c	/^port_read_tcp4(Device *device)$/;"	f	line:17	language:C	typeref:typename:local_internal i8	signature:(Device * device)
 port_read_tcp6	libnet/net.c	/^port_read_tcp6(Device *device)$/;"	f	line:46	language:C	typeref:typename:local_internal i8	signature:(Device * device)
-pos	base/base_arena.h	/^  u64 pos;$/;"	m	line:28	language:C++	struct:mem_arena	typeref:typename:u64	access:public
+pos	base/base_arena.h	/^  u64 pos;$/;"	m	line:27	language:C++	struct:mem_arena	typeref:typename:u64	access:public
 process_count	dbus/dbushandler.h	/^  size_t process_count;$/;"	m	line:43	language:C++	struct:System	typeref:typename:size_t	access:public
-process_kill	libres/resources.cc	/^process_kill(pid_t pid, int signal)$/;"	f	line:844	language:C++	typeref:typename:int	signature:(pid_t pid,int signal)
-process_list_collect	libres/resources.cc	/^process_list_collect(Process_List *list, mem_arena *arena)$/;"	f	line:554	language:C++	typeref:typename:int	signature:(Process_List * list,mem_arena * arena)
-process_read	libres/resources.cc	/^process_read(i32 pid, Process *out)$/;"	f	line:622	language:C++	typeref:typename:int	signature:(i32 pid,Process * out)
+process_kill	libres/resources.cc	/^process_kill(pid_t pid, int signal)$/;"	f	line:849	language:C++	typeref:typename:local_internal int	signature:(pid_t pid,int signal)
+process_list_collect	libres/resources.cc	/^process_list_collect(Process_List *list, mem_arena *arena)$/;"	f	line:559	language:C++	typeref:typename:local_internal int	signature:(Process_List * list,mem_arena * arena)
+process_read	libres/resources.cc	/^process_read(i32 pid, Process *out)$/;"	f	line:627	language:C++	typeref:typename:local_internal int	signature:(i32 pid,Process * out)
 processes	dbus/dbushandler.h	/^  Process *processes;$/;"	m	line:42	language:C++	struct:System	typeref:typename:Process *	access:public
 processes	libres/resources.h	/^  Process_List processes;$/;"	m	line:134	language:C++	struct:Device	typeref:typename:Process_List	access:public
-query	libpkg/distro/fedora_dnf.cc	/^query(libdnf5::Base *base, std::string package_name)$/;"	f	line:44	language:C++	typeref:typename:std::vector<std::string>	signature:(libdnf5::Base * base,std::string package_name)
+query	libpkg/distro/fedora_dnf.cc	/^query(libdnf5::Base *base, std::string package_name)$/;"	f	line:49	language:C++	typeref:typename:std::vector<std::string>	signature:(libdnf5::Base * base,std::string package_name)
 queued_job	dbus/dbushandler.h	/^  uint32_t queued_job;$/;"	m	line:65	language:C++	struct:LoadedUnit	typeref:typename:uint32_t	access:public
 ram_create	libres/resources.cc	/^ram_create(mem_arena *m)$/;"	f	line:355	language:C++	typeref:typename:Ram *	signature:(mem_arena * m)
 ram_read	libres/resources.cc	/^ram_read(Ram *out)$/;"	f	line:370	language:C++	typeref:typename:int	signature:(Ram * out)
-run_transaction	libpkg/distro/fedora_dnf.cc	/^run_transaction(libdnf5::Base *base, std::string package_name)$/;"	f	line:60	language:C++	typeref:typename:void	signature:(libdnf5::Base * base,std::string package_name)
-server_address	agent_grpc/agent_grpc.cc	/^static const char *server_address = "0.0.0.0:5000";$/;"	v	line:6	language:C++	typeref:typename:const char *	file:
+run_transaction	libpkg/distro/fedora_dnf.cc	/^run_transaction(libdnf5::Base *base, std::string package_name)$/;"	f	line:65	language:C++	typeref:typename:void	signature:(libdnf5::Base * base,std::string package_name)
 service_count	dbus/dbushandler.h	/^  size_t service_count;$/;"	m	line:45	language:C++	struct:System	typeref:typename:size_t	access:public
 services	dbus/dbushandler.h	/^  Service *services;$/;"	m	line:44	language:C++	struct:System	typeref:typename:Service *	access:public
-setup	libpkg/distro/fedora_dnf.cc	/^setup()$/;"	f	line:24	language:C++	typeref:typename:libdnf5::Base *	signature:()
+setup	libpkg/distro/fedora_dnf.cc	/^setup()$/;"	f	line:29	language:C++	typeref:typename:libdnf5::Base *	signature:()
 state	dbus/dbushandler.h	/^  char *state;$/;"	m	line:52	language:C++	struct:Unit	typeref:typename:char *	access:public
 state	libres/resources.h	/^  Process_State state;$/;"	m	line:51	language:C++	struct:Process	typeref:typename:Process_State	access:public
 stime	libres/resources.h	/^  u64 stime;$/;"	m	line:53	language:C++	struct:Process	typeref:typename:u64	access:public

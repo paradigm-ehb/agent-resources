@@ -1,7 +1,7 @@
 #include <grpcpp/server_builder.h>
 #include <unistd.h>
 
-#include "agent_grpc/agent_grpc.h"
+#include "grpc_service/grpc_service.h"
 
 int
 main(void)

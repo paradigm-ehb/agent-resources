@@ -1,6 +1,5 @@
 #define internal static
-
-struct package_set
+ struct package_set
 {
   const char *manager;
   const char *packages[16];
