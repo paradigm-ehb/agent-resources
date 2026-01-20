@@ -6,7 +6,6 @@
 #include "base/base_arena.c"
 #include "libres/resources.cc"
 
-#include <assert.h>
 
 /*
  * Test case:
@@ -21,7 +20,7 @@ test_partition_count()
   Disk *disk = disk_create(arena);
   disk_read(disk, arena);
 
-  assert((disk->part_count != 0) && "Failed to retrieve partition count");
+  test_assert((disk->part_count != 0) && "Failed to retrieve partition count");
 
 }
 
@@ -37,7 +36,7 @@ test_partition_creation()
   Disk *disk = disk_create(arena);
   disk_read(disk, arena);
 
-  assert((disk->partitions != NULL));
+  test_assert((disk->partitions != NULL));
 }
 
 /*
@@ -52,7 +51,7 @@ test_partition_capacity_bigger_then_count()
   Disk *disk = disk_create(arena);
   disk_read(disk, arena);
 
-  assert((disk->part_capacity >= disk->part_count));
+  test_assert((disk->part_capacity >= disk->part_count));
 }
 
 /*

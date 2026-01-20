@@ -20,6 +20,7 @@ LDFLAGS  += $(shell pkg-config --libs grpc++)
 # Compiler flags
 CXXFLAGS := \
 	-std=c++17 \
+	-g
 	-Wall \
 	-Wextra \
 	-Wno-unused-function \
@@ -28,6 +29,7 @@ CXXFLAGS := \
 
 CFLAGS := \
 	-std=c99 \
+	-g
 	-Wall \
 	-Wextra \
 	-Wno-unused-function \

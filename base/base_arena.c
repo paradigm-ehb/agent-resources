@@ -12,9 +12,8 @@
 
 #include "base_arena.h"
 
-/**
- * TODO(nasr): reserve pages support
- * */
+/* TODO(nasr): reserve pages support */
+/* TODO(nasr): check if an arena has been used before */
 
 local_internal mem_arena *
 arena_create(u64 capacity)

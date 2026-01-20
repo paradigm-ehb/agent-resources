@@ -1,11 +1,32 @@
 #ifndef BASE_H
 #define BASE_H
 
+#include <cstdint>
 #include <stdint.h>
 #include <stddef.h>
 
+/* assert an expression and output the file and the line */
+
+#define RED   "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define RESET "\x1b[0m"
+
+#define test_assert(expr) \
+  do \
+  { \
+    if (!(expr)) \
+    { \
+      fprintf(stderr, RED " [FAILED] %s:%d: expr:%s test:%s\n" RESET, __FILE__, __LINE__, #expr, __func__); \
+      abort(); \
+    } \
+    else\
+    { \
+      fprintf(stdout, GREEN "[PASSED] %s\n" RESET, __func__); \
+    }\
+  } while (0)
+
 #define global_variable static
-#define local_persist   static
+#define local_persist static
 #define local_internal static
 
 #define ERR_OK 0
@@ -41,6 +62,9 @@ typedef double f64;
 typedef i32 b32;
 typedef i16 b16;
 typedef u8 b8;
+
+typedef uintptr_t umm;
+typedef intptr_t smm;
 
 #define TRUE 1
 #define FALSE 0
