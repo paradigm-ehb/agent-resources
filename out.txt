@@ -1,1 +1,0 @@
-g++ -std=c++17 -Wall -Wno-unused-function -I. -Ithird_party/grpc/include -Ithird_party/grpc/src/core -Ithird_party/grpc/src -Ithird_party/grpc -Igen unity.cc -o agent -pthread -lprotobuf -lgrpc++ -lgrpc -labsl_base -labsl_synchronization -labsl_strings -lssl -lcrypto -ldbus-1

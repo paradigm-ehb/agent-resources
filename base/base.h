@@ -1,9 +1,9 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include <cstdint>
 #include <stdint.h>
-#include <stddef.h>
+#include <unistd.h>
+#include <stdio.h>
 
 /* assert an expression and output the file and the line */
 
@@ -11,13 +11,16 @@
 #define GREEN "\x1b[32m"
 #define RESET "\x1b[0m"
 
-#define test_assert(expr) \
+/* TODO(nasr): remove the stdio dep? */
+
+#define test(expr) \
   do \
   { \
     if (!(expr)) \
     { \
-      fprintf(stderr, RED " [FAILED] %s:%d: expr:%s test:%s\n" RESET, __FILE__, __LINE__, #expr, __func__); \
-      abort(); \
+      fprintf(stderr, RED " [FAILED] %s:%d: expr:%s test:%s\n" RESET, \
+          __FILE__, __LINE__, #expr, __func__); \
+      _exit(0); \
     } \
     else\
     { \
@@ -25,9 +28,16 @@
     }\
   } while (0)
 
+#define check(expr) \
+  if (!(expr)) \
+      fprintf(stderr, RED " [ERROR] %s:%d: expr:%s test:%s\n" RESET, \
+          __FILE__, __LINE__, #expr, __func__); \
+          _exit(0);\
+
 #define global_variable static
 #define local_persist static
 #define local_internal static
+
 
 #define ERR_OK 0
 #define ERR_IO 1
@@ -39,6 +49,10 @@
 #define MiB(n) (((u64)(n)) << 20)
 #define GiB(n) (((u64)(n)) << 30)
 
+/*
+ *
+ * TODO(nasr): improve the namings
+ * */
 #define BUFFER_SIZE_SMALL 128
 #define BUFFER_SIZE_DEFAULT 256
 #define BUFFER_SIZE_LARGE 512
@@ -78,9 +92,6 @@ is_numeric(char *s);
 local_internal b8
 compare_string(const char *c1, const char *c2);
 
-/*
- * TODO(nasr): macro for verbose assertions
- *
- * */
+/* TODO(nasr): macro for verbose assertions */
 
 #endif

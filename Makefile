@@ -20,7 +20,7 @@ LDFLAGS  += $(shell pkg-config --libs grpc++)
 # Compiler flags
 CXXFLAGS := \
 	-std=c++17 \
-	-g
+	-g    \
 	-Wall \
 	-Wextra \
 	-Wno-unused-function \
@@ -29,8 +29,8 @@ CXXFLAGS := \
 
 CFLAGS := \
 	-std=c99 \
-	-g
-	-Wall \
+	-g \
+	-wall \
 	-Wextra \
 	-Wno-unused-function \
 	$(INCLUDES)
@@ -46,8 +46,9 @@ LDFLAGS := \
 	-labsl_strings \
 	-ldbus-1 \
 	-lsystemd \
-	-lssl \
-	-lcrypto
+	-D_POSIX_C_SOURCE=200809L \
+  -lssl \
+	-lcrypto \
 
 # Sources
 # Unity build OR list files explicitly

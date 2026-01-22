@@ -110,6 +110,7 @@
 !_TAG_ROLE_DESCRIPTION!Sh!script	loaded	/loaded/
 !_TAG_ROLE_DESCRIPTION!Yaml!anchor	alias	/alias/
 $(TARGET)	Makefile	/^$(TARGET): $(SOURCES)$/;"	t
+-D_POSIX_C_SOURCE	Makefile	/^	-D_POSIX_C_SOURCE=200809L \\$/;"	m
 0	compile_commands.json	/^      "\/usr\/bin\/g++",$/;"	s	array:0.arguments
 0	compile_commands.json	/^  {$/;"	o
 1	compile_commands.json	/^      "-c",$/;"	s	array:0.arguments
@@ -1429,7 +1430,8 @@ GOOGLE_PROTOBUF_INCLUDED_services_2fv1_2fservices_2eproto	gen/services/v1/servic
 GOOGLE_PROTOBUF_INCLUDED_services_2fv2_2fservices_2eproto	gen/services/v2/services.pb.h	/^#define GOOGLE_PROTOBUF_INCLUDED_services_2fv2_2fservices_2eproto$/;"	d
 GOOGLE_PROTOBUF_INCLUDED_services_2fv3_2fservices_2eproto	gen/services/v3/services.pb.h	/^#define GOOGLE_PROTOBUF_INCLUDED_services_2fv3_2fservices_2eproto$/;"	d
 GOOGLE_PROTOBUF_INCLUDED_services_2fv4_2fservices_2eproto	gen/services/v4/services.pb.h	/^#define GOOGLE_PROTOBUF_INCLUDED_services_2fv4_2fservices_2eproto$/;"	d
-GRPC_H	grpc_service/grpc_service.h	/^#define GRPC_H$/;"	d
+GREEN	base/base.h	/^#define GREEN /;"	d
+GRPC_H	grpc_server/server.h	/^#define GRPC_H$/;"	d
 GRPC_actions_2fv1_2fdevice_5factions_2eproto__INCLUDED	gen/actions/v1/device_actions.grpc.pb.h	/^#define GRPC_actions_2fv1_2fdevice_5factions_2eproto__INCLUDED$/;"	d
 GRPC_greet_2fgreet_2eproto__INCLUDED	gen/greet/greet.grpc.pb.h	/^#define GRPC_greet_2fgreet_2eproto__INCLUDED$/;"	d
 GRPC_journal_2fv1_2fjournal_2eproto__INCLUDED	gen/journal/v1/journal.grpc.pb.h	/^#define GRPC_journal_2fv1_2fjournal_2eproto__INCLUDED$/;"	d
@@ -3668,6 +3670,8 @@ QueryUnits	gen/services/v4/services.grpc.pb.h	/^    ::grpc::Status QueryUnits(::
 QueryUnits	gen/services/v4/services.grpc.pb.h	/^    virtual ::grpc::ServerUnaryReactor* QueryUnits($/;"	f	class:services::v4::HandlerService::WithCallbackMethod_QueryUnits	typeref:typename:::grpc::ServerUnaryReactor *
 QueryUnits	gen/services/v4/services.grpc.pb.h	/^    virtual ::grpc::ServerUnaryReactor* QueryUnits($/;"	f	class:services::v4::HandlerService::WithRawCallbackMethod_QueryUnits	typeref:typename:::grpc::ServerUnaryReactor *
 QueryUnits	proto/services/v4/services.proto	/^  rpc QueryUnits (UnitQueryRequest)$/;"	r	service:services.v4.HandlerService	typeref:typename:GetUnitsReply
+RED	base/base.h	/^#define RED /;"	d
+RESET	base/base.h	/^#define RESET /;"	d
 RESOURCES_API_VERSION	libres/resources.h	/^#define RESOURCES_API_VERSION /;"	d
 RESOURCES_H	libres/resources.h	/^#define RESOURCES_H$/;"	d
 Ram	libres/resources.h	/^struct Ram$/;"	s
@@ -5820,7 +5824,6 @@ _LoadedUnit_default_instance_	gen/services/v4/services.pb.cc	/^PROTOBUF_ATTRIBUT
 _Memory_default_instance_	gen/resources/v1/deviceresources.pb.cc	/^PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MemoryDefaultTypeInternal _Memory_default_insta/;"	v	namespace:resources::v1	typeref:typename:PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MemoryDefaultTypeInternal
 _Memory_default_instance_	gen/resources/v2/deviceresources.pb.cc	/^PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MemoryDefaultTypeInternal _Memory_default_insta/;"	v	namespace:resources::v2	typeref:typename:PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MemoryDefaultTypeInternal
 _Memory_default_instance_	gen/resources/v3/deviceresources.pb.cc	/^PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MemoryDefaultTypeInternal _Memory_default_insta/;"	v	namespace:resources::v3	typeref:typename:PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MemoryDefaultTypeInternal
-_POSIX_C_SOURCE	libres/resources.cc	/^#define _POSIX_C_SOURCE /;"	d	file:
 _ProcessActionReply_default_instance_	gen/resources/v2/deviceresources.pb.cc	/^PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessActionReplyDefaultTypeInternal _ProcessA/;"	v	namespace:resources::v2	typeref:typename:PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessActionReplyDefaultTypeInternal
 _ProcessActionReply_default_instance_	gen/resources/v3/deviceresources.pb.cc	/^PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessActionReplyDefaultTypeInternal _ProcessA/;"	v	namespace:resources::v3	typeref:typename:PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessActionReplyDefaultTypeInternal
 _ProcessActionRequest_default_instance_	gen/resources/v2/deviceresources.pb.cc	/^PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessActionRequestDefaultTypeInternal _Proces/;"	v	namespace:resources::v2	typeref:typename:PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessActionRequestDefaultTypeInternal
@@ -7280,6 +7283,7 @@ channel_	gen/services/v1/services.grpc.pb.h	/^    std::shared_ptr< ::grpc::Chann
 channel_	gen/services/v2/services.grpc.pb.h	/^    std::shared_ptr< ::grpc::ChannelInterface> channel_;$/;"	m	class:services::v2::HandlerService::Stub	typeref:typename:std::shared_ptr<::grpc::ChannelInterface>
 channel_	gen/services/v3/services.grpc.pb.h	/^    std::shared_ptr< ::grpc::ChannelInterface> channel_;$/;"	m	class:services::v3::HandlerService::Stub	typeref:typename:std::shared_ptr<::grpc::ChannelInterface>
 channel_	gen/services/v4/services.grpc.pb.h	/^    std::shared_ptr< ::grpc::ChannelInterface> channel_;$/;"	m	class:services::v4::HandlerService::Stub	typeref:typename:std::shared_ptr<::grpc::ChannelInterface>
+check	base/base.h	/^#define check(/;"	d
 clean	Makefile	/^clean:$/;"	t
 clear_action	gen/services/v2/services.pb.h	/^inline void UnitActionRequest::clear_action() {$/;"	f	class:services::v2::UnitActionRequest	typeref:typename:void
 clear_action	gen/services/v2/services.pb.h	/^inline void UnitFileActionRequest::clear_action() {$/;"	f	class:services::v2::UnitFileActionRequest	typeref:typename:void
@@ -7821,7 +7825,6 @@ directory	compile_commands.json	/^    "directory": "\/home\/nasr\/agent-c",$/;"	
 disk_create	libres/resources.cc	/^disk_create(mem_arena *m)$/;"	f	typeref:typename:Disk *
 disk_push_partition	libres/resources.cc	/^disk_push_partition(Disk *d, Partition p, mem_arena *arena)$/;"	f	typeref:typename:local_internal void
 disk_read	libres/resources.cc	/^disk_read(Disk *out, mem_arena *arena)$/;"	f	typeref:typename:local_internal int
-disk_tests	tests/test_resources.cc	/^disk_tests()$/;"	f	typeref:typename:local_internal void
 disks	gen/resources/v1/deviceresources.pb.h	/^SystemResources::disks() const {$/;"	f	class:resources::v1::SystemResources	typeref:typename:const::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::resources::v1::Disk> &
 disks	gen/resources/v1/deviceresources.pb.h	/^inline const ::resources::v1::Disk& SystemResources::disks(int index) const {$/;"	f	class:resources::v1::SystemResources	typeref:typename:const::resources::v1::Disk &
 disks	gen/resources/v2/deviceresources.pb.h	/^SystemResources::disks() const {$/;"	f	class:resources::v2::SystemResources	typeref:typename:const::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::resources::v2::Disk> &
@@ -8010,13 +8013,15 @@ frequency	proto/resources/v2/deviceresources.proto	/^  string frequency = 3;$/;"
 frequency	proto/resources/v3/deviceresources.proto	/^  string frequency = 3;  \/\/ Nominal or current frequency$/;"	f	message:resources.v3.Cpu	typeref:typename:string
 fs_create	libres/resources.cc	/^fs_create(mem_arena *arena)$/;"	f	typeref:typename:local_internal FileSystem *
 fs_read	libres/resources.cc	/^fs_read(char *path, FileSystem *fs)$/;"	f	typeref:typename:local_internal int
+generate_cert	auth/auth.cc	/^generate_cert()$/;"	f	typeref:typename:local_internal void
 global_variable	base/base.h	/^#define global_variable /;"	d
 greet	gen/greet/greet.grpc.pb.cc	/^namespace greet {$/;"	n	file:
 greet	gen/greet/greet.grpc.pb.h	/^namespace greet {$/;"	n
 greet	gen/greet/greet.pb.cc	/^namespace greet {$/;"	n	file:
 greet	gen/greet/greet.pb.h	/^namespace greet {$/;"	n
 greet	proto/greet/greet.proto	/^package greet;$/;"	p
-grpc_server_setup	grpc_service/server.cc	/^grpc_server_setup()$/;"	f	typeref:typename:local_internal void
+grpc_server_intercept_logger	grpc_server/server.cc	/^grpc_server_intercept_logger()$/;"	f	typeref:typename:local_internal void
+grpc_server_setup	grpc_server/server.cc	/^grpc_server_setup()$/;"	f	typeref:typename:local_internal void
 has_cpu	gen/resources/v1/deviceresources.pb.h	/^inline bool SystemResources::has_cpu() const {$/;"	f	class:resources::v1::SystemResources	typeref:typename:bool
 has_cpu	gen/resources/v2/deviceresources.pb.h	/^inline bool SystemResources::has_cpu() const {$/;"	f	class:resources::v2::SystemResources	typeref:typename:bool
 has_cpu	gen/resources/v3/deviceresources.pb.h	/^inline bool GetCpuReply::has_cpu() const {$/;"	f	class:resources::v3::GetCpuReply	typeref:typename:bool
@@ -8571,6 +8576,7 @@ limit	gen/journal/v2/journal.pb.h	/^inline uint64_t JournalRequest::limit() cons
 limit	proto/journal/v2/journal.proto	/^  uint64 limit = 10;$/;"	f	message:journal.v2.JournalRequest	typeref:typename:uint64
 limit_	gen/journal/v2/journal.pb.h	/^  uint64_t limit_;$/;"	m	class:journal::v2::JournalRequest	typeref:typename:uint64_t
 linux_distro	libpkg/pkg.h	/^  enum LinuxDistro linux_distro;$/;"	m	struct:DistroStack	typeref:enum:LinuxDistro
+load_cert	auth/auth.cc	/^load_cert()$/;"	f	typeref:typename:local_internal void
 load_state	dbus/dbushandler.h	/^  char *load_state;$/;"	m	struct:LoadedUnit	typeref:typename:char *
 load_state	gen/services/v2/services.pb.h	/^inline const std::string& LoadedUnit::load_state() const {$/;"	f	class:services::v2::LoadedUnit	typeref:typename:const std::string &
 load_state	gen/services/v3/services.pb.h	/^inline const std::string& LoadedUnit::load_state() const {$/;"	f	class:services::v3::LoadedUnit	typeref:typename:const std::string &
@@ -8584,7 +8590,9 @@ local_persist	base/base.h	/^#define local_persist /;"	d
 logs	journal/journald.c	/^logs(char *unit, char *time, JournalField jf)$/;"	f	typeref:typename:local_internal const char *
 main	agent/core.cc	/^main(void)$/;"	f	typeref:typename:int
 main	forge/forge.h	/^main()$/;"	f	typeref:typename:int
-main	tests/test_resources.cc	/^main()$/;"	f	typeref:typename:int
+main	tests/test_cpu_resources.cc	/^main()$/;"	f	typeref:typename:int
+main	tests/test_disk_resources.cc	/^main()$/;"	f	typeref:typename:int
+main	tests/test_ram_resources.cc	/^main()$/;"	f	typeref:typename:int
 major	gen/resources/v1/deviceresources.pb.h	/^inline uint32_t DiskPartition::major() const {$/;"	f	class:resources::v1::DiskPartition	typeref:typename:uint32_t
 major	gen/resources/v2/deviceresources.pb.h	/^inline uint32_t DiskPartition::major() const {$/;"	f	class:resources::v2::DiskPartition	typeref:typename:uint32_t
 major	gen/resources/v3/deviceresources.pb.h	/^inline uint32_t DiskPartition::major() const {$/;"	f	class:resources::v3::DiskPartition	typeref:typename:uint32_t
@@ -9782,6 +9790,7 @@ signal	proto/resources/v3/deviceresources.proto	/^  int32 signal = 2;$/;"	f	mess
 signal_	gen/resources/v2/deviceresources.pb.h	/^  int32_t signal_;$/;"	m	class:resources::v2::ProcessActionRequest	typeref:typename:int32_t
 signal_	gen/resources/v3/deviceresources.pb.h	/^  int32_t signal_;$/;"	m	class:resources::v3::ProcessActionRequest	typeref:typename:int32_t
 size_type	gen/journal/v2/journal.pb.cc	/^      typedef ::PROTOBUF_NAMESPACE_ID::Map< std::string, std::string >::size_type size_type;$/;"	t	function:journal::v2::JournalEntry::_InternalSerialize	typeref:typename:::PROTOBUF_NAMESPACE_ID::Map<std::string,std::string>::size_type	file:
+smm	base/base.h	/^typedef intptr_t smm;$/;"	t	typeref:typename:intptr_t
 state	dbus/dbushandler.h	/^  char *state;$/;"	m	struct:Unit	typeref:typename:char *
 state	gen/resources/v1/deviceresources.pb.h	/^inline ::resources::v1::ProcessState Process::state() const {$/;"	f	class:resources::v1::Process	typeref:typename:::resources::v1::ProcessState
 state	gen/resources/v2/deviceresources.pb.h	/^inline ::resources::v2::ProcessState Process::state() const {$/;"	f	class:resources::v2::Process	typeref:typename:::resources::v2::ProcessState
@@ -9993,6 +10002,25 @@ swap	gen/services/v4/services.pb.h	/^  friend void swap(WatchUnitsRequest& a, Wa
 tail	gen/journal/v2/journal.pb.cc	/^JournalRequest::_Internal::tail(const JournalRequest* msg) {$/;"	f	class:journal::v2::JournalRequest::_Internal	typeref:typename:const::journal::v2::SeekTail &
 tail	gen/journal/v2/journal.pb.h	/^inline const ::journal::v2::SeekTail& JournalRequest::tail() const {$/;"	f	class:journal::v2::JournalRequest	typeref:typename:const::journal::v2::SeekTail &
 tail	proto/journal/v2/journal.proto	/^    SeekTail tail = 2;$/;"	f	oneof:journal.v2.JournalRequest.position	typeref:typename:SeekTail
+test	base/base.h	/^#define test(/;"	d
+test_cpu_cores_positive	tests/test_cpu_resources.cc	/^test_cpu_cores_positive()$/;"	f	typeref:typename:local_internal void
+test_cpu_create	tests/test_cpu_resources.cc	/^test_cpu_create()$/;"	f	typeref:typename:local_internal void
+test_cpu_frequency_present	tests/test_cpu_resources.cc	/^test_cpu_frequency_present()$/;"	f	typeref:typename:local_internal void
+test_cpu_model_present	tests/test_cpu_resources.cc	/^test_cpu_model_present()$/;"	f	typeref:typename:local_internal void
+test_cpu_read_idempotent	tests/test_cpu_resources.cc	/^test_cpu_read_idempotent()$/;"	f	typeref:typename:local_internal void
+test_cpu_read_null	tests/test_cpu_resources.cc	/^test_cpu_read_null()$/;"	f	typeref:typename:local_internal void
+test_cpu_read_returns_ok	tests/test_cpu_resources.cc	/^test_cpu_read_returns_ok()$/;"	f	typeref:typename:local_internal void
+test_cpu_usage_monotonic	tests/test_cpu_resources.cc	/^test_cpu_usage_monotonic()$/;"	f	typeref:typename:local_internal void
+test_cpu_usage_read	tests/test_cpu_resources.cc	/^test_cpu_usage_read()$/;"	f	typeref:typename:local_internal void
+test_cpu_usage_values_valid	tests/test_cpu_resources.cc	/^test_cpu_usage_values_valid()$/;"	f	typeref:typename:local_internal void
+test_cpu_vendor_present	tests/test_cpu_resources.cc	/^test_cpu_vendor_present()$/;"	f	typeref:typename:local_internal void
+test_individual_partition_non_null	tests/test_disk_resources.cc	/^test_individual_partition_non_null()$/;"	f	typeref:typename:local_internal void
+test_partition_capacity_bigger_then_count	tests/test_disk_resources.cc	/^test_partition_capacity_bigger_then_count()$/;"	f	typeref:typename:local_internal void
+test_partition_count	tests/test_disk_resources.cc	/^test_partition_count()$/;"	f	typeref:typename:local_internal void
+test_partition_creation	tests/test_disk_resources.cc	/^test_partition_creation()$/;"	f	typeref:typename:local_internal void
+test_ram_create	tests/test_ram_resources.cc	/^test_ram_create()$/;"	f	typeref:typename:local_internal void
+test_ram_read_non_empty_values	tests/test_ram_resources.cc	/^test_ram_read_non_empty_values()$/;"	f	typeref:typename:local_internal void
+test_ram_read_returns_ok	tests/test_ram_resources.cc	/^test_ram_read_returns_ok()$/;"	f	typeref:typename:local_internal void
 time	gen/journal/v1/journal.pb.h	/^inline const std::string& JournalRequest::time() const {$/;"	f	class:journal::v1::JournalRequest	typeref:typename:const std::string &
 time	proto/journal/v1/journal.proto	/^  string time = 1;$/;"	f	message:journal.v1.JournalRequest	typeref:typename:string
 total	gen/resources/v1/deviceresources.pb.h	/^inline const std::string& Memory::total() const {$/;"	f	class:resources::v1::Memory	typeref:typename:const std::string &
@@ -10026,6 +10054,7 @@ u16	base/base.h	/^typedef uint16_t u16;$/;"	t	typeref:typename:uint16_t
 u32	base/base.h	/^typedef uint32_t u32;$/;"	t	typeref:typename:uint32_t
 u64	base/base.h	/^typedef uint64_t u64;$/;"	t	typeref:typename:uint64_t
 u8	base/base.h	/^typedef uint8_t u8;$/;"	t	typeref:typename:uint8_t
+umm	base/base.h	/^typedef uintptr_t umm;$/;"	t	typeref:typename:uintptr_t
 unit_action	gen/services/v1/services.pb.h	/^inline ::services::v1::ServiceActionRequest_UnitAction ServiceActionRequest::unit_action() const/;"	f	class:services::v1::ServiceActionRequest	typeref:typename:::services::v1::ServiceActionRequest_UnitAction
 unit_action_	gen/services/v1/services.pb.h	/^  int unit_action_;$/;"	m	class:services::v1::ServiceActionRequest	typeref:typename:int
 unit_file_action	gen/services/v1/services.pb.h	/^inline ::services::v1::ServiceActionRequest_UnitFileAction ServiceActionRequest::unit_file_actio/;"	f	class:services::v1::ServiceActionRequest	typeref:typename:::services::v1::ServiceActionRequest_UnitFileAction

@@ -1,5 +1,4 @@
 #include "base/base.h"
-#include "stddef.h"
 
 /**
  * Helper function to parse strings to int using ascii codes

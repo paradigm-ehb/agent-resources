@@ -1,5 +1,4 @@
 #include "base/base.h"
-#include <cstdio>
 
 #ifdef DEBUG
 
@@ -14,10 +13,10 @@
 local_internal void
 compile(char *path)
 {
-  /**
-   * TODO(nasr): call clang somehow
-   * */
-  std::printf("path %s", path);
+  /*
+    TODO(nasr): checkout tsoding nob
+
+   */
 }
 
 local_internal int
@@ -25,7 +24,9 @@ build(int argc, char **argv)
 {
   if (argc > 0)
   {
-    printf("arguments provided");
+    /*
+      TODO(nasr): do something
+     */
   }
 
   compile(*argv);

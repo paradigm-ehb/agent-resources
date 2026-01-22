@@ -16,7 +16,6 @@
 #include "base/base_arena.h"
 #include "base/base.h"
 
-#define _POSIX_C_SOURCE 200809L
 
 /*
  * disk_push_partition - Add a partition to the disk structure

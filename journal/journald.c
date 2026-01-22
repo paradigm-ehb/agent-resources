@@ -1,14 +1,11 @@
 /*
- *  TODO(nasr): replacing assert.h
+ *  TODO(nasr): replacing .h
  *
  */
-#include <assert.h>
-#include <cstdio>
-
 #include <systemd/sd-journal.h>
+#include "journald.h"
 
 #include "base/base.h"
-#include "journald.h"
 
 /*
  * TODO(nasr): replace with meta program
@@ -36,11 +33,6 @@ local_internal JournalField
 parse_unit_name(char *unit)
 {
 
-  /**
-   * TODO(nasr): replacement to remove warnigns for now
-   */
-
-  std::printf("%s", unit);
 
   return JOURNAL_FIELD_HOSTNAME;
 }
@@ -49,12 +41,6 @@ local_internal const char *
 logs(char *unit, char *time, JournalField jf)
 {
   sd_journal *journal = NULL;
-  /**
-   * TODO(nasr): replacement to remove warnigns for now
-   */
-
-  std::printf("%s", unit);
-  std::printf("%s", time);
 
   int code = sd_journal_open(&journal, SD_JOURNAL_LOCAL_ONLY);
   if (code != 0)
