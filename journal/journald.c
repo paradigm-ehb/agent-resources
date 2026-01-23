@@ -32,44 +32,42 @@ global_variable const char *journal_field_names[JOURNAL_FIELD_COUNT] = {
 local_internal JournalField
 parse_unit_name(char *unit)
 {
-
-
-  return JOURNAL_FIELD_HOSTNAME;
+    return JOURNAL_FIELD_HOSTNAME;
 }
 
 local_internal const char *
 logs(char *unit, char *time, JournalField jf)
 {
-  sd_journal *journal = NULL;
+    sd_journal *journal = NULL;
 
-  int code = sd_journal_open(&journal, SD_JOURNAL_LOCAL_ONLY);
-  if (code != 0)
-  {
-    assert(0);
-  }
-
-  sd_journal_seek_head(journal);
-
-  const char *msg = { 0 };
-  while ((code = sd_journal_next(journal)) > 0)
-  {
+    int code = sd_journal_open(&journal, SD_JOURNAL_LOCAL_ONLY);
+    if (code != 0)
     {
-      const void *data;
-
-      sd_journal_add_match(journal, &data, sizeof((char *)jf));
+        assert(0);
     }
+
+    sd_journal_seek_head(journal);
+
+    const char *msg = {0};
+    while ((code = sd_journal_next(journal)) > 0)
     {
-      const void *data;
-      size_t len = 0;
+        {
+            const void *data;
 
-      if (sd_journal_get_data(journal, "MESSAGE", &data, &len) == 0)
-      {
-        msg = (const char *)data;
-      }
+            sd_journal_add_match(journal, &data, sizeof((char *)jf));
+        }
+        {
+            const void *data;
+            size_t      len = 0;
+
+            if (sd_journal_get_data(journal, "MESSAGE", &data, &len) == 0)
+            {
+                msg = (const char *)data;
+            }
+        }
     }
-  }
 
-  sd_journal_close(journal);
+    sd_journal_close(journal);
 
-  return msg;
+    return msg;
 }

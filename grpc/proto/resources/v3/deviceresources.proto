@@ -16,7 +16,7 @@ service ResourcesService {
    * Includes CPU, memory, device metadata, disks, and processes.
    */
   rpc GetSystemResources(GetSystemResourcesRequest)
-      returns (GetSystemResourcesResponse);
+      returns (GetSystemResourcesReply);
 
   /** Retrieve CPU information and aggregated CPU time counters. */
   rpc GetCpu(GetCpuRequest)
@@ -56,7 +56,7 @@ service ResourcesService {
 
 message GetSystemResourcesRequest {}
 
-message GetSystemResourcesResponse {
+message GetSystemResourcesReply {
   SystemResources resources = 1;
 }
 

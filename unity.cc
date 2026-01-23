@@ -2,7 +2,7 @@
 #include "base/base.c"
 #include "common/logger.c"
 #include "journal/journald.c"
-#include "libnet/net.c"
+#include "libnet/net.cc"
 #include "libres/resources.cc"
 #include "dbus/dbushandler.cc"
 #include "auth/auth.cc"
@@ -10,7 +10,7 @@
 #include "grpc/generated/resources/v3/deviceresources.grpc.pb.cc"
 #include "grpc/handlers/resource_handler.cc"
 #include "grpc/server/server.cc"
-#include "agent/core.cc"
+#include "core/core.cc"
 
 /*
 #include "libvm/qc.c"

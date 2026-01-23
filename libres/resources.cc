@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -7,15 +6,11 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
 #include <sys/statfs.h>
 
 #include "libres/resources.h"
 #include "base/base_arena.h"
 #include "base/base.h"
-
 
 /*
  * disk_push_partition - Add a partition to the disk structure
@@ -30,24 +25,24 @@
 local_internal void
 disk_push_partition(Disk *d, Partition p, mem_arena *arena)
 {
-  if (d->part_count == d->part_capacity)
-  {
-    size_t new_cap = d->part_capacity ? d->part_capacity * 2 : 8;
-
-    Partition *np = PUSH_ARRAY_NZ(arena, Partition, new_cap);
-    if (!np)
-      return;
-
-    if (d->partitions && d->part_count > 0)
+    if (d->part_count == d->part_capacity)
     {
-      memcpy(np, d->partitions, d->part_count * sizeof(Partition));
+        size_t new_cap = d->part_capacity ? d->part_capacity * 2 : 8;
+
+        Partition *np = PUSH_ARRAY_NZ(arena, Partition, new_cap);
+        if (!np)
+            return;
+
+        if (d->partitions && d->part_count > 0)
+        {
+            memcpy(np, d->partitions, d->part_count * sizeof(Partition));
+        }
+
+        d->partitions    = np;
+        d->part_capacity = new_cap;
     }
 
-    d->partitions = np;
-    d->part_capacity = new_cap;
-  }
-
-  d->partitions[d->part_count++] = p;
+    d->partitions[d->part_count++] = p;
 }
 
 /*
@@ -58,7 +53,7 @@ disk_push_partition(Disk *d, Partition p, mem_arena *arena)
 local_internal Cpu *
 cpu_create(mem_arena *m)
 {
-  return (Cpu *)arena_push(m, sizeof(Cpu), 1);
+    return (Cpu *)arena_push(m, sizeof(Cpu), 1);
 }
 
 /*
@@ -82,52 +77,52 @@ cpu_create(mem_arena *m)
 int
 cpu_read_enabled_core_cpu_frequency(Cpu *out, int enabled_cpu_count)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
+    if (!out)
+    {
+        check(0);
+        return ERR_INVALID;
+    }
 
-  char path[PATH_MAX_LEN];
-  for (i8 i = 0; i <= enabled_cpu_count; i++)
-  {
-    snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq", i);
-  }
-  FILE *fp = fopen(path, "r");
-  // TODO(nasr): do a **cores  see each frequency individually together with the utilization
-  if (!fp)
-  {
-    assert(fp);
-    return ERR_IO;
-  }
+    char path[PATH_MAX_LEN];
+    for (i8 i = 0; i <= enabled_cpu_count; i++)
+    {
+        snprintf(path, sizeof(path), "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq", i);
+    }
+    FILE *fp = fopen(path, "r");
+    // TODO(nasr): do a **cores  see each frequency individually together with the utilization
+    if (!fp)
+    {
+        assert(fp);
+        return ERR_IO;
+    }
 
-  u64 freq = 0;
-  if (fscanf(fp, "%lu", &freq) != 1)
-  {
+    u64 freq = 0;
+    if (fscanf(fp, "%lu", &freq) != 1)
+    {
+        fclose(fp);
+        assert(0);
+        return ERR_PARSE;
+    }
+
     fclose(fp);
-    assert(0);
-    return ERR_PARSE;
-  }
 
-  fclose(fp);
-
-  snprintf(out->frequency, sizeof(out->frequency), "%lu", freq);
-  return ERR_OK;
+    snprintf(out->frequency, sizeof(out->frequency), "%lu", freq);
+    return ERR_OK;
 }
 
 int
 cpu_read_cpu_model_name_arm64(Cpu *out)
 {
-  FILE *of = fopen("/proc/device-tree/model", "rb");
-  if (!of)
-  {
-    assert(0);
-    return ERR_IO;
-  }
+    FILE *of = fopen("/proc/device-tree/model", "rb");
+    if (!of)
+    {
+        assert(0);
+        return ERR_IO;
+    }
 
-  u8 buffer[BUFFER_SIZE_DEFAULT];
+    u8 buffer[BUFFER_SIZE_DEFAULT];
 
-  /**
+    /**
 	*
 	* note to self
   *	fread returns the amount of bytes read
@@ -135,214 +130,214 @@ cpu_read_cpu_model_name_arm64(Cpu *out)
 	*
   */
 
-  size_t n = fread(buffer, 1, sizeof(buffer), of);
-  if (n == 0)
-  {
-    assert(0);
-    return ERR_IO;
-  }
+    size_t n = fread(buffer, 1, sizeof(buffer), of);
+    if (n == 0)
+    {
+        assert(0);
+        return ERR_IO;
+    }
 
-  size_t len = 0;
-  while (len < n && buffer[len] != 0)
-  {
-    ++len;
-  }
+    size_t len = 0;
+    while (len < n && buffer[len] != 0)
+    {
+        ++len;
+    }
 
-  memcpy(out->model, buffer, len);
-  out->model[len] = '\0';
+    memcpy(out->model, buffer, len);
+    out->model[len] = '\0';
 
-  fclose(of);
+    fclose(of);
 
-  return ERR_OK;
+    return ERR_OK;
 }
 
 int
 cpu_get_cores_enabled_arm(Cpu *out)
 {
-  assert(out);
+    assert(out);
 
-  FILE *fp = fopen("/sys/devices/system/cpu/enabled", "r");
-  assert(fp);
+    FILE *fp = fopen("/sys/devices/system/cpu/enabled", "r");
+    assert(fp);
 
-  char buf[BUFFER_SIZE_DEFAULT];
-  assert(fgets(buf, sizeof(buf), fp));
-  fclose(fp);
+    char buf[BUFFER_SIZE_DEFAULT];
+    assert(fgets(buf, sizeof(buf), fp));
+    fclose(fp);
 
-  int max_cpu = 0;
-  char *p = buf;
+    int   max_cpu = 0;
+    char *p       = buf;
 
-  while (*p)
-  {
-    if (*p >= '0' && *p <= '9')
+    while (*p)
     {
-      int v = 0;
-      while (*p >= '0' && *p <= '9')
-      {
-        v = v * 10 + (*p++ - '0');
-      }
+        if (*p >= '0' && *p <= '9')
+        {
+            int v = 0;
+            while (*p >= '0' && *p <= '9')
+            {
+                v = v * 10 + (*p++ - '0');
+            }
 
-      if (v > max_cpu)
-      {
-        max_cpu = v;
-      }
+            if (v > max_cpu)
+            {
+                max_cpu = v;
+            }
+        }
+        else
+        {
+            ++p;
+        }
     }
-    else
-    {
-      ++p;
-    }
-  }
 
-  out->cores = (u32)max_cpu;
-  return ERR_OK;
+    out->cores = (u32)max_cpu;
+    return ERR_OK;
 }
 
 int
 cpu_read_arm64(Cpu *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
+    if (!out)
+    {
+        assert(0);
+        return ERR_INVALID;
+    }
 
-  cpu_get_cores_enabled_arm(out);
-  cpu_read_cpu_model_name_arm64(out);
-  cpu_read_enabled_core_cpu_frequency(out, (int)out->cores);
+    cpu_get_cores_enabled_arm(out);
+    cpu_read_cpu_model_name_arm64(out);
+    cpu_read_enabled_core_cpu_frequency(out, (int)out->cores);
 
-  return ERR_OK;
+    return ERR_OK;
 }
 
 int
 cpu_read_amd64(Cpu *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
-
-  FILE *f = fopen("/proc/cpuinfo", "r");
-  if (!f)
-  {
-    assert(0);
-    return ERR_IO;
-  }
-
-  char buf[BUFFER_SIZE_LARGE];
-  while (fgets(buf, sizeof(buf), f))
-  {
-    char *colon = strchr(buf, ':');
-    if (!colon)
-      continue;
-
-    char *val = colon + 1;
-    while (*val == ' ')
-      val++;
-
-    size_t len = strcspn(val, "\n");
-
-    if (!strncmp(buf, "vendor_id", 9))
+    if (!out)
     {
-      memcpy(out->vendor, val, len);
+        assert(0);
+        return ERR_INVALID;
     }
-    if (!strncmp(buf, "model name", 10))
-    {
-      memcpy(out->model, val, len);
-    }
-    if (!strncmp(buf, "cpu MHz", 7))
-    {
-      memcpy(out->frequency, val, len);
-    }
-    if (!strncmp(buf, "cpu cores", 9))
-    {
-      out->cores = (u32)atoi(buf);
-    }
-  }
 
-  fclose(f);
-  return ERR_OK;
+    FILE *f = fopen("/proc/cpuinfo", "r");
+    if (!f)
+    {
+        assert(0);
+        return ERR_IO;
+    }
+
+    char buf[BUFFER_SIZE_LARGE];
+    while (fgets(buf, sizeof(buf), f))
+    {
+        char *colon = strchr(buf, ':');
+        if (!colon)
+            continue;
+
+        char *val = colon + 1;
+        while (*val == ' ')
+            val++;
+
+        size_t len = strcspn(val, "\n");
+
+        if (!strncmp(buf, "vendor_id", 9))
+        {
+            memcpy(out->vendor, val, len);
+        }
+        if (!strncmp(buf, "model name", 10))
+        {
+            memcpy(out->model, val, len);
+        }
+        if (!strncmp(buf, "cpu MHz", 7))
+        {
+            memcpy(out->frequency, val, len);
+        }
+        if (!strncmp(buf, "cpu cores", 9))
+        {
+            out->cores = (u32)atoi(buf);
+        }
+    }
+
+    fclose(f);
+    return ERR_OK;
 }
 
 int
 cpu_read(Cpu *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
+    if (!out)
+    {
+        assert(0);
+        return ERR_INVALID;
+    }
 
 #if defined(__arm__) || defined(__aarch64__)
-  if (cpu_read_arm64(out) != ERR_OK)
-  {
-    /**
+    if (cpu_read_arm64(out) != ERR_OK)
+    {
+        /**
 		 * Debugging!!
 		 *
 		 * */
-    assert(0);
-  }
+        assert(0);
+    }
 
 #elif defined(__i386__) || defined(__x86_64__)
-  if (cpu_read_amd64(out) != ERR_OK)
-  {
-    /**
+    if (cpu_read_amd64(out) != ERR_OK)
+    {
+        /**
 		 * Debugging!!
 		 *
 		 * */
-    assert(0);
-  }
+        assert(0);
+    }
 
 #else
 #error "Unsupported architecture"
 #endif
-  return ERR_OK;
+    return ERR_OK;
 }
 
 int
 cpu_read_usage(Cpu *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
-
-  FILE *f = fopen("/proc/stat", "r");
-  if (!f)
-  {
-    assert(0);
-    return ERR_IO;
-  }
-
-  char buf[BUFFER_SIZE_LARGE];
-  while (fgets(buf, sizeof(buf), f))
-  {
-    if (strncmp(buf, "cpu ", 4) == 0)
+    if (!out)
     {
-      unsigned long user, nice, system, idle, iowait, irq, softirq, steal;
-      if (sscanf(
-            buf + 4,
-            "%lu %lu %lu %lu %lu %lu %lu %lu",
-            &user,
-            &nice,
-            &system,
-            &idle,
-            &iowait,
-            &irq,
-            &softirq,
-            &steal) == 8)
-      {
-        u64 idleAll = idle + iowait;
-        u64 total = user + nice + system + idle + iowait + irq + softirq + steal;
-        out->idle_time = idleAll;
-        out->total_time = total;
-        break;
-      }
+        assert(0);
+        return ERR_INVALID;
     }
-  }
 
-  fclose(f);
-  return ERR_OK;
+    FILE *f = fopen("/proc/stat", "r");
+    if (!f)
+    {
+        assert(0);
+        return ERR_IO;
+    }
+
+    char buf[BUFFER_SIZE_LARGE];
+    while (fgets(buf, sizeof(buf), f))
+    {
+        if (strncmp(buf, "cpu ", 4) == 0)
+        {
+            unsigned long user, nice, system, idle, iowait, irq, softirq, steal;
+            if (sscanf(
+                buf + 4,
+                "%lu %lu %lu %lu %lu %lu %lu %lu",
+                &user,
+                &nice,
+                &system,
+                &idle,
+                &iowait,
+                &irq,
+                &softirq,
+                &steal) == 8)
+            {
+                u64 idleAll     = idle + iowait;
+                u64 total       = user + nice + system + idle + iowait + irq + softirq + steal;
+                out->idle_time  = idleAll;
+                out->total_time = total;
+                break;
+            }
+        }
+    }
+
+    fclose(f);
+    return ERR_OK;
 }
 
 /*
@@ -353,7 +348,7 @@ cpu_read_usage(Cpu *out)
 Ram *
 ram_create(mem_arena *m)
 {
-  return (Ram *)arena_push(m, sizeof(Ram), 1);
+    return (Ram *)arena_push(m, sizeof(Ram), 1);
 }
 
 /*
@@ -368,65 +363,65 @@ ram_create(mem_arena *m)
 int
 ram_read(Ram *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
-
-  FILE *f = fopen("/proc/meminfo", "r");
-  if (!f)
-  {
-    assert(0);
-    return ERR_IO;
-  }
-
-  mem_arena *temp_arena = arena_create(KiB(8));
-
-  size_t total_len;
-  size_t free_len;
-
-  char *total_buffer;
-  char *free_buffer;
-
-  char buf[BUFFER_SIZE_SMALL];
-  while (fgets(buf, sizeof(buf), f))
-  {
-    char *colon = strchr(buf, ':');
-    if (!colon)
+    if (!out)
     {
-      continue;
+        assert(0);
+        return ERR_INVALID;
     }
 
-    char *val = colon + 1;
-    while (*val == ' ')
+    FILE *f = fopen("/proc/meminfo", "r");
+    if (!f)
     {
-      val++;
+        assert(0);
+        return ERR_IO;
     }
 
-    if (!strncmp(buf, "MemTotal", 8))
-    {
-      total_len = strcspn(val, "k\n");
-      total_buffer = PUSH_ARRAY(temp_arena, char, total_len);
+    mem_arena *temp_arena = arena_create(KiB(8));
 
-      memcpy(total_buffer, val, total_len);
+    size_t total_len;
+    size_t free_len;
+
+    char *total_buffer;
+    char *free_buffer;
+
+    char buf[BUFFER_SIZE_SMALL];
+    while (fgets(buf, sizeof(buf), f))
+    {
+        char *colon = strchr(buf, ':');
+        if (!colon)
+        {
+            continue;
+        }
+
+        char *val = colon + 1;
+        while (*val == ' ')
+        {
+            val++;
+        }
+
+        if (!strncmp(buf, "MemTotal", 8))
+        {
+            total_len    = strcspn(val, "k\n");
+            total_buffer = PUSH_ARRAY(temp_arena, char, total_len);
+
+            memcpy(total_buffer, val, total_len);
+        }
+
+        if (!strncmp(buf, "MemFree", 7))
+        {
+            free_len    = strcspn(val, "k\n");
+            free_buffer = PUSH_ARRAY(temp_arena, char, free_len);
+
+            memcpy(free_buffer, val, free_len);
+        }
     }
 
-    if (!strncmp(buf, "MemFree", 7))
-    {
-      free_len = strcspn(val, "k\n");
-      free_buffer = PUSH_ARRAY(temp_arena, char, free_len);
+    out->total = parse_u64(total_buffer, total_len);
+    out->free  = parse_u64(free_buffer, free_len);
 
-      memcpy(free_buffer, val, free_len);
-    }
-  }
-
-  out->total = parse_u64(total_buffer, total_len);
-  out->free = parse_u64(free_buffer, free_len);
-
-  arena_destroy(temp_arena);
-  fclose(f);
-  return ERR_OK;
+    arena_destroy(temp_arena);
+    fclose(f);
+    return ERR_OK;
 }
 
 /*
@@ -437,7 +432,7 @@ ram_read(Ram *out)
 Disk *
 disk_create(mem_arena *m)
 {
-  return (Disk *)arena_push(m, sizeof(Disk), 1);
+    return (Disk *)arena_push(m, sizeof(Disk), 1);
 }
 
 /*
@@ -455,83 +450,77 @@ disk_create(mem_arena *m)
 local_internal int
 disk_read(Disk *out, mem_arena *arena)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
-
-  FILE *f = fopen("/proc/partitions", "r");
-  if (!f)
-  {
-    assert(0);
-    return ERR_IO;
-  }
-
-  char buf[BUFFER_SIZE_DEFAULT];
-
-  while (fgets(buf, sizeof(buf), f))
-  {
-    Partition p = {
-      .major = 0,
-      .minor = 0,
-      .blocks = 0,
-      .name = {}
-    };
-    char name[BUFFER_SIZE_DEFAULT];
-
-    if (sscanf(buf,
-          "%lu %lu %lu %255s",
-          &p.major,
-          &p.minor,
-          &p.blocks,
-          name) != 4)
+    if (!out)
     {
-      continue;
+        assert(0);
+        return ERR_INVALID;
     }
 
-    size_t len = strlen(name);
-    if (len >= sizeof(p.name))
-      len = sizeof(p.name) - 1;
+    FILE *f = fopen("/proc/partitions", "r");
+    if (!f)
+    {
+        assert(0);
+        return ERR_IO;
+    }
 
-    memcpy(p.name, name, len);
-    p.name[len] = 0;
+    char buf[BUFFER_SIZE_DEFAULT];
 
-    disk_push_partition(out, p, arena);
-  }
+    while (fgets(buf, sizeof(buf), f))
+    {
+        Partition p = {
+        .major  = 0,
+        .minor  = 0,
+        .blocks = 0,
+        .name   = {}};
+        char name[BUFFER_SIZE_DEFAULT];
 
-  fclose(f);
-  return ERR_OK;
+        if (sscanf(buf, "%lu %lu %lu %255s", &p.major, &p.minor, &p.blocks, name) != 4)
+        {
+            continue;
+        }
+
+        size_t len = strlen(name);
+        if (len >= sizeof(p.name))
+            len = sizeof(p.name) - 1;
+
+        memcpy(p.name, name, len);
+        p.name[len] = 0;
+
+        disk_push_partition(out, p, arena);
+    }
+
+    fclose(f);
+    return ERR_OK;
 }
 
 local_internal FileSystem *
 fs_create(mem_arena *arena)
 {
-  return (FileSystem *)arena_push(arena, sizeof(FileSystem), 1);
+    return (FileSystem *)arena_push(arena, sizeof(FileSystem), 1);
 }
 
 local_internal int
 fs_read(char *path, FileSystem *fs)
 {
-  struct statfs s;
-  if (statfs(path, &s) != 0)
-  {
-    return ERR_IO;
-  }
+    struct statfs s;
+    if (statfs(path, &s) != 0)
+    {
+        return ERR_IO;
+    }
 
-  i64 block_size = s.f_bsize;
+    i64 block_size = s.f_bsize;
 
-  u64 blocks = (u64)s.f_blocks;
-  u64 bfree = (u64)s.f_bfree;
-  u64 bavail = (u64)s.f_bavail;
-  u64 bsize = (u64)block_size;
+    u64 blocks = (u64)s.f_blocks;
+    u64 bfree  = (u64)s.f_bfree;
+    u64 bavail = (u64)s.f_bavail;
+    u64 bsize  = (u64)block_size;
 
-  fs->total = blocks * bsize;
-  fs->free = bfree * bsize;
-  fs->available = bavail * bsize;
-  fs->used = (blocks - bfree) * bsize;
+    fs->total     = blocks * bsize;
+    fs->free      = bfree * bsize;
+    fs->available = bavail * bsize;
+    fs->used      = (blocks - bfree) * bsize;
 
-  return ERR_OK;
+    return ERR_OK;
 }
 
 /*
@@ -542,7 +531,7 @@ fs_read(char *path, FileSystem *fs)
 local_internal Device *
 device_create(mem_arena *m)
 {
-  return (Device *)arena_push(m, sizeof(Device), 1);
+    return (Device *)arena_push(m, sizeof(Device), 1);
 }
 
 /*
@@ -557,57 +546,57 @@ device_create(mem_arena *m)
 local_internal int
 process_list_collect(Process_List *list, mem_arena *arena)
 {
-  DIR *d = opendir("/proc");
-  if (!d)
-  {
-    assert(0);
-    return ERR_IO;
-  }
+    DIR *d = opendir("/proc");
+    if (!d)
+    {
+        assert(0);
+        return ERR_IO;
+    }
 
-  struct dirent *e = 0;
+    struct dirent *e = 0;
 
-  if (!list->items)
-  {
-    list->capacity = 8;
-    list->count = 0;
-    list->items = PUSH_ARRAY_NZ(arena, Process, list->capacity);
     if (!list->items)
     {
-      closedir(d);
-      assert(0);
-      return ERR_IO;
+        list->capacity = 8;
+        list->count    = 0;
+        list->items    = PUSH_ARRAY_NZ(arena, Process, list->capacity);
+        if (!list->items)
+        {
+            closedir(d);
+            assert(0);
+            return ERR_IO;
+        }
     }
-  }
 
-  while ((e = readdir(d)))
-  {
-    if (!is_numeric(e->d_name))
-      continue;
-
-    if (list->count == list->capacity)
+    while ((e = readdir(d)))
     {
-      size_t new_cap = list->capacity * 2;
-      Process *np = PUSH_ARRAY_NZ(arena, Process, new_cap);
-      if (!np)
-        break;
+        if (!is_numeric(e->d_name))
+            continue;
 
-      memcpy(np, list->items, sizeof(Process) * list->capacity);
-      list->items = np;
-      list->capacity = new_cap;
+        if (list->count == list->capacity)
+        {
+            size_t   new_cap = list->capacity * 2;
+            Process *np      = PUSH_ARRAY_NZ(arena, Process, new_cap);
+            if (!np)
+                break;
+
+            memcpy(np, list->items, sizeof(Process) * list->capacity);
+            list->items    = np;
+            list->capacity = new_cap;
+        }
+
+        Process *p = &list->items[list->count++];
+
+        p->pid         = atoi(e->d_name);
+        p->state       = PROCESS_UNDEFINED;
+        p->utime       = 0;
+        p->stime       = 0;
+        p->num_threads = 0;
+        p->name[0]     = 0;
     }
 
-    Process *p = &list->items[list->count++];
-
-    p->pid = atoi(e->d_name);
-    p->state = PROCESS_UNDEFINED;
-    p->utime = 0;
-    p->stime = 0;
-    p->num_threads = 0;
-    p->name[0] = 0;
-  }
-
-  closedir(d);
-  return ERR_OK;
+    closedir(d);
+    return ERR_OK;
 }
 
 /**
@@ -625,152 +614,152 @@ struct Proces {
 local_internal int
 process_read(i32 pid, Process *out)
 {
-  char path[PATH_MAX_LEN];
-  snprintf(path, sizeof(path), "/proc/%d/status", pid);
+    char path[PATH_MAX_LEN];
+    snprintf(path, sizeof(path), "/proc/%d/status", pid);
 
-  FILE *fp = fopen(path, "r");
-  if (!fp)
-  {
-    return ERR_IO;
-  }
+    FILE *fp = fopen(path, "r");
+    if (!fp)
+    {
+        return ERR_IO;
+    }
 
-  char buf[BUFFER_SIZE_LARGE];
+    char buf[BUFFER_SIZE_LARGE];
 
-  /* initialize */
-  out->pid = pid;
+    /* initialize */
+    out->pid = pid;
 
-  while (fgets(
+    while (fgets(
     buf,
     sizeof(buf),
     fp))
-  {
-    char *colon = strchr(buf, ':');
-    if (!colon)
     {
-      continue;
+        char *colon = strchr(buf, ':');
+        if (!colon)
+        {
+            continue;
+        }
+
+        char *val = colon + 1;
+        while (*val == ' ' || *val == '\t')
+        {
+            ++val;
+        }
+
+        size_t len = strcspn(val, "\n");
+
+        if (!strncmp(buf, "Name:", 5))
+        {
+            memcpy(out->name, val, len);
+            out->name[len] = 0;
+        }
+        if (!strncmp(buf, "State:", 6))
+        {
+            char state_char = 0;
+            for (char *p = val; *p; ++p)
+            {
+                if ((*p >= 'A' && *p <= 'Z') || *p == 't')
+                {
+                    state_char = *p;
+                    break;
+                }
+            }
+
+            switch (state_char)
+            {
+                case 'R':
+                {
+                    out->state = PROCESS_RUNNING;
+                    break;
+                }
+                case 'S':
+                {
+                    out->state = PROCESS_SLEEPING;
+                    break;
+                }
+                case 'D':
+                {
+                    out->state = PROCESS_DISK_SLEEP;
+                    break;
+                }
+                case 'T':
+                {
+                    out->state = PROCESS_STOPPED;
+                    break;
+                }
+                case 't':
+                {
+                    out->state = PROCESS_TRACING_STOPPED;
+                    break;
+                }
+                case 'Z':
+                {
+                    out->state = PROCESS_ZOMBIE;
+                    break;
+                }
+                case 'X':
+                {
+                    out->state = PROCESS_DEAD;
+                    break;
+                }
+                case 'I':
+                {
+                    out->state = PROCESS_IDLE;
+                    break;
+                }
+                default:
+                {
+                    out->state = PROCESS_UNDEFINED;
+                    break;
+                }
+            }
+        }
+
+        if (!strncmp(buf, "Threads:", 8))
+        {
+            out->num_threads = (u32)strtoul(val, 0, 10);
+        }
     }
 
-    char *val = colon + 1;
-    while (*val == ' ' || *val == '\t')
+    int error = fclose(fp);
+    if (error != 0)
     {
-      ++val;
+        return ERR_IO;
     }
 
-    size_t len = strcspn(val, "\n");
-
-    if (!strncmp(buf, "Name:", 5))
-    {
-      memcpy(out->name, val, len);
-      out->name[len] = 0;
-    }
-    if (!strncmp(buf, "State:", 6))
-    {
-      char state_char = 0;
-      for (char *p = val; *p; ++p)
-      {
-        if ((*p >= 'A' && *p <= 'Z') || *p == 't')
-        {
-          state_char = *p;
-          break;
-        }
-      }
-
-      switch (state_char)
-      {
-        case 'R':
-        {
-          out->state = PROCESS_RUNNING;
-          break;
-        }
-        case 'S':
-        {
-          out->state = PROCESS_SLEEPING;
-          break;
-        }
-        case 'D':
-        {
-          out->state = PROCESS_DISK_SLEEP;
-          break;
-        }
-        case 'T':
-        {
-          out->state = PROCESS_STOPPED;
-          break;
-        }
-        case 't':
-        {
-          out->state = PROCESS_TRACING_STOPPED;
-          break;
-        }
-        case 'Z':
-        {
-          out->state = PROCESS_ZOMBIE;
-          break;
-        }
-        case 'X':
-        {
-          out->state = PROCESS_DEAD;
-          break;
-        }
-        case 'I':
-        {
-          out->state = PROCESS_IDLE;
-          break;
-        }
-        default:
-        {
-          out->state = PROCESS_UNDEFINED;
-          break;
-        }
-      }
-    }
-
-    if (!strncmp(buf, "Threads:", 8))
-    {
-      out->num_threads = (u32)strtoul(val, 0, 10);
-    }
-  }
-
-  int error = fclose(fp);
-  if (error != 0)
-  {
-    return ERR_IO;
-  }
-
-  return ERR_OK;
+    return ERR_OK;
 }
 
 local_internal int
 device_up_time(Device *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
+    if (!out)
+    {
+        assert(0);
+        return ERR_INVALID;
+    }
 
-  FILE *f = fopen("/proc/uptime", "r");
-  if (!f)
-  {
-    assert(0);
-    return ERR_IO;
-  }
+    FILE *f = fopen("/proc/uptime", "r");
+    if (!f)
+    {
+        assert(0);
+        return ERR_IO;
+    }
 
-  i64 s;
-  int result = fscanf(f, "%ld", &s);
-  fclose(f);
+    i64 s;
+    int result = fscanf(f, "%ld", &s);
+    fclose(f);
 
-  if (result != 1)
-  {
-    assert(0);
-    return ERR_IO;
-  }
+    if (result != 1)
+    {
+        assert(0);
+        return ERR_IO;
+    }
 
-  i64 day = s / 86400;
-  i64 hour = s % 86400 / 3600;
-  i64 min = s % 3600 / 60;
-  sprintf(out->uptime, "%ldd %ldh %ldm", day, hour, min);
-  return ERR_OK;
+    i64 day  = s / 86400;
+    i64 hour = s % 86400 / 3600;
+    i64 min  = s % 3600 / 60;
+    sprintf(out->uptime, "%ldd %ldh %ldm", day, hour, min);
+    return ERR_OK;
 }
 
 /*
@@ -787,49 +776,49 @@ device_up_time(Device *out)
 int
 device_read(Device *out)
 {
-  if (!out)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
-
-  FILE *version = fopen("/etc/os-release", "r");
-  if (!version)
-  {
-    if (version)
+    if (!out)
     {
-      fclose(version);
+        assert(0);
+        return ERR_INVALID;
     }
-    return ERR_IO;
-  }
 
-  char buffer[BUFFER_SIZE_DEFAULT];
-  while (fgets(buffer, sizeof(out->os_version), version))
-  {
-    if (!strncmp(buffer, "NAME=", 5))
+    FILE *version = fopen("/etc/os-release", "r");
+    if (!version)
     {
-      char *start = strchr(buffer, '"');
-      if (start)
-      {
-        start++;
-        char *end = strchr(start, '"');
-        if (end)
+        if (version)
         {
-          i64 len = end - start;
-          if ((u64)len < sizeof(out->os_version))
-          {
-            memcpy(out->os_version, start, (u64)len);
-            out->os_version[len] = '\0';
-          }
+            fclose(version);
         }
-      }
+        return ERR_IO;
     }
-  }
 
-  fclose(version);
-  device_up_time(out);
+    char buffer[BUFFER_SIZE_DEFAULT];
+    while (fgets(buffer, sizeof(out->os_version), version))
+    {
+        if (!strncmp(buffer, "NAME=", 5))
+        {
+            char *start = strchr(buffer, '"');
+            if (start)
+            {
+                start++;
+                char *end = strchr(start, '"');
+                if (end)
+                {
+                    i64 len = end - start;
+                    if ((u64)len < sizeof(out->os_version))
+                    {
+                        memcpy(out->os_version, start, (u64)len);
+                        out->os_version[len] = '\0';
+                    }
+                }
+            }
+        }
+    }
 
-  return ERR_OK;
+    fclose(version);
+    device_up_time(out);
+
+    return ERR_OK;
 }
 
 /*
@@ -847,27 +836,27 @@ device_read(Device *out)
 local_internal int
 process_kill(pid_t pid, int signal)
 {
-  if (pid <= 0)
-  {
-    assert(0);
-    return ERR_INVALID;
-  }
-
-  if (kill(pid, signal) == -1)
-  {
-    if (errno == EPERM)
+    if (pid <= 0)
     {
-      assert(0);
-      return ERR_PERM;
-    }
-    if (errno == ESRCH)
-    {
-      assert(0);
-      return ERR_INVALID;
+        assert(0);
+        return ERR_INVALID;
     }
 
-    assert(0);
-    return ERR_IO;
-  }
-  return ERR_OK;
+    if (kill(pid, signal) == -1)
+    {
+        if (errno == EPERM)
+        {
+            assert(0);
+            return ERR_PERM;
+        }
+        if (errno == ESRCH)
+        {
+            assert(0);
+            return ERR_INVALID;
+        }
+
+        assert(0);
+        return ERR_IO;
+    }
+    return ERR_OK;
 }

@@ -13,7 +13,7 @@
 local_internal void
 compile(char *path)
 {
-  /*
+    /*
     TODO(nasr): checkout tsoding nob
 
    */
@@ -22,13 +22,13 @@ compile(char *path)
 local_internal int
 build(int argc, char **argv)
 {
-  if (argc > 0)
-  {
-    /*
+    if (argc > 0)
+    {
+        /*
       TODO(nasr): do something
      */
-  }
+    }
 
-  compile(*argv);
-  return 0;
+    compile(*argv);
+    return 0;
 }

@@ -23,8 +23,8 @@ typedef struct mem_arena mem_arena;
 
 struct mem_arena
 {
-  u64 capacity;
-  u64 pos;
+    u64 capacity;
+    u64 pos;
 };
 
 local_internal mem_arena *
@@ -44,6 +44,5 @@ arena_pop_to(mem_arena *arena, u64 pos);
 
 local_internal void
 arena_clear(mem_arena *arena);
-
 
 #endif

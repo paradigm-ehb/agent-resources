@@ -7,37 +7,34 @@
 
 /* assert an expression and output the file and the line */
 
-#define RED   "\x1b[31m"
+#define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define RESET "\x1b[0m"
 
 /* TODO(nasr): remove the stdio dep? */
 
 #define test(expr) \
-  do \
-  { \
-    if (!(expr)) \
+    do \
     { \
-      fprintf(stderr, RED " [FAILED] %s:%d: expr:%s test:%s\n" RESET, \
-          __FILE__, __LINE__, #expr, __func__); \
-      _exit(0); \
-    } \
-    else\
-    { \
-      fprintf(stdout, GREEN "[PASSED] %s\n" RESET, __func__); \
-    }\
-  } while (0)
+        if (!(expr)) \
+        { \
+            fprintf(stderr, RED " [FAILED] %s:%d: expr:%s test:%s\n" RESET, __FILE__, __LINE__, #expr, __func__); \
+            _exit(0); \
+        } \
+        else \
+        { \
+            fprintf(stdout, GREEN "[PASSED] %s\n" RESET, __func__); \
+        } \
+    } while (0)
 
 #define check(expr) \
-  if (!(expr)) \
-      fprintf(stderr, RED " [ERROR] %s:%d: expr:%s test:%s\n" RESET, \
-          __FILE__, __LINE__, #expr, __func__); \
-          _exit(0);\
+    if (!(expr)) \
+        fprintf(stderr, RED " [ERROR] %s:%d: expr:%s test:%s\n" RESET, __FILE__, __LINE__, #expr, __func__); \
+    _exit(0);
 
 #define global_variable static
 #define local_persist static
 #define local_internal static
-
 
 #define ERR_OK 0
 #define ERR_IO 1
@@ -63,22 +60,22 @@
 typedef uint64_t u64;
 typedef uint32_t u32;
 typedef uint16_t u16;
-typedef uint8_t u8;
+typedef uint8_t  u8;
 
-typedef int8_t i8;
+typedef int8_t  i8;
 typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
 
-typedef float f32;
+typedef float  f32;
 typedef double f64;
 
 typedef i32 b32;
 typedef i16 b16;
-typedef u8 b8;
+typedef u8  b8;
 
 typedef uintptr_t umm;
-typedef intptr_t smm;
+typedef intptr_t  smm;
 
 #define TRUE 1
 #define FALSE 0

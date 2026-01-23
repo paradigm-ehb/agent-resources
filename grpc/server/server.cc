@@ -1,26 +1,42 @@
-#include <grpcpp/health_check_service_interface.h>
-#include <grpcpp/grpcpp.h>
-#include <grpcpp/ext/proto_server_reflection_plugin.h>
-
-/* needed for building the server */
-#include <grpcpp/server_builder.h>
-
-#include "grpc/grpc_include.h"
-#include "base/base.h"
-#include "grpc/generated/resources/v3/deviceresources.grpc.pb.h"
-#include "grpc/generated/resources/v3/deviceresources.pb.h"
 
 #include <memory>
 
+#include "grpc/grpc_include.h"
+
+#include <grpcpp/health_check_service_interface.h>
+#include <grpcpp/grpcpp.h>
+#include <grpcpp/server_builder.h>
+#include <grpcpp/ext/proto_server_reflection_plugin.h>
+
+
+#include "grpc/generated/resources/v3/deviceresources.grpc.pb.h"
+#include "grpc/generated/resources/v3/deviceresources.pb.h"
+
+#include "base/base.h"
+
 class ResourcesServiceImpl final
-    : public resources::v3::ResourcesService::Service
+  : public resources::v3::ResourcesService::Service
 {
 public:
   grpc::Status
   GetSystemResources(
     grpc::ServerContext                            *ctx,
     const resources::v3::GetSystemResourcesRequest *req,
-    resources::v3::GetSystemResourcesResponse      *resp
+    resources::v3::GetSystemResourcesReply         *reply
+  ) override;
+
+  grpc::Status
+  GetCpu(
+    grpc::ServerContext         *ctx,
+    const resources::v3::GetCpuRequest *req,
+    resources::v3::GetCpuReply         *reply
+  ) override;
+
+  grpc::Status
+  GetMemory(
+    grpc::ServerContext              *ctx,
+    const resources::v3::GetMemoryRequest *req,
+    resources::v3::GetMemoryReply         *reply
   ) override;
 };
 
@@ -28,44 +44,43 @@ grpc::Status
 ResourcesServiceImpl::GetSystemResources(
   grpc::ServerContext                            *ctx,
   const resources::v3::GetSystemResourcesRequest *req,
-  resources::v3::GetSystemResourcesResponse      *resp
+  resources::v3::GetSystemResourcesReply         *reply
 )
 {
-  return get_system_resources_impl(
-    ctx,
-    const_cast<resources::v3::GetSystemResourcesRequest *>(req),
-    resp
-  );
+  return get_system_resources_impl(ctx, req, reply);
 }
 
-local_internal void
-grpc_server_intercept_logger(void)
+grpc::Status
+ResourcesServiceImpl::GetCpu(
+  grpc::ServerContext                  *ctx,
+  const resources::v3::GetCpuRequest   *req,
+  resources::v3::GetCpuReply           *reply
+)
 {
-  /*
-    TODO(nasr): every grpc call contains meta data we can inspect
-    based on this we can give better responses
-   */
+  return get_cpu_impl(ctx, req, reply);
 }
 
-/*
- * grpc server setup
- */
+grpc::Status
+ResourcesServiceImpl::GetMemory(
+  grpc::ServerContext                      *ctx,
+  const resources::v3::GetMemoryRequest   *req,
+  resources::v3::GetMemoryReply           *reply
+)
+{
+  return get_ram_impl(ctx, req, reply);
+}
+
+
 local_internal void
 grpc_server_setup(void)
 {
-  ResourcesServiceImpl resources_service;
+  ResourcesServiceImpl service;
 
-  /*
-    TODO(nasr): provide a way for defining this?
-   */
-  const char         *server_address = "0.0.0.0:5000";
+  const char *server_address = "0.0.0.0:5000";
   grpc::ServerBuilder sb;
 
-  /*
-    enabled for first initial check to see if a server is online or not
-   */
+  /* Health + reflection (for grpcurl / debugging) */
   grpc::EnableDefaultHealthCheckService(true);
-
   grpc::reflection::InitProtoReflectionServerBuilderPlugin();
 
   sb.AddListeningPort(
@@ -73,11 +88,15 @@ grpc_server_setup(void)
     grpc::InsecureServerCredentials()
   );
 
-  sb.RegisterService(&resources_service);
+  sb.RegisterService(&service);
 
-  printf("gRPC service registered: %s\n", resources::v3::ResourcesService::service_full_name());
+  printf(
+    "gRPC service registered: %s\n",
+    resources::v3::ResourcesService::service_full_name()
+  );
 
   std::unique_ptr<grpc::Server> server(sb.BuildAndStart());
 
+  /* Blocks forever — expected for a server */
   server->Wait();
 }

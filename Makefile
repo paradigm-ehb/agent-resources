@@ -1,11 +1,9 @@
-# Compilers
+# Compiler
 CXX := g++
-CC  := gcc
 
 # Paths
 SRC_DIR   := .
 GEN_DIR   := grpc/generated
-
 BUILD_DIR := build
 
 TARGET := $(BUILD_DIR)/agent
@@ -16,28 +14,21 @@ INCLUDES := \
 	-I$(GEN_DIR)
 
 INCLUDES += $(shell pkg-config --cflags grpc++)
-LDFLAGS  += $(shell pkg-config --libs grpc++)
 
-# Compiler flags
+# Compiler flags (C++ only)
 CXXFLAGS := \
 	-std=c++17 \
-	-g    \
-	-Wall \
-	-Wextra \
-	-Wno-unused-function \
-	-lgrpc++_reflection \
-	$(INCLUDES)
-
-CFLAGS := \
-	-std=c99 \
 	-g \
-	-wall \
+	-O0 \
+	-fno-omit-frame-pointer \
+	-Wall \
 	-Wextra \
 	-Wno-unused-function \
 	$(INCLUDES)
 
 # Linker flags
 LDFLAGS := \
+	$(shell pkg-config --libs grpc++) \
 	-pthread \
 	-lgrpc++ \
 	-lgrpc \
@@ -47,18 +38,17 @@ LDFLAGS := \
 	-labsl_strings \
 	-ldbus-1 \
 	-lsystemd \
-	-D_POSIX_C_SOURCE=200809L \
-  -lssl \
+	-lssl \
 	-lcrypto \
+	-lgrpc++_reflection
 
-# Sources
-# Unity build OR list files explicitly
+# Sources (unity build)
 SOURCES := \
 	unity.cc
 
-
 # Rules
 all: $(TARGET)
+	./$(TARGET)
 
 $(TARGET): $(SOURCES)
 	@mkdir -p $(BUILD_DIR)

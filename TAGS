@@ -1,0 +1,331 @@
+
+auth/auth.cc,61
+generate_key(14,286
+generate_cert(48,931
+generate(91,2046
+
+base/base.h,1043
+#define BASE_H2,15
+#define RED 10,152
+#define GREEN 11,175
+#define RESET 12,200
+#define test(16,266
+#define check(30,617
+#define global_variable 35,784
+#define local_persist 36,815
+#define local_internal 37,844
+#define ERR_OK 39,875
+#define ERR_IO 40,892
+#define ERR_PARSE 41,909
+#define ERR_PERM 42,929
+#define ERR_INVALID 43,948
+#define KiB(45,971
+#define MiB(46,1005
+#define GiB(47,1039
+#define BUFFER_SIZE_SMALL 53,1121
+#define BUFFER_SIZE_DEFAULT 54,1151
+#define BUFFER_SIZE_LARGE 55,1183
+#define PATH_MAX_LEN 56,1213
+#define DEPRECATED 58,1240
+typedef uint64_t u64;60,1292
+typedef uint32_t u32;61,1314
+typedef uint16_t u16;62,1336
+typedef uint8_t  u8;63,1358
+typedef int8_t  i8;65,1380
+typedef int16_t i16;66,1400
+typedef int32_t i32;67,1421
+typedef int64_t i64;68,1442
+typedef float  f32;70,1464
+typedef double f64;71,1484
+typedef i32 b32;73,1505
+typedef i16 b16;74,1522
+typedef u8  b8;75,1539
+typedef uintptr_t umm;77,1556
+typedef intptr_t  smm;78,1579
+#define TRUE 80,1603
+#define FALSE 81,1618
+
+base/base_arena.h,377
+#define ARENA_H2,16
+#define MIN(10,87
+#define MAX(11,131
+#define ALIGN_UP_POW2(12,175
+#define PUSH_STRUCT(14,254
+#define PUSH_STRUCT_NZ(15,323
+#define PUSH_ARRAY(16,395
+#define PUSH_ARRAY_NZ(17,472
+#define ARENA_BASE_POS 19,553
+#define ARENA_ALIGN 20,596
+typedef struct mem_arena mem_arena;22,634
+struct mem_arena24,671
+    u64 capacity;26,690
+    u64 pos;27,708
+
+core/core.cc,11
+main(5,55
+
+dbus/dbushandler.cc,133
+create_session_bus_connection(7,112
+create_system_bus_connection(15,237
+create_systemd_object(23,368
+create_logind_object(42,735
+
+dbus/dbushandler.h,1427
+typedef struct Process        Process;4,49
+typedef struct Service        Service;5,88
+typedef struct System         System;6,127
+typedef struct BusConnection  BusConnection;7,165
+typedef struct Unit           Unit;8,210
+typedef struct LoadedUnit     LoadedUnit;9,246
+typedef struct UnitFileChange UnitFileChange;10,288
+BusConnection17,487
+    BusConnection *conn;conn19,503
+Process23,539
+    char    *name;name25,549
+    uint32_t id;26,568
+Service30,596
+    char    *name;name32,606
+    uint32_t id;33,625
+    char    *owner;owner34,642
+System38,673
+    char    *os;os40,682
+    Process *processes;processes41,699
+    size_t   process_count;42,723
+    Service *services;services43,751
+    size_t   service_count;44,774
+Unit48,813
+    char *name;name50,820
+    char *state;state51,836
+LoadedUnit55,864
+    char    *name;name57,877
+    char    *description;description58,896
+    char    *load_state;load_state59,922
+    char    *sub_state;sub_state60,947
+    char    *active_state;active_state61,971
+    char    *dep_unit;dep_unit62,998
+    char    *object_path;object_path63,1021
+    uint32_t queued_job;64,1047
+    char    *job_type;job_type65,1072
+    char    *job_path;job_path66,1095
+UnitFileChange70,1129
+    char *type_of_change;type_of_change72,1146
+    char *file_name_symlink;file_name_symlink73,1172
+    char *destination_symlink;destination_symlink74,1201
+
+forge/dep.h,164
+#define internal 1,0
+struct package_set2,24
+    const char *manager;manager4,45
+    const char *packages[packages5,70
+internal struct package_set deps 8,104
+
+forge/forge.h,23
+build(4,38
+main(9,65
+
+grpc/grpc_include.h,20
+#define GRPC_H2,15
+
+grpc/handlers/resource_handler.cc,319
+using resources::v3::GetSystemResourcesReply;10,217
+using resources::v3::GetSystemResourcesRequest;11,263
+using resources::v3::SystemResources;12,311
+               get_system_resources_impl(15,378
+               get_cpu_impl(122,3535
+               get_ram_impl(173,4922
+               get_device_impl(219,6085
+
+grpc/server/server.cc,192
+ResourcesServiceImpl::GetSystemResources(GetSystemResources44,1059
+ResourcesServiceImpl::GetCpu(GetCpu54,1340
+ResourcesServiceImpl::GetMemory(GetMemory64,1566
+grpc_server_setup(75,1813
+
+journal/journald.h,584
+#define JOURNALD_H2,19
+typedef enum JournalField4,39
+    JOURNAL_FIELD_PRIORITY,6,67
+    JOURNAL_FIELD_MESSAGE,7,95
+    JOURNAL_FIELD_TIMESTAMP,8,122
+    JOURNAL_FIELD_PID,9,151
+    JOURNAL_FIELD_UID,10,174
+    JOURNAL_FIELD_GID,11,197
+    JOURNAL_FIELD_COMM,12,220
+    JOURNAL_FIELD_EXE,13,244
+    JOURNAL_FIELD_SYSTEMD_UNIT,14,267
+    JOURNAL_FIELD_SYSTEMD_USER_UNIT,15,299
+    JOURNAL_FIELD_BOOT_ID,16,336
+    JOURNAL_FIELD_MACHINE_ID,17,363
+    JOURNAL_FIELD_HOSTNAME,18,393
+    JOURNAL_FIELD_TRANSPORT,19,421
+    JOURNAL_FIELD_COUNT21,451
+} JournalField;22,475
+
+libnet/net.cc,46
+port_read_tcp4(17,312
+port_read_tcp6(46,847
+
+libpkg/distro/fedora_dnf.cc,81
+#define DISTRO_FEDORAH1,0
+setup(29,723
+query(49,1097
+run_transaction(65,1396
+
+libpkg/pkg.h,732
+#define PKGMANAGER_H2,21
+enum LinuxDistro7,96
+    DISTRO_UNKNOWN 9,115
+    DISTRO_ARCH_LINUX,11,140
+    DISTRO_MANJARO,12,163
+    DISTRO_ENDEAVOUROS,13,183
+    DISTRO_ARCO,14,207
+    DISTRO_GARUDA,15,224
+    DISTRO_DEBIAN,17,244
+    DISTRO_UBUNTU,18,263
+    DISTRO_LINUX_MINT,19,282
+    DISTRO_POP_OS,20,305
+    DISTRO_FEDORA,22,325
+    DISTRO_RHEL,23,344
+    DISTRO_CENTOS_STREAM,24,361
+    DISTRO_ROCKY,25,387
+    DISTRO_ALMA,26,405
+    DISTRO_GENTOO,28,423
+    DISTRO_NIXOS,29,442
+    DISTRO_OPENSUSE,30,460
+    DISTRO_COUNT32,482
+struct DistroStack36,504
+    const char      *name;name38,525
+    enum LinuxDistro linux_distro;39,552
+local_internal const struct DistroStack distro_map[distro_map42,591
+
+libres/resources.cc,539
+disk_push_partition(26,582
+cpu_create(54,1292
+cpu_read_enabled_core_cpu_frequency(78,1890
+cpu_read_cpu_model_name_arm64(114,2664
+cpu_get_cores_enabled_arm(155,3312
+cpu_read_arm64(195,4004
+cpu_read_amd64(211,4271
+cpu_read(262,5236
+cpu_read_usage(297,5722
+ram_create(349,6921
+ram_read(364,7296
+disk_create(433,8710
+disk_read(451,9247
+fs_create(497,10124
+fs_read(503,10243
+device_create(532,10890
+process_list_collect(547,11304
+process_read(615,12670
+device_up_time(733,15296
+device_read(777,16221
+process_kill(837,17632
+
+libres/resources.h,2296
+#define RESOURCES_H2,20
+#define RESOURCES_API_VERSION 10,154
+typedef struct Cpu        Cpu;12,187
+typedef struct Ram        Ram;13,218
+typedef struct Disk       Disk;14,249
+typedef struct Device     Device;15,281
+typedef struct FileSystem FileSystem;16,315
+typedef struct Partition    Partition;18,354
+typedef struct Process      Process;19,393
+typedef struct Process_List Process_List;20,430
+typedef int32_t ProcessState;31,662
+typedef enum Process_State33,693
+    PROCESS_UNDEFINED 35,722
+    PROCESS_RUNNING 36,755
+    PROCESS_SLEEPING 37,788
+    PROCESS_DISK_SLEEP 38,821
+    PROCESS_STOPPED 39,854
+    PROCESS_TRACING_STOPPED 40,887
+    PROCESS_ZOMBIE 41,920
+    PROCESS_DEAD 42,953
+    PROCESS_IDLE 43,986
+} Process_State;45,1020
+struct Process47,1038
+    char          name[name49,1055
+    u64           utime;50,1098
+    u64           stime;51,1123
+    i32           pid;52,1148
+    u32           num_threads;53,1171
+    Process_State state;54,1202
+struct Process_List57,1231
+    Process *items;items59,1253
+    size_t   count;60,1273
+    size_t   capacity;61,1293
+struct Partition64,1320
+    u64  major;66,1339
+    u64  minor;67,1355
+    u64  blocks;68,1371
+    char name[name69,1388
+struct Cpu72,1426
+    char vendor[vendor74,1439
+    char model[model75,1477
+    char frequency[frequency76,1514
+    u64  total_time;77,1553
+    u64  idle_time;78,1574
+    u32  cores;79,1594
+struct Ram82,1614
+    u64 total;84,1627
+    u64 free;85,1642
+struct FileSystem88,1660
+    u64 total;90,1680
+    u64 free;91,1695
+    u64 available;92,1709
+    u64 used;93,1728
+struct Disk96,1746
+    Partition *partitions;partitions98,1760
+    size_t part_count;100,1788
+    size_t part_capacity;101,1811
+enum TransportLayerType104,1841
+    TRANSPORT_TCP,106,1867
+    TRANSPORT_UDP,107,1886
+    TRANSPORT_SCTP,108,1905
+struct Port114,1995
+    char name[name121,2101
+    int                     port;123,2136
+    enum TransportLayerType type;124,2170
+    char                    alias[alias125,2204
+    char                    comment[comment126,2260
+struct Device129,2322
+    char         os_version[os_version131,2338
+    char         uptime[uptime132,2388
+    Process_List processes;133,2434
+    struct Port *port;port134,2462
+
+tests/test_cpu_resources.cc,368
+test_cpu_create(14,248
+test_cpu_read_returns_ok(23,402
+test_cpu_model_present(32,577
+test_cpu_cores_positive(43,768
+test_cpu_frequency_present(54,953
+test_cpu_usage_read(65,1152
+test_cpu_usage_values_valid(74,1328
+test_cpu_usage_monotonic(86,1573
+test_cpu_read_idempotent(106,1968
+test_cpu_read_null(122,2293
+test_cpu_vendor_present(130,2400
+main(143,2629
+
+tests/test_disk_resources.cc,169
+test_partition_count(15,253
+test_partition_creation(30,551
+test_partition_capacity_bigger_then_count(45,844
+test_individual_partition_non_null(60,1170
+main(79,1528
+
+tests/test_ram_resources.cc,109
+test_ram_create(13,244
+test_ram_read_returns_ok(25,462
+test_ram_read_non_empty_values(37,685
+main(49,888
+
+unity.cc,0
+
+libpkg/distro/debian_apt.cc,0
+
+libpkg/distro/arch_pac.cc,0
+
+common/logger.h,0

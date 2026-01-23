@@ -6,22 +6,22 @@
 local_internal u64
 parse_u64(char *buf, size_t len)
 {
-  u64 value = 0;
+    u64 value = 0;
 
-  for (
+    for (
     size_t buffer_idx = 0;
     buffer_idx < len;
     ++buffer_idx)
-  {
-    char c = buf[buffer_idx];
-    if (c < '0' || c > '9')
     {
-      break;
+        char c = buf[buffer_idx];
+        if (c < '0' || c > '9')
+        {
+            break;
+        }
+        value = value * 10 + (c - '0');
     }
-    value = value * 10 + (c - '0');
-  }
 
-  return value;
+    return value;
 }
 
 /*
@@ -33,36 +33,36 @@ parse_u64(char *buf, size_t len)
 local_internal b8
 is_numeric(char *s)
 {
-  for (; *s; ++s)
-  {
-    if (*s < '0' || *s > '9')
+    for (; *s; ++s)
     {
-      return 0;
+        if (*s < '0' || *s > '9')
+        {
+            return 0;
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 local_internal b8
 compare_string(const char *c1, const char *c2)
 {
-  if (sizeof(c1) != sizeof(c2))
-  {
-    return -1;
-  }
+    if (sizeof(c1) != sizeof(c2))
+    {
+        return -1;
+    }
 
-  for (
+    for (
     u64 word_idx = 0;
     word_idx <= sizeof(*c1);
     ++word_idx)
-  {
-    if (*c1 != *c2)
     {
-      return -1;
+        if (*c1 != *c2)
+        {
+            return -1;
+        }
+        ++c1;
+        ++c2;
     }
-    ++c1;
-    ++c2;
-  }
 
-  return 0;
+    return 0;
 }

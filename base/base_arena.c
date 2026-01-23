@@ -18,17 +18,16 @@
 local_internal mem_arena *
 arena_create(u64 capacity)
 {
-  mem_arena *arena = (mem_arena *)mmap(0, capacity, PROT_READ | PROT_WRITE | PROT_EXEC,
-    MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-  if (arena == MAP_FAILED)
-  {
-    return NULL;
-  }
+    mem_arena *arena = (mem_arena *)mmap(0, capacity, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if (arena == MAP_FAILED)
+    {
+        return NULL;
+    }
 
-  arena->capacity = capacity;
-  arena->pos = ARENA_BASE_POS;
+    arena->capacity = capacity;
+    arena->pos      = ARENA_BASE_POS;
 
-  return arena;
+    return arena;
 }
 
 /*
@@ -37,50 +36,50 @@ arena_create(u64 capacity)
 local_internal void
 arena_destroy(mem_arena *arena)
 {
-  munmap(arena, arena->capacity);
+    munmap(arena, arena->capacity);
 }
 
 local_internal void *
 arena_push(mem_arena *arena, u64 size, b32 non_zero)
 {
-  u64 pos_aligned = ALIGN_UP_POW2(arena->pos, ARENA_ALIGN);
-  u64 new_pos = pos_aligned + size;
+    u64 pos_aligned = ALIGN_UP_POW2(arena->pos, ARENA_ALIGN);
+    u64 new_pos     = pos_aligned + size;
 
-  if (new_pos > arena->capacity)
-  {
-    assert(0);
-    return NULL;
-  }
+    if (new_pos > arena->capacity)
+    {
+        assert(0);
+        return NULL;
+    }
 
-  arena->pos = new_pos;
-  /*
+    arena->pos = new_pos;
+    /*
    * cast to u8 to be able to do pointer arithemtic
    * */
-  u8 *out = (u8 *)arena + pos_aligned;
+    u8 *out = (u8 *)arena + pos_aligned;
 
-  if (!non_zero)
-  {
-    memset(out, 0, size);
-  }
-  return out;
+    if (!non_zero)
+    {
+        memset(out, 0, size);
+    }
+    return out;
 }
 
 local_internal void
 arena_pop(mem_arena *arena, u64 size)
 {
-  size = MIN(size, arena->pos - ARENA_BASE_POS);
-  arena->pos -= size;
+    size = MIN(size, arena->pos - ARENA_BASE_POS);
+    arena->pos -= size;
 }
 
 local_internal void
 arena_pop_to(mem_arena *arena, u64 pos)
 {
-  u64 size = pos < arena->pos ? arena->pos - pos : 0;
-  arena_pop(arena, size);
+    u64 size = pos < arena->pos ? arena->pos - pos : 0;
+    arena_pop(arena, size);
 }
 
 local_internal void
 arena_clear(mem_arena *arena)
 {
-  arena_pop_to(arena, ARENA_BASE_POS);
+    arena_pop_to(arena, ARENA_BASE_POS);
 }

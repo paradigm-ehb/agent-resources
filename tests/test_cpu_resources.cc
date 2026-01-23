@@ -13,116 +13,116 @@
 local_internal void
 test_cpu_create()
 {
-  mem_arena *arena = arena_create(MiB(1));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(1));
+    Cpu       *cpu   = cpu_create(arena);
 
-  test(cpu != NULL);
+    test(cpu != NULL);
 }
 
 local_internal void
 test_cpu_read_returns_ok()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  test(cpu_read(cpu) == ERR_OK);
+    test(cpu_read(cpu) == ERR_OK);
 }
 
 local_internal void
 test_cpu_model_present()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read(cpu);
+    cpu_read(cpu);
 
-  test(cpu->model[0] != '\0');
+    test(cpu->model[0] != '\0');
 }
 
 local_internal void
 test_cpu_cores_positive()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read(cpu);
+    cpu_read(cpu);
 
-  test(cpu->cores > 0);
+    test(cpu->cores > 0);
 }
 
 local_internal void
 test_cpu_frequency_present()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read(cpu);
+    cpu_read(cpu);
 
-  test(cpu->frequency[0] != '\0');
+    test(cpu->frequency[0] != '\0');
 }
 
 local_internal void
 test_cpu_usage_read()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  test(cpu_read_usage(cpu) == ERR_OK);
+    test(cpu_read_usage(cpu) == ERR_OK);
 }
 
 local_internal void
 test_cpu_usage_values_valid()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read_usage(cpu);
+    cpu_read_usage(cpu);
 
-  test(cpu->total_time > 0);
-  test(cpu->idle_time <= cpu->total_time);
+    test(cpu->total_time > 0);
+    test(cpu->idle_time <= cpu->total_time);
 }
 
 local_internal void
 test_cpu_usage_monotonic()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read_usage(cpu);
-  u64 total1 = cpu->total_time;
-  u64 idle1  = cpu->idle_time;
+    cpu_read_usage(cpu);
+    u64 total1 = cpu->total_time;
+    u64 idle1  = cpu->idle_time;
 
-  sleep(1);
+    sleep(1);
 
-  cpu_read_usage(cpu);
-  u64 total2 = cpu->total_time;
-  u64 idle2  = cpu->idle_time;
+    cpu_read_usage(cpu);
+    u64 total2 = cpu->total_time;
+    u64 idle2  = cpu->idle_time;
 
-  test(total2 >= total1);
-  test(idle2  >= idle1);
+    test(total2 >= total1);
+    test(idle2 >= idle1);
 }
 
 local_internal void
 test_cpu_read_idempotent()
 {
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read(cpu);
+    cpu_read(cpu);
 
-  char model_copy[sizeof(cpu->model)];
-  memcpy(model_copy, cpu->model, sizeof(cpu->model));
+    char model_copy[sizeof(cpu->model)];
+    memcpy(model_copy, cpu->model, sizeof(cpu->model));
 
-  cpu_read(cpu);
+    cpu_read(cpu);
 
-  test(strcmp(cpu->model, model_copy) == 0);
+    test(strcmp(cpu->model, model_copy) == 0);
 }
 
 local_internal void
 test_cpu_read_null()
 {
 #ifdef DEBUG
-  test(cpu_read(NULL) == ERR_INVALID);
+    test(cpu_read(NULL) == ERR_INVALID);
 #endif
 }
 
@@ -130,29 +130,29 @@ local_internal void
 test_cpu_vendor_present()
 {
 #if defined(__i386__) || defined(__x86_64__)
-  mem_arena *arena = arena_create(MiB(4));
-  Cpu *cpu = cpu_create(arena);
+    mem_arena *arena = arena_create(MiB(4));
+    Cpu       *cpu   = cpu_create(arena);
 
-  cpu_read(cpu);
+    cpu_read(cpu);
 
-  test(cpu->vendor[0] != '\0');
+    test(cpu->vendor[0] != '\0');
 #endif
 }
 
 int
 main()
 {
-  test_cpu_create();
-  test_cpu_read_returns_ok();
-  test_cpu_model_present();
-  test_cpu_vendor_present();
-  test_cpu_cores_positive();
-  test_cpu_frequency_present();
-  test_cpu_usage_read();
-  test_cpu_usage_values_valid();
-  test_cpu_usage_monotonic();
-  test_cpu_read_idempotent();
-  test_cpu_read_null();
+    test_cpu_create();
+    test_cpu_read_returns_ok();
+    test_cpu_model_present();
+    test_cpu_vendor_present();
+    test_cpu_cores_positive();
+    test_cpu_frequency_present();
+    test_cpu_usage_read();
+    test_cpu_usage_values_valid();
+    test_cpu_usage_monotonic();
+    test_cpu_read_idempotent();
+    test_cpu_read_null();
 
-  return 0;
+    return 0;
 }

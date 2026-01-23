@@ -2,30 +2,35 @@ CompileFlags:
   CompilationDatabase: .
 
   Add:
-    - --gcc-toolchain=/usr
     - -std=c++17
-    - -I/home/nasr/agent-c
-    - -I/home/nasr/agent-c/grpc/generated
     - -Wall
     - -Wextra
     - -Wno-unused-function
     - -g
     - -O0
+    - -I/home/nasr/c/agent-c
+    - -I/home/nasr/c/agent-c/grpc/generated
 
   Remove:
+    # Linker flags (clangd must never see these)
     - -l*
     - -pthread
+
+    # Codegen / ABI noise
     - -march=*
     - -mtune=*
     - -fPIC
+
+    # Optimization flags (we enforce -O0 above)
     - -O*
+    - -Ofast
 
 Diagnostics:
   Suppress:
+    # Generated-code and unity-build noise
     - pp_file_not_found
-    - unknown-warning-option
     - unused-command-line-argument
-    - macro-redefined
+    - unknown-warning-option
 
 Index:
   Background: Build
