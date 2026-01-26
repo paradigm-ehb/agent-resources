@@ -24,18 +24,41 @@ parse_u64(char *buf, size_t len)
     return value;
 }
 
+local_internal inline b8
+is_aligned(umm x)
+{
+  return (x & (x - 1)) == 0;
+}
 
 local_internal inline u64
 align_up_pow(u64 n, u64 p)
 {
-  /*
+    /*
    * TODO(nasr): there is bug here grrr
    * were checking if the memory is aligned but the function
    * is used to align the memory
    * make a seperate function that checks for that alignment
    * check(p && ((p & (p - 1)) == 0));
    * */
-  return (n + (p - 1)) & ~(p - 1);
+    return (n + (p - 1)) & ~(p - 1);
+}
+
+local_internal inline u64
+align(u64 ptr, u64 align)
+{
+  umm p, a, modulo;
+
+  p = ptr;
+  a = (umm)align;
+
+  modulo = p & (a - 1);
+
+  if (modulo != 0)
+  {
+    p += a - modulo;
+  }
+
+  return p;
 }
 
 
@@ -81,4 +104,3 @@ compare_string(const char *c1, const char *c2)
 
     return 0;
 }
-

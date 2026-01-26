@@ -1,5 +1,3 @@
-
-#include <cstdio>
 #include <memory>
 
 #include "grpc/grpc_include.h"

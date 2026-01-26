@@ -3,7 +3,6 @@
 /* unity build */
 #include "base/base.c"
 #include "base/base_arena.c"
-#include <stdio.h>
 #include <string.h>
 
 /*
@@ -312,7 +311,6 @@ test_arena_large_allocation()
 int
 main(void)
 {
-    printf("running arena tests\n");
     test_arena_create();
     test_arena_capacity();
     test_arena_initial_pos();
@@ -333,6 +331,5 @@ main(void)
     test_temp_arena_nesting();
     test_arena_reuse();
     test_arena_large_allocation();
-    printf("all arena tests passed\n");
     return 0;
 }

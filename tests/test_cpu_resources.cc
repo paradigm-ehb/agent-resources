@@ -6,7 +6,6 @@
 #include "base/base.c"
 #include "base/base_arena.c"
 #include "libres/resources.cc"
-#include <stdio.h>
 
 /*
  * Test: cpu_create returns a valid pointer

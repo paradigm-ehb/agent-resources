@@ -8,6 +8,7 @@ CompileFlags:
     - -Wno-unused-function
     - -g
     - -O0
+    - -I/home/nasr/c/agent-c/unity.cc
     - -I/home/nasr/c/agent-c
     - -I/home/nasr/c/agent-c/grpc/generated
 

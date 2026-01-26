@@ -38,7 +38,7 @@ struct sys_process
     u64           utime;
     u64           stime;
     i32           pid;
-    u32           num_threads;
+    i8           num_threads;
     sys_proc_state state;
 };
 

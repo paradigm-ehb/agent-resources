@@ -12,8 +12,24 @@
 
 #include "base_arena.h"
 
-/* TODO(nasr): reserve pages support */
-/* TODO(nasr): check if an arena has been used before */
+/* credits gingerbill arena allocaters article */
+local_internal inline u64
+align(u64 ptr, u64 align)
+{
+  umm p, a, modulo;
+
+  p = ptr;
+  a = (umm)align;
+
+  modulo = p & (a - 1);
+
+  if (modulo != 0)
+  {
+    p += a - modulo;
+  }
+
+  return p;
+}
 
 local_internal global_arena *
 arena_create(u64 capacity)
