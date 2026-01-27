@@ -3,6 +3,15 @@
 
 #include "base.h"
 
+#include <assert.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <unistd.h>
+
 /**
  * Arena Helper macro's
  * */
@@ -19,7 +28,7 @@
 
 #define ARENA_ALIGN (sizeof(void *))
 
-typedef struct mem_arena global_arena;
+typedef struct mem_arena  global_arena;
 typedef struct temp_arena temp_arena;
 
 struct mem_arena
@@ -31,9 +40,9 @@ struct mem_arena
 
 struct temp_arena
 {
-  global_arena *arena;
-  umm offset;
-  umm prev_offset;
+    global_arena *arena;
+    umm           offset;
+    umm           prev_offset;
 };
 
 local_internal global_arena *
@@ -56,6 +65,5 @@ arena_clear(global_arena *arena);
 
 local_internal void
 temp_arena_create();
-
 
 #endif

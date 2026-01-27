@@ -1,40 +1,32 @@
+#include "base_arena.h"
+
 /**
  * TODO(nasr): remove stdlib
  * */
-#include <assert.h>
-#include <stdint.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-#include "base_arena.h"
-
 /* credits gingerbill arena allocaters article */
 local_internal inline u64
 align_stub(u64 ptr, u64 align)
 {
-  umm p, a, modulo;
+    umm p, a, modulo;
 
-  p = ptr;
-  a = (umm)align;
+    p = ptr;
+    a = (umm)align;
 
-  modulo = p & (a - 1);
+    modulo = p & (a - 1);
 
-  if (modulo != 0)
-  {
-    p += a - modulo;
-  }
+    if (modulo != 0)
+    {
+        p += a - modulo;
+    }
 
-  return p;
+    return p;
 }
 
 local_internal global_arena *
 arena_create(u64 capacity)
 {
     global_arena *arena = (global_arena *)mmap(0, capacity, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+
     if (arena == MAP_FAILED)
     {
         return NULL;
@@ -104,18 +96,17 @@ arena_clear(global_arena *arena)
 local_internal temp_arena
 temp_arena_begin(global_arena *arena)
 {
-  temp_arena temp;
-  temp.arena = arena;
-  temp.prev_offset = arena->prev_pos;
-  temp.offset = arena->pos;
+    temp_arena temp;
+    temp.arena       = arena;
+    temp.prev_offset = arena->prev_pos;
+    temp.offset      = arena->pos;
 
-  return temp;
+    return temp;
 }
 
 local_internal void
 temp_arena_end(temp_arena temp)
 {
-	temp.arena->prev_pos = temp.prev_offset;
-	temp.arena->pos = temp.offset;
-
+    temp.arena->prev_pos = temp.prev_offset;
+    temp.arena->pos      = temp.offset;
 }

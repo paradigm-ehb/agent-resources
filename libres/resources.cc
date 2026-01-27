@@ -1,16 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <string.h>
-#include <sys/statfs.h>
-
 #include "libres/resources.h"
-#include "base/base_arena.h"
-#include "base/base.h"
 
 /*
  * disk_push_partition - Add a partition to the disk structure
@@ -294,7 +282,7 @@ cpu_read(cpu *out)
 }
 
 int
-cpu_read_usage(cpu  *out)
+cpu_read_usage(cpu *out)
 {
     if (!out)
     {
@@ -345,7 +333,7 @@ cpu_read_usage(cpu  *out)
  *
  * Return: Pointer to newly allocated Ram, or NULL on allocation failure
  */
- memory *
+memory *
 ram_create(mem_arena *m)
 {
     return (memory *)arena_push(m, sizeof(memory), 1);
@@ -576,8 +564,8 @@ process_list_collect(proc_list *list, mem_arena *arena)
 
         if (list->count == list->capacity)
         {
-            size_t   new_cap = list->capacity * 2;
-            proc *np      = PUSH_ARRAY_NZ(arena, proc, new_cap);
+            size_t new_cap = list->capacity * 2;
+            proc  *np      = PUSH_ARRAY_NZ(arena, proc, new_cap);
             if (!np)
                 break;
 

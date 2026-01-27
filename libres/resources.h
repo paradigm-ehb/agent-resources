@@ -2,7 +2,16 @@
 #define RESOURCES_H
 #include <stddef.h>
 #include <stdint.h>
+
+#include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <dirent.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <string.h>
+#include <sys/statfs.h>
 
 #include "base/base.h"
 #include "base/base_arena.h"
@@ -34,19 +43,19 @@ typedef enum
 
 struct sys_process
 {
-    char          name[BUFFER_SIZE_SMALL];
-    u64           utime;
-    u64           stime;
-    i32           pid;
-    i8           num_threads;
+    char           name[BUFFER_SIZE_SMALL];
+    u64            utime;
+    u64            stime;
+    i32            pid;
+    i8             num_threads;
     sys_proc_state state;
 };
 
 struct sys_process_list
 {
     proc *items;
-    umm      count;
-    umm      capacity;
+    umm   count;
+    umm   capacity;
 };
 
 struct sys_partition
@@ -93,7 +102,7 @@ struct sys_device
 {
     char         os_version[BUFFER_SIZE_DEFAULT];
     char         uptime[BUFFER_SIZE_DEFAULT];
-    proc_list processes;
+    proc_list    processes;
     struct Port *port;
 };
 

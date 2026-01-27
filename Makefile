@@ -20,11 +20,12 @@ CXXFLAGS := \
 	-std=c++17 \
 	-g \
 	-O0 \
+	-g3 \
 	-fno-omit-frame-pointer \
-	-Wall \
-	-Wextra \
-	-Wno-unused-function \
 	$(INCLUDES)
+#	-Wall \
+#	-Wextra \
+#	-Wno-unused-function \
 
 # Linker flags
 LDFLAGS := \
@@ -45,11 +46,6 @@ LDFLAGS := \
 # Sources (unity build)
 SOURCES := \
 	unity.cc
-
-# Quiet / verbose toggle
-ifndef VERBOSE
-Q := @
-endif
 
 # Rules
 all: $(TARGET)

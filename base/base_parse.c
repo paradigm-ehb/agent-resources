@@ -1,10 +1,4 @@
-#include "base_arena.h"
-#include "base_parse.h"
-
-#include "base.c"
-#include "base_arena.c"
-
-#include <fcntl.h>
+#include "base/base_parse.h"
 
 local_internal b8
 compare_string(const char *c1, const char *c2)
@@ -30,70 +24,80 @@ compare_string(const char *c1, const char *c2)
     return 0;
 }
 
-  local_internal char*
-parse_proc_files(char *path, char *delim, global_arena *arena)
+local_internal char *
+parse_proc_files(const char *path, const char *delim, global_arena *arena)
 {
-  if (!path || !delim || !arena)
-  {
-    test(0);
-    return NULL;
-  }
-
-
-  umm delim_len = sizeof(*delim);
-  int fd = open(path, O_RDONLY);
-
-  /* check if the return is anything other than 0*/
-  check(fd);
-
-  u64 bytes = 0;
-
-  char buffer[BUFFER_SIZE_SMALL];
-
-  /* processor   : 0 */
-
-  while ((bytes = read(fd, buffer, sizeof(buffer))) > 0)
-  {
-    char *start;
-    char *end;
-
-    for ( u64 buffer_position = 1;
-        buffer_position < bytes;
-        ++buffer_position)
+    if (!path || !delim || !arena)
     {
-
-      char *line = &buffer[buffer_position];
-
-      for  (u64 line_position = 1;
-          line_position < bytes;
-          ++line_position)
-      {
-
-        if (line[line_position] == delim[0])
-        {
-
-          start = &line[line_position];
-          /*
-           * TODO(nasr): calculate by end - current
-           *
-           * */
-
-        }
-
-      }
-
+        test(0);
+        return NULL;
     }
 
-  }
+    umm delim_len = sizeof(*delim);
+    int fd        = open(path, O_RDONLY);
+
+    u64 bytes = 0;
+
+    char  buffer[BUFFER_SIZE_SMALL];
+    char *out;
+
+    /*
+      processor\t:0\n
+      NOTE(nasr): interesting this loads the complete buffer at once
+    */
+    bytes = read(fd, buffer, sizeof(buffer));
+    {
+        char *start;
+        char *end;
+
+        for (u64 buffer_position = 0;
+        buffer_position < bytes;
+        ++buffer_position)
+
+            for (u64 line_position = 0;
+            line_position < bytes;
+            ++line_position)
+            {
+                char *line_bf = &buffer[buffer_position];
+
+                if (line_bf[line_position] == '\t' || line_bf[line_position] == ' ')
+                {
+                    continue;
+                }
+
+                if (line_bf[line_position] == delim[0])
+                {
+                    start = &line_bf[line_position];
+                    continue;
+                }
+
+                start = &line_bf[line_position];
+                if (line_bf[line_position] == '\n')
+                {
+                    end = &line_bf[line_position];
+                    break;
+                }
+            }
+        // break;
+    }
+
+    /*
+     out = PUSH_ARRAY(arena, char, sizeof(end));
+     MemCpy(out, end, sizeof(end));
+    */
+    close(fd);
+    return out;
 }
 
-int main(int argc, char **argv)
+int
+main(void)
 {
-  global_arena *arena = arena_create(MiB(8));
+    global_arena *arena = arena_create(MiB(8));
 
-  char *path = "/proc/cpuinfo";
-  char *out  = parse_proc_files(path, ":", arena);
+    const char *path  = "/proc/cpuinfo";
+    const char *delim = ":";
 
+    parse_proc_files(path, delim, arena);
 
-  return 0;
+    return 0;
 }

@@ -5,6 +5,7 @@
 #include "libres/resources.h"
 #include "base/base_arena.h"
 #include "base/base.h"
+#include "base/base_parse.h"
 
 /**
  * Retrieve listening service to port x

@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <string.h>
 
 /* assert an expression and output the file and the line */
 
@@ -50,16 +51,14 @@
 
 #define unused(x) (void)(x)
 
-/*
- *
- * TODO(nasr): improve the namings
- * */
 #define BUFFER_SIZE_SMALL 128
 #define BUFFER_SIZE_DEFAULT 256
 #define BUFFER_SIZE_LARGE 512
 #define PATH_MAX_LEN 4096
 
 #define DEPRECATED __attribute__((__deprecated__))
+
+#define MemCpy(dest, src, len)  memcpy(dest, src, len)
 
 typedef uint64_t u64;
 typedef uint32_t u32;
