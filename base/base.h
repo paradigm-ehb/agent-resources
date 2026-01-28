@@ -13,26 +13,31 @@
 #define GREEN "\x1b[32m"
 #define RESET "\x1b[0m"
 
-/* TODO(nasr): remove the stdio dep? */
-
 #define test(expr) \
     do \
     { \
         if (!(expr)) \
         { \
-            fprintf(stderr, RED " [FAILED] %s:%d: expr:%s test:%s\n" RESET, __FILE__, __LINE__, #expr, __func__); \
-            _exit(0); \
+            write(STDERR_FILENO, " [FAILED] in ", 13); \
+            write(STDERR_FILENO, __func__, 50); \
+            write(STDERR_FILENO, "\n", 1); \
+            _exit(1); \
         } \
         else \
         { \
-            fprintf(stdout, GREEN "[PASSED] %s\n" RESET, __func__); \
+            write(STDOUT_FILENO, "[PASSED] ", 9); \
+            write(STDOUT_FILENO, __func__, 50); \
+            write(STDOUT_FILENO, "\n", 1); \
         } \
     } while (0)
 
 #define check(expr) \
     if (!(expr)) \
-        fprintf(stderr, RED " [ERROR] %s:%d: expr:%s test:%s\n" RESET, __FILE__, __LINE__, #expr, __func__); \
-    _exit(1);
+    { \
+        write(STDERR_FILENO, RED " [ERROR] in ", 12); \
+        write(STDERR_FILENO, __func__, 50); \
+        write(STDERR_FILENO, RESET "\n", 1); \
+    }
 
 #define global_variable static
 #define local_persist static

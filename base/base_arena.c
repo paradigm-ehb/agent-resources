@@ -130,6 +130,12 @@ arena_clear(mem_arena *arena)
     arena_pop_to(arena, sizeof(*arena));
 }
 
+local_internal void
+arena_resize(mem_arena *arena)
+{
+    check(is_aligned(arena->pos));
+}
+
 local_internal temp_arena
 temp_arena_begin(mem_arena *arena)
 {
